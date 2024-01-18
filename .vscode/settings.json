@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.sql": "jinja-sql",
+        "**/target/**": ""
+    },
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.defaultInterpreterPath": "./dbt-env/bin/python3"
+}
