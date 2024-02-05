@@ -12,12 +12,20 @@ The project is currently under development and all documentation is aimed at pro
 
 ### Instructions
  1. Clone this repository to your machine
- 2. `cd` into the repo directory and set up a virtual environment per the instructions [here](https://docs.getdbt.com/docs/core/pip-install#using-virtual-environments).  Note that if you're using VS Code, the vscode config in the repo will automatically source the virtualenv each time you open a new terminal in the project
- 3. Create a .env file in your repo and add a PYTHONPATH entry for your virtual env (e.g. `PYTHONPATH="~/dbt-synthea/dbt-env/bin/python"`)
+ 2. `cd` into the repo directory and set up a virtual environment:
+ ```bash
+ $ python3 -m venv dbt-env
+ ```
+ - Note that if you're using VS Code, once you set this env as your preferred interpreter for the project, the vscode config in the repo will automatically source the virtualenv each time you open a new terminal in the project.  Otherwise, each time you open a new terminal to use dbt for this project, run:
+```bash
+$ source dbt-env/bin/activate         # activate the environment for Mac and Linux OR
+$ dbt-env\Scripts\activate            # activate the environment for Windows
+```
+ 3. Create a .env file in your repo (`touch .env`) and add a PYTHONPATH entry for your virtual env (for example, if you created your repo in your computer's home directory, the entry will read as: `PYTHONPATH="~/dbt-synthea/dbt-env/bin/python"`)
  4. In your virtual environment, install dbt-core and the dbt-postgres adapter as follows:
 ```bash
- pip install dbt-core==1.7.4
- pip install dbt-postgres==1.7.4
+$ pip3 install dbt-core==1.7.4
+$ pip3 install dbt-postgres==1.7.4
 ```
 
  5. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
@@ -28,7 +36,7 @@ synthea_omop_etl:
   outputs:
     dev:
       dbname: <name of the local postgres database where you'll be running this project>
-      host: localhost
+      host: <postgres host e.g. localhost>
       pass: <postgres user password>
       port: 5432
       schema: <dev schema name for this project>
@@ -38,8 +46,9 @@ synthea_omop_etl:
   target: dev
 ```
 
- 6. Ensure your profile is setup correctly from the command line:
+ 6. `cd` into the project directory, and ensure your profile is setup correctly using dbt debug:
 ```bash
+$ cd synthea_omop_etl
 $ dbt debug
 ```
 
