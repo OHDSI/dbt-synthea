@@ -28,9 +28,9 @@ models:
 
 seeds:
   synthea_omop_etl:
-    synthea:
+    # synthea:
       +database: dbt_synthea
-      +schema: synthea
+      #+schema: synthea
       allergies:
         +column_types:
           CODE: varchar
