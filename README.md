@@ -16,12 +16,12 @@ The project is currently under development and all documentation is aimed at pro
  ```bash
  $ python3 -m venv dbt-env
  ```
- - Note that if you're using VS Code, once you set this env as your preferred interpreter for the project, the vscode config in the repo will automatically source the virtualenv each time you open a new terminal in the project.  Otherwise, each time you open a new terminal to use dbt for this project, run:
+ - If you are using VS Code, create a .env file in  the root of your repo workspace (`touch .env`) and add a PYTHONPATH entry for your virtual env (for example, if you cloned your repo in your computer's home directory, the entry will read as: `PYTHONPATH="~/dbt-synthea/dbt-env/bin/python"`)
+ - Now, in VS Code, once you set this virtualenv as your preferred interpreter for the project, the vscode config in the repo will automatically source this env each time you open a new terminal in the project.  Otherwise, each time you open a new terminal to use dbt for this project, run:
 ```bash
 $ source dbt-env/bin/activate         # activate the environment for Mac and Linux OR
 $ dbt-env\Scripts\activate            # activate the environment for Windows
 ```
- 3. Create a .env file in your repo (`touch .env`) and add a PYTHONPATH entry for your virtual env (for example, if you created your repo in your computer's home directory, the entry will read as: `PYTHONPATH="~/dbt-synthea/dbt-env/bin/python"`)
  4. In your virtual environment, install dbt-core and the dbt-postgres adapter as follows:
 ```bash
 $ pip3 install dbt-core==1.7.4
@@ -51,18 +51,22 @@ synthea_omop_etl:
 $ cd synthea_omop_etl
 $ dbt debug
 ```
+ 7. Load dbt dependencies:
+```bash
+$ dbt deps
+```
 
- 7. Load the CSVs with the Synthea dataset. This materializes the CSVs as tables in your target schema.
+ 8. Load the CSVs with the Synthea dataset. This materializes the CSVs as tables in your target schema.
 ```bash
 $ dbt seed
 ```
 
- 8. Run the models we have so far:
+ 9. Run the models we have so far:
 ```bash
 $ dbt run
 ```
 
- 9. Test the output of the models:
+ 10. Test the output of the models:
 ```bash
 $ dbt test
 ```
