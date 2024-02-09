@@ -24,6 +24,68 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   synthea_omop_etl:
-    # Config indicated by + and applies to all files under models/example/
-    example:
-      +materialized: view
+    +materialized: table
+
+seeds:
+  synthea_omop_etl:
+    synthea:
+      +database: dbt_synthea
+      +schema: synthea
+      allergies:
+        +column_types:
+          CODE: varchar
+          REACTION1: varchar
+      careplans:
+        +column_types:
+          CODE: varchar
+          REASONCODE: varchar
+      claims_transactions:
+        +column_types:
+          PROCEDURECODE: varchar
+      claims:
+        +column_types:
+          DIAGNOSIS1: varchar
+          DIAGNOSIS2: varchar
+          DIAGNOSIS3: varchar
+          DIAGNOSIS4: varchar
+          DIAGNOSIS5: varchar
+          DIAGNOSIS6: varchar
+          DIAGNOSIS7: varchar
+          DIAGNOSIS8: varchar
+      conditions:
+        +column_types:
+          CODE: varchar
+      devices:
+        +column_types:
+          CODE: varchar
+      encounters:
+        +column_types:
+          CODE: varchar
+          REASONCODE: varchar
+      imaging_studies:
+        +column_types:
+          CODE: varchar
+          BODYSITE_CODE: varchar
+          MODALITY_CODE: varchar
+          SOP_CODE: varchar
+          PROCEDURE_CODE: varchar
+      immunizations:
+        +column_types:
+          CODE: varchar
+      medications:
+        +column_types:
+          CODE: varchar
+          REASONCODE: varchar
+      observations:
+        +column_types:
+          CODE: varchar
+      procedures:
+        +column_types:
+          CODE: varchar
+          REASONCODE: varchar
+      supplies:
+        +column_types:
+          CODE: varchar
+
+
+          
