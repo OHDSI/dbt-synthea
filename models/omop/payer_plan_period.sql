@@ -1,8 +1,8 @@
 select
   row_number() over (order by pat.id, pt.start_year) as payer_plan_period_id,
   per.person_id as person_id,
-  cast(pt.start_year as DATE) as payer_plan_period_start_date,
-  cast(pt.end_year as DATE) as payer_plan_period_end_date,
+  cast(concat(cast(pt.start_year as varchar), '01','01') as DATE) as payer_plan_period_start_date,
+  cast(concat(cast(pt.end_year as varchar), '12','31') as DATE) as payer_plan_period_end_date,
   0 as payer_concept_id,
   pt.payer as payer_source_value,
   0 as payer_source_concept_id,
