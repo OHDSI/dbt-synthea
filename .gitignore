@@ -1,4 +1,3 @@
-dbt-env/
-.env
-.DS_Store
-*.log
+target/
+dbt_packages/
+logs/
