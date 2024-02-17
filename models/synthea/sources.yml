@@ -1,0 +1,25 @@
+# Synthea sources to be used when not using the demonstration seeds
+version: 2
+
+sources:
+  - name: synthea
+    schema: synthea
+    tables:
+      - name: allergies
+      - name: careplans
+      - name: claims
+      - name: claims_transactions
+      - name: conditions
+      - name: devices
+      - name: encounters
+      - name: imaging_studies
+      - name: immunizations
+      - name: medications
+      - name: observations
+      - name: organizations
+      - name: patients
+      - name: procedures
+      - name: providers
+      - name: payer_transitions
+      - name: payers
+      - name: supplies
