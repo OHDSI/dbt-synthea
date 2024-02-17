@@ -1,0 +1,108 @@
+name: 'synthea_omop_etl'
+version: '0.2.0'
+config-version: 2
+
+profile: 'synthea_omop_etl'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  # Don't clean the dbt_packages every time as this requires reinstalling with `dbt deps`
+  # - "dbt_packages"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  synthea_omop_etl:
+    synthea:
+      +materialized: view
+      +docs:
+        node_color: "#FFA600"
+      +tags:
+        - synthea
+    vocab:
+      +materialized: view
+      +docs:
+        node_color: "#D45087"
+      +tags:
+        - vocab
+    staging:
+      +materialized: table
+      +docs:
+        node_color: "#F95D6A"
+      +tags:
+        - omop
+    omop:
+      +materialized: table
+      +docs:
+        node_color: "#665191"
+      +tags:
+        - omop
+seeds:
+  synthea_omop_etl:
+    synthea:
+      +database: dbt_synthea
+      +schema: synthea
+      allergies:
+        +column_types:
+          CODE: varchar
+          REACTION1: varchar
+      careplans:
+        +column_types:
+          CODE: varchar
+          REASONCODE: varchar
+      claims_transactions:
+        +column_types:
+          PROCEDURECODE: varchar
+      claims:
+        +column_types:
+          DIAGNOSIS1: varchar
+          DIAGNOSIS2: varchar
+          DIAGNOSIS3: varchar
+          DIAGNOSIS4: varchar
+          DIAGNOSIS5: varchar
+          DIAGNOSIS6: varchar
+          DIAGNOSIS7: varchar
+          DIAGNOSIS8: varchar
+      conditions:
+        +column_types:
+          CODE: varchar
+      devices:
+        +column_types:
+          CODE: varchar
+      encounters:
+        +column_types:
+          CODE: varchar
+          REASONCODE: varchar
+      imaging_studies:
+        +column_types:
+          CODE: varchar
+          BODYSITE_CODE: varchar
+          MODALITY_CODE: varchar
+          SOP_CODE: varchar
+          PROCEDURE_CODE: varchar
+      immunizations:
+        +column_types:
+          CODE: varchar
+      medications:
+        +column_types:
+          CODE: varchar
+          REASONCODE: varchar
+      observations:
+        +column_types:
+          CODE: varchar
+      procedures:
+        +column_types:
+          CODE: varchar
+          REASONCODE: varchar
+      supplies:
+        +column_types:
+          CODE: varchar
