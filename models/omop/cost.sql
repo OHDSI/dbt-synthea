@@ -10,8 +10,7 @@ with all_costs as (
 )
 
 select
-  row_number() over (order by tmp.cost_event_id) as cost_id,
-  ac.cost_id,
+  row_number() over (order by ac.cost_event_id) as cost_id,
   ac.cost_event_id,
   ac.cost_domain_id,
   ac.cost_type_concept_id,
