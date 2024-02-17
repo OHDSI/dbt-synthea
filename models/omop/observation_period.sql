@@ -13,4 +13,4 @@ from (
   inner join {{ ref ('synthea_encounters') }} as e
     on p.person_source_value = e.patient
   group by p.person_id
-) as tmp;
+) as tmp
