@@ -14,18 +14,18 @@ The project is currently under development and all documentation is aimed at pro
  1. Clone this repository to your machine
  2. `cd` into the repo directory and set up a virtual environment:
  ```bash
- $ python3 -m venv dbt-env
+  python3 -m venv dbt-env
  ```
  - If you are using VS Code, create a .env file in  the root of your repo workspace (`touch .env`) and add a PYTHONPATH entry for your virtual env (for example, if you cloned your repo in your computer's home directory, the entry will read as: `PYTHONPATH="~/dbt-synthea/dbt-env/bin/python"`)
  - Now, in VS Code, once you set this virtualenv as your preferred interpreter for the project, the vscode config in the repo will automatically source this env each time you open a new terminal in the project.  Otherwise, each time you open a new terminal to use dbt for this project, run:
 ```bash
-$ source dbt-env/bin/activate         # activate the environment for Mac and Linux OR
-$ dbt-env\Scripts\activate            # activate the environment for Windows
+ source dbt-env/bin/activate         # activate the environment for Mac and Linux OR
+dbt-env\Scripts\activate            # activate the environment for Windows
 ```
  4. In your virtual environment, install dbt-core and the dbt-postgres adapter as follows:
 ```bash
-$ pip3 install dbt-core==1.7.4
-$ pip3 install dbt-postgres==1.7.4
+ pip3 install dbt-core==1.7.4
+ pip3 install dbt-postgres==1.7.4
 ```
 
  5. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
@@ -46,27 +46,30 @@ synthea_omop_etl:
   target: dev
 ```
 
- 6. `cd` into the project directory, and ensure your profile is setup correctly using dbt debug:
+ 6. Run `dbt debug` at the root of the repo which is also the dbt project's root directory.
+
 ```bash
-$ cd synthea_omop_etl
-$ dbt debug
+dbt debug
 ```
  7. Load dbt dependencies:
 ```bash
-$ dbt deps
+dbt deps
 ```
 
  8. Load the CSVs with the Synthea dataset. This materializes the CSVs as tables in your target schema.
+ This is only provided for demonstration purposes.
+ Large datasets should be loaded into the database using other methods rather than using dbt seeds.
+ See https://docs.getdbt.com/docs/build/seeds for more information.
 ```bash
-$ dbt seed
+dbt seed
 ```
 
  9. Run the models we have so far:
 ```bash
-$ dbt run
+dbt run
 ```
 
  10. Test the output of the models:
 ```bash
-$ dbt test
+dbt test
 ```

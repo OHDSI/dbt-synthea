@@ -1,6 +1,0 @@
-
-version: 2
-
-models:
-  - name: synthea_patients
-    description: "Synthea patients table"

@@ -1,6 +1,6 @@
 [sqlfluff]
 templater = dbt
-dialect = databricks
+dialect = tsql
 sql_file_exts = .sql,.sql.j2,.dml,.ddl
 exclude_rules = L031, L014, ST06
 large_file_skip_byte_limit = 0
