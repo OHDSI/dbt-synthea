@@ -1,33 +1,33 @@
-/* Emergency visits */
-/* collapse ER claim lines with no days between them into one visit */
+/* emergency visits */
+/* collapse er claim lines with no days between them into one visit */
 
 select
-  T2.encounter_id,
-  T2.patient,
-  T2.encounterclass,
-  T2.VISIT_START_DATE,
-  T2.VISIT_END_DATE
+  t2.encounter_id,
+  t2.patient,
+  t2.encounterclass,
+  t2.visit_start_date,
+  t2.visit_end_date
 from (
   select
-    MIN(encounter_id) as encounter_id,
+    min(encounter_id) as encounter_id,
     patient,
     encounterclass,
-    VISIT_START_DATE,
-    MAX(VISIT_END_DATE) as VISIT_END_DATE
+    visit_start_date,
+    max(visit_end_date) as visit_end_date
   from (
     select
-      CL1.id as encounter_id,
-      CL1.patient,
-      CL1.encounterclass,
-      CL1.start as VISIT_START_DATE,
-      CL2.stop as VISIT_END_DATE
-    from {{ ref( 'synthea_encounters') }} as CL1
-    inner join {{ ref( 'synthea_encounters') }} as CL2
+      cl1.id as encounter_id,
+      cl1.patient,
+      cl1.encounterclass,
+      cl1.start as visit_start_date,
+      cl2.stop as visit_end_date
+    from {{ ref( 'synthea_encounters') }} as cl1
+    inner join {{ ref( 'synthea_encounters') }} as cl2
       on
-        CL1.patient = CL2.patient
-        and CL1.start = CL2.start
-        and CL1.encounterclass = CL2.encounterclass
-    where CL1.encounterclass in ('emergency', 'urgent')
-  ) as T1
-  group by patient, encounterclass, VISIT_START_DATE
-) as T2
+        cl1.patient = cl2.patient
+        and cl1.start = cl2.start
+        and cl1.encounterclass = cl2.encounterclass
+    where cl1.encounterclass in ('emergency', 'urgent')
+  ) as t1
+  group by patient, encounterclass, visit_start_date
+) as t2

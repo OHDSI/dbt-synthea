@@ -48,7 +48,7 @@ with cte as (
 
 select
   condition_occurrence_id as cost_event_id,
-  'Condition' as cost_domain_id,
+  'condition' as cost_domain_id,
   32814 as cost_type_concept_id,
   44818668 as currency_concept_id,
   payer_paid + patient_paid as total_charge,
@@ -65,7 +65,7 @@ select
   payer_plan_period_id as payer_plan_period_id,
   cast(null as numeric) as amount_allowed,
   0 as revenue_code_concept_id,
-  'UNKNOWN / UNKNOWN' as revenue_code_source_value,
+  'unknown / unknown' as revenue_code_source_value,
   0 as drg_concept_id,
   '000' as drg_source_value
 from cte

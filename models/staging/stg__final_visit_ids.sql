@@ -1,10 +1,10 @@
 select
   encounter_id,
-  VISIT_OCCURRENCE_ID_NEW
+  visit_occurrence_id_new
 from (
   select
     *,
-    row_number() over (partition by encounter_id order by PRIORITY) as RN
+    row_number() over (partition by encounter_id order by priority) as rn
   from (
     select
       *,
@@ -13,11 +13,11 @@ from (
           then (
             case
               when
-                VISIT_TYPE = 'inpatient' and VISIT_OCCURRENCE_ID_NEW is not null
+                visit_type = 'inpatient' and visit_occurrence_id_new is not null
                 then 1
               when
-                VISIT_TYPE in ('emergency', 'urgent')
-                and VISIT_OCCURRENCE_ID_NEW is not null
+                visit_type in ('emergency', 'urgent')
+                and visit_occurrence_id_new is not null
                 then 2
               else 99
             end
@@ -26,23 +26,23 @@ from (
           then (
             case
               when
-                VISIT_TYPE = 'inpatient' and VISIT_OCCURRENCE_ID_NEW is not null
+                visit_type = 'inpatient' and visit_occurrence_id_new is not null
                 then 1
               when
-                VISIT_TYPE in ('ambulatory', 'wellness', 'outpatient')
-                and VISIT_OCCURRENCE_ID_NEW is not null
+                visit_type in ('ambulatory', 'wellness', 'outpatient')
+                and visit_occurrence_id_new is not null
                 then 2
               else 99
             end
           )
         when
           encounterclass = 'inpatient'
-          and VISIT_TYPE = 'inpatient'
-          and VISIT_OCCURRENCE_ID_NEW is not null
+          and visit_type = 'inpatient'
+          and visit_occurrence_id_new is not null
           then 1
         else 99
-      end as PRIORITY
+      end as priority
     from {{ ref('stg__assign_all_visit_ids') }}
-  ) as T1
-) as T2
-where RN = 1
+  ) as t1
+) as t2
+where rn = 1

@@ -1,22 +1,22 @@
-/* Outpatient visits */
+/* outpatient visits */
 
-with CTE_VISITS_DISTINCT as (
+with cte_visits_distinct as (
   select
-    MIN(id) as encounter_id,
+    min(id) as encounter_id,
     patient,
     encounterclass,
-    start as VISIT_START_DATE,
-    stop as VISIT_END_DATE
+    start as visit_start_date,
+    stop as visit_end_date
   from {{ ref( 'synthea_encounters') }}
   where encounterclass in ('ambulatory', 'wellness', 'outpatient')
   group by patient, encounterclass, start, stop
 )
 
 select
-  MIN(encounter_id) as encounter_id,
+  min(encounter_id) as encounter_id,
   patient,
   encounterclass,
-  VISIT_START_DATE,
-  MAX(VISIT_END_DATE) as VISIT_END_DATE
-from CTE_VISITS_DISTINCT
-group by patient, encounterclass, VISIT_START_DATE
+  visit_start_date,
+  max(visit_end_date) as visit_end_date
+from cte_visits_distinct
+group by patient, encounterclass, visit_start_date

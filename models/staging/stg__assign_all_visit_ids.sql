@@ -1,43 +1,43 @@
-/*Assign VISIT_OCCURRENCE_ID to all encounters*/
+/*assign visit_occurrence_id to all encounters*/
 
 select
-  E.id as encounter_id,
-  E.patient as person_source_value,
-  E.start as date_service,
-  E.stop as date_service_end,
-  E.encounterclass,
-  AV.encounterclass as VISIT_TYPE,
-  AV.VISIT_START_DATE,
-  AV.VISIT_END_DATE,
-  AV.VISIT_OCCURRENCE_ID,
+  e.id as encounter_id,
+  e.patient as person_source_value,
+  e.start as date_service,
+  e.stop as date_service_end,
+  e.encounterclass,
+  av.encounterclass as visit_type,
+  av.visit_start_date,
+  av.visit_end_date,
+  av.visit_occurrence_id,
   case
-    when E.encounterclass = 'inpatient' and AV.encounterclass = 'inpatient'
-      then VISIT_OCCURRENCE_ID
-    when E.encounterclass in ('emergency', 'urgent')
+    when e.encounterclass = 'inpatient' and av.encounterclass = 'inpatient'
+      then visit_occurrence_id
+    when e.encounterclass in ('emergency', 'urgent')
       then (
         case
-          when AV.encounterclass = 'inpatient' and E.start > AV.VISIT_START_DATE
-            then VISIT_OCCURRENCE_ID
+          when av.encounterclass = 'inpatient' and e.start > av.visit_start_date
+            then visit_occurrence_id
           when
-            AV.encounterclass in ('emergency', 'urgent')
-            and E.start = AV.VISIT_START_DATE
-            then VISIT_OCCURRENCE_ID
+            av.encounterclass in ('emergency', 'urgent')
+            and e.start = av.visit_start_date
+            then visit_occurrence_id
         end
       )
-    when E.encounterclass in ('ambulatory', 'wellness', 'outpatient')
+    when e.encounterclass in ('ambulatory', 'wellness', 'outpatient')
       then (
         case
           when
-            AV.encounterclass = 'inpatient' and E.start >= AV.VISIT_START_DATE
-            then VISIT_OCCURRENCE_ID
-          when AV.encounterclass in ('ambulatory', 'wellness', 'outpatient')
-            then VISIT_OCCURRENCE_ID
+            av.encounterclass = 'inpatient' and e.start >= av.visit_start_date
+            then visit_occurrence_id
+          when av.encounterclass in ('ambulatory', 'wellness', 'outpatient')
+            then visit_occurrence_id
         end
       )
-  end as VISIT_OCCURRENCE_ID_NEW
+  end as visit_occurrence_id_new
 from {{ ref('synthea_encounters') }}
 inner join {{ ref('stg__all_visits') }}
   on
-    E.patient = AV.patient
-    and E.start >= AV.VISIT_START_DATE
-    and E.start <= AV.VISIT_END_DATE
+    e.patient = av.patient
+    and e.start >= av.visit_start_date
+    and e.start <= av.visit_end_date

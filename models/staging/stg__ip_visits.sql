@@ -1,36 +1,36 @@
-/* Inpatient visits */
-/* Collapse IP claim lines with <=1 day between them into one visit */
+/* inpatient visits */
+/* collapse ip claim lines with <=1 day between them into one visit */
 
-with CTE_END_DATES as (
+with cte_end_dates as (
   select
     patient,
     encounterclass,
-    dateadd(day, -1, EVENT_DATE) as END_DATE
+    dateadd(day, -1, event_date) as end_date
   from (
     select
       patient,
       encounterclass,
-      EVENT_DATE,
-      EVENT_TYPE,
-      max(START_ORDINAL)
+      event_date,
+      event_type,
+      max(start_ordinal)
         over (
           partition by patient,
           encounterclass
-          order by EVENT_DATE, EVENT_TYPE rows unbounded preceding
+          order by event_date, event_type rows unbounded preceding
         )
-        as START_ORDINAL,
+        as start_ordinal,
       row_number() over (
-        partition by patient, encounterclass order by EVENT_DATE, EVENT_TYPE
-      ) as OVERALL_ORD
+        partition by patient, encounterclass order by event_date, event_type
+      ) as overall_ord
     from (
       select
         patient,
         encounterclass,
-        start as EVENT_DATE,
-        -1 as EVENT_TYPE,
+        start as event_date,
+        -1 as event_type,
         row_number() over (
           partition by patient, encounterclass order by start, stop
-        ) as START_ORDINAL
+        ) as start_ordinal
       from {{ ref( 'synthea_encounters') }}
       where encounterclass = 'inpatient'
       union all
@@ -38,44 +38,44 @@ with CTE_END_DATES as (
         patient,
         encounterclass,
         dateadd(day, 1, stop),
-        1 as EVENT_TYPE,
-        NULL
+        1 as event_type,
+        null
       from {{ ref( 'synthea_encounters') }}
       where encounterclass = 'inpatient'
-    ) as RAWDATA
-  ) as E
-  where (2 * E.START_ORDINAL - E.OVERALL_ORD = 0)
+    ) as rawdata
+  ) as e
+  where (2 * e.start_ordinal - e.overall_ord = 0)
 ),
 
-CTE_VISIT_ENDS as (
+cte_visit_ends as (
   select
-    min(V.id) as encounter_id,
-    V.patient,
-    V.encounterclass,
-    V.start as VISIT_START_DATE,
-    min(E.END_DATE) as VISIT_END_DATE
-  from {{ ref( 'synthea_encounters') }} as V
-  inner join CTE_END_DATES as E
+    min(v.id) as encounter_id,
+    v.patient,
+    v.encounterclass,
+    v.start as visit_start_date,
+    min(e.end_date) as visit_end_date
+  from {{ ref( 'synthea_encounters') }} as v
+  inner join cte_end_dates as e
     on
-      V.patient = E.patient
-      and V.encounterclass = E.encounterclass
-      and V.start <= E.END_DATE
-  group by V.patient, V.encounterclass, V.start
+      v.patient = e.patient
+      and v.encounterclass = e.encounterclass
+      and v.start <= e.end_date
+  group by v.patient, v.encounterclass, v.start
 )
 
 select
-  T2.encounter_id,
-  T2.patient,
-  T2.encounterclass,
-  T2.VISIT_START_DATE,
-  T2.VISIT_END_DATE
+  t2.encounter_id,
+  t2.patient,
+  t2.encounterclass,
+  t2.visit_start_date,
+  t2.visit_end_date
 from (
   select
     encounter_id,
     patient,
     encounterclass,
-    min(VISIT_START_DATE) as VISIT_START_DATE,
-    VISIT_END_DATE
-  from CTE_VISIT_ENDS
-  group by encounter_id, patient, encounterclass, VISIT_END_DATE
-) as T2;
+    min(visit_start_date) as visit_start_date,
+    visit_end_date
+  from cte_visit_ends
+  group by encounter_id, patient, encounterclass, visit_end_date
+) as t2;
