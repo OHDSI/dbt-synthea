@@ -6,20 +6,22 @@
 
 WITH patients AS (
 
-    SELECT  *
+    SELECT  
+
+        {% for column_name in column_names %}
+            {% if column_name == "Id" %}
+            "{{ column_name }}" as patient_id
+            {% elif column_name ==  "BIRTHDATE" %}
+            "{{ column_name }}" as  patient_birth_date
+            {% else %}
+            "{{ column_name }}" as {{ column_name | lower }}
+            {% endif %}
+        {% if not loop.last %},{% endif %}
+        {% endfor %}
+        
     FROM {{ source('synthea','patients' ) }}
 ) 
 
-select  
-{% for column_name in column_names %}
-        {% if column_name == "Id" %}
-            "{{ column_name }}" as patient_id
-        {% elif column_name ==  "BIRTHDATE" %}
-            "{{ column_name }}" as  patient_birth_date
-        {% else %}
-            "{{ column_name }}" as {{ column_name | lower }}
-        {% endif %}
-    {% if not loop.last %},{% endif %}
-{% endfor %}
+SELECT  *
 
 FROM patients
