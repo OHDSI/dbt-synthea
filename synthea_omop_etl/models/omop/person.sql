@@ -13,8 +13,8 @@ SELECT
     patient_id AS person_source_value,
     NULL AS gender_source_value,
     0 AS gender_source_concept_id,
-    NULL AS race_source_value,
+    race AS race_source_value,
     0 AS race_source_concept_id,
-    NULL AS ethnicity_source_value,
+    ethnicity AS ethnicity_source_value,
     0 AS ethnicity_source_concept_id
 FROM {{ ref('synthea_patients') }}

@@ -4,24 +4,22 @@
 %}
 
 
-WITH patients AS (
+WITH cte_patients_lower AS (
 
     SELECT  
 
         {% for column_name in column_names %}
-            {% if column_name == "Id" %}
-            "{{ column_name }}" as patient_id
-            {% elif column_name ==  "BIRTHDATE" %}
-            "{{ column_name }}" as  patient_birth_date
-            {% else %}
             "{{ column_name }}" as {{ column_name | lower }}
-            {% endif %}
         {% if not loop.last %},{% endif %}
         {% endfor %}
         
     FROM {{ source('synthea','patients' ) }}
 ) 
-
-SELECT  *
-
-FROM patients
+, cte_patients as (
+    select 
+    id as patient_id, birthdate as patient_birth_date, 
+    *  
+    from cte_patients_lower
+)
+SELECT  * 
+FROM cte_patients

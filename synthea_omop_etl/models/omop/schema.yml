@@ -1,11 +1,6 @@
 version: 2
 
-sources:
-  - name: synthea
-    database: dbt_synthea
-    schema: synthea
-    tables:
-      - name: patients
+
 
 models:
   - name: person
