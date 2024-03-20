@@ -17,8 +17,10 @@ WITH cte_patients_lower AS (
 ) 
 , cte_patients as (
     select 
-    id as patient_id, birthdate as patient_birth_date, 
-    *  
+    id as patient_id
+    , birthdate as patient_birth_date
+    , race as patient_race
+    , ethnicity as patient_ethnicity
     from cte_patients_lower
 )
 SELECT  * 
