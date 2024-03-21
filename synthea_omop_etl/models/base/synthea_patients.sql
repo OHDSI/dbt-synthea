@@ -13,15 +13,18 @@ WITH cte_patients_lower AS (
         {% if not loop.last %},{% endif %}
         {% endfor %}
         
-    FROM {{ source('synthea','patients' ) }}
+    FROM {{ source('synthea','patients') }}
 ) 
-, cte_patients as (
-    select 
-    id as patient_id
-    , birthdate as patient_birth_date
-    , race as patient_race
-    , ethnicity as patient_ethnicity
-    from cte_patients_lower
+, cte_patients AS (
+
+    SELECT 
+        id AS patient_id
+        , birthdate AS patient_birth_date
+        , race AS patient_race
+        , ethnicity AS patient_ethnicity
+    FROM cte_patients_lower
+
 )
+
 SELECT  * 
 FROM cte_patients
