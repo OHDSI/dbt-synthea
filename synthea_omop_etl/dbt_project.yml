@@ -29,7 +29,6 @@ models:
 seeds:
   synthea_omop_etl:
     synthea:
-      +database: dbt_synthea
       +schema: synthea
       allergies:
         +column_types:
