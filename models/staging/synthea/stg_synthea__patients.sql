@@ -15,7 +15,8 @@ WITH cte_patients_lower AS (
         
     FROM {{ source('synthea','patients') }}
 ) 
-, cte_patients AS (
+
+, cte_patients_rename AS (
 
     SELECT 
         id AS patient_id
@@ -27,4 +28,4 @@ WITH cte_patients_lower AS (
 )
 
 SELECT  * 
-FROM cte_patients
+FROM cte_patients_rename

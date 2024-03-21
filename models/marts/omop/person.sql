@@ -19,4 +19,4 @@ SELECT
     , patient_ethnicity AS ethnicity_source_value
     , 0 AS ethnicity_source_concept_id
 
-FROM {{ ref('synthea_patients') }}
+FROM {{ ref('stg_synthea__patients') }}
