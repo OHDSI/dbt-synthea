@@ -1,0 +1,12 @@
+
+version: 2
+
+sources:
+  - name: synthea
+    schema: "{{ target.schema }}_synthea"
+    tables:
+      - name: patients
+
+models:
+  - name: synthea_patients
+    description: "Synthea patients table"
