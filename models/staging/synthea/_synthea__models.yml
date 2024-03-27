@@ -1,0 +1,6 @@
+
+version: 2
+
+models:
+  - name: stg_synthea__patients
+    description: "Synthea patients table"
