@@ -3,6 +3,8 @@ The purpose of this project is to re-create the Synthea-->OMOP ETL implemented i
 
 The project is currently under development and all documentation is aimed at project contributors.  This project is not yet ready for use.
 
+**Note** the current implementation of the ETL is designed for Synthea v3.0.0.
+
 ## Developer Setup
 
 ### Prerequisites
