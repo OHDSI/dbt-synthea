@@ -1,7 +1,5 @@
 version: 2
 
-
-
 models:
   - name: person
     columns:

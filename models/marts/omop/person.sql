@@ -1,4 +1,5 @@
-SELECT 
+SELECT
+
     {{ dbt_utils.generate_surrogate_key(['patient_id']) }} AS person_id,
     0 AS gender_concept_id
     , DATE_PART('year', patient_birth_date) AS year_of_birth
@@ -17,4 +18,5 @@ SELECT
     , 0 AS race_source_concept_id
     , patient_ethnicity AS ethnicity_source_value
     , 0 AS ethnicity_source_concept_id
-FROM {{ ref('synthea_patients') }}
+
+FROM {{ ref('stg_synthea__patients') }}

@@ -46,9 +46,8 @@ synthea_omop_etl:
   target: dev
 ```
 
- 6. `cd` into the project directory, and ensure your profile is setup correctly using dbt debug:
+ 6. Ensure your profile is setup correctly using dbt debug:
 ```bash
-cd synthea_omop_etl
 dbt debug
 ```
  7. Load dbt dependencies:
