@@ -4,6 +4,8 @@ models:
     columns:
       - name: patient_id
         data_type: text
+        tests:
+          - unique
       - name: patient_birth_date
         data_type: date
       - name: patient_death_date
@@ -62,3 +64,51 @@ models:
       - name: patient_healthcare_coverage
         description: "The total lifetime cost of healthcare services that were covered by Payers (i.e. what the insurance company paid)."
         data_type: double precision
+
+  - name: stg_synthea__allergies
+    description: Synthea allergies table
+    columns:
+      - name: allergy_start_date
+        data_type: date
+        description: "The date the allergy was diagnosed."
+      - name: allergy_stop_date
+        data_type: date
+        description: "The date the allergy ended, if applicable."
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+      - name: allergy_code
+        data_type: text
+      - name: allergy_code_system
+        data_type: text
+      - name: allergy_description
+        data_type: text
+      - name: allergy_type
+        data_type: text
+        description: "Identify entry as an allergy or intolerance."
+      - name: allergy_category
+        data_type: text
+        description: "Identify the category as drug, medication, food, or environment."
+      - name: reaction1_code
+        data_type: text
+        description: "Optional SNOMED code of the patient's reaction."
+      - name: reaction1_description
+        data_type: text
+        description: "Optional description of the Reaction1 SNOMED code."
+      - name: reaction1_severity
+        data_type: text
+        description: "Severity of the reaction: MILD, MODERATE, or SEVERE."
+      - name: reaction2_code
+        data_type: text
+        description: "Optional SNOMED code of the patient's second reaction."
+      - name: reaction2_description
+        data_type: text
+        description: "Optional description of the Reaction2 SNOMED code."
+      - name: reaction2_severity
+        data_type: text
+        description: "Severity of the second reaction: MILD, MODERATE, or SEVERE."
