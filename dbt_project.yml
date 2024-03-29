@@ -70,6 +70,10 @@ seeds:
       observations:
         +column_types:
           CODE: varchar
+      patients:
+        +column_types:
+          SUFFIX: varchar
+          ZIP: varchar
       procedures:
         +column_types:
           CODE: varchar

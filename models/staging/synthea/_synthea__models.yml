@@ -1,6 +1,64 @@
-
-version: 2
-
 models:
   - name: stg_synthea__patients
-    description: "Synthea patients table"
+    description: Synthea patients table
+    columns:
+      - name: patient_id
+        data_type: text
+      - name: patient_birth_date
+        data_type: date
+      - name: patient_death_date
+        data_type: date
+      - name: patient_ssn
+        data_type: text
+      - name: patient_drivers_license_number
+        data_type: text
+      - name: patient_passport_number
+        data_type: text
+      - name: patient_prefix
+        data_type: text
+        description: "Name prefix, such as Mr., Mrs., Dr., etc."
+      - name: patient_first_name
+        data_type: text
+      - name: patient_last_name
+        data_type: text
+      - name: patient_suffix
+        data_type: text
+        description: "Name suffix, such as PhD, MD, JD, etc."
+      - name: patient_maiden_name
+        data_type: text
+      - name: patient_marital_status
+        description: "Marital Status. M is married, S is single. Currently no support for divorce (D) or widowing (W)."
+        data_type: text
+      - name: patient_race
+        description: "Text description of patient's primary race."
+        data_type: text
+      - name: patient_ethnicity
+        description: "Text description of patient's primary ethnicity."
+        data_type: text
+      - name: patient_gender
+        description: "Gender. M is male, F is female."
+        data_type: text
+      - name: patient_birthplace
+        description: "Name of the town where the patient was born."
+        data_type: text
+      - name: patient_address
+        description: "Patient's street address"
+        data_type: text
+      - name: patient_city
+        data_type: text
+      - name: patient_state
+        data_type: text
+      - name: patient_county
+        data_type: text
+      - name: patient_zip
+        data_type: text
+      - name: patient_latitude
+        data_type: double precision
+      - name: patient_longitude
+        data_type: double precision
+      - name: patient_healthcare_expenses
+        description: "The total lifetime cost of healthcare to the patient (i.e. what the patient paid)."
+        data_type: double precision
+      - name: patient_healthcare_coverage
+        description: "The total lifetime cost of healthcare services that were covered by Payers (i.e. what the insurance company paid)."
+        data_type: double precision
