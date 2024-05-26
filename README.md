@@ -29,7 +29,7 @@ pip3 install dbt-postgres==1.7.4
 ```
 
  5. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
-   - Run `touch ~/.dbt/profiles.yml` if you don't already have a profiles.yml file on your machine
+   - Create a directory `.dbt` in your root directory if one doesn't exist already, then create a `profiles.yml` file in `.dbt` 
    - Add the following block to the file:
 ```yaml
 synthea_omop_etl:

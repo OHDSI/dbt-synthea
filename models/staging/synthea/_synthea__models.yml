@@ -6,15 +6,15 @@ models:
         data_type: text
         tests:
           - unique
-      - name: patient_birth_date
+      - name: birth_date
         data_type: date
-      - name: patient_death_date
+      - name: death_date
         data_type: date
-      - name: patient_ssn
+      - name: ssn
         data_type: text
-      - name: patient_drivers_license_number
+      - name: drivers_license_number
         data_type: text
-      - name: patient_passport_number
+      - name: passport_number
         data_type: text
       - name: patient_prefix
         data_type: text
@@ -28,19 +28,19 @@ models:
         description: "Name suffix, such as PhD, MD, JD, etc."
       - name: patient_maiden_name
         data_type: text
-      - name: patient_marital_status
+      - name: marital_status
         description: "Marital Status. M is married, S is single. Currently no support for divorce (D) or widowing (W)."
         data_type: text
-      - name: patient_race
+      - name: race
         description: "Text description of patient's primary race."
         data_type: text
-      - name: patient_ethnicity
+      - name: ethnicity
         description: "Text description of patient's primary ethnicity."
         data_type: text
       - name: patient_gender
         description: "Gender. M is male, F is female."
         data_type: text
-      - name: patient_birthplace
+      - name: birthplace
         description: "Name of the town where the patient was born."
         data_type: text
       - name: patient_address
@@ -58,10 +58,10 @@ models:
         data_type: double precision
       - name: patient_longitude
         data_type: double precision
-      - name: patient_healthcare_expenses
+      - name: healthcare_expenses
         description: "The total lifetime cost of healthcare to the patient (i.e. what the patient paid)."
         data_type: double precision
-      - name: patient_healthcare_coverage
+      - name: healthcare_coverage
         description: "The total lifetime cost of healthcare services that were covered by Payers (i.e. what the insurance company paid)."
         data_type: double precision
 
@@ -82,6 +82,10 @@ models:
               field: patient_id
       - name: encounter_id
         data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
       - name: allergy_code
         data_type: text
       - name: allergy_code_system
@@ -93,7 +97,7 @@ models:
         description: "Identify entry as an allergy or intolerance."
       - name: allergy_category
         data_type: text
-        description: "Identify the category as drug, medication, food, or environment."
+        description: "Identify the allergy category as drug, medication, food, or environment."
       - name: reaction1_code
         data_type: text
         description: "Optional SNOMED code of the patient's reaction."
@@ -112,3 +116,161 @@ models:
       - name: reaction2_severity
         data_type: text
         description: "Severity of the second reaction: MILD, MODERATE, or SEVERE."
+
+  - name: stg_synthea__careplans
+    description: Synthea careplans table
+    columns:
+      - name: careplan_id
+        data_type: text
+        tests:
+          - unique
+      - name: careplan_start_date
+        data_type: date
+        description: "The date the careplan was initiated."
+      - name: careplan_stop_date
+        data_type: date
+        description: "The date the careplan ended, if applicable."
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: careplan_code
+        data_type: text
+      - name: careplan_description
+        data_type: text
+      - name: careplan_reason_code
+        data_type: text
+        description: "Diagnosis code from SNOMED-CT that this care plan addresses."
+      - name: careplan_reason_description
+        data_type: text
+  
+  - name: stg_synthea__claims_transactions
+    description: Synthea claim transactions table
+    columns:
+      - name: claim_transaction_id
+        data_type: text
+        tests:
+          - unique
+      - name: claim_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__claims')
+              field: claim_id
+      - name: charge_id
+        data_type: double precision
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: transaction_type
+        data_type: text
+        description: "Type of claim transaction: charge, payment, adjustment, transferin, transferout."
+      - name: transaction_amount
+        data_type: double precision
+        description: "Dollar amount for a CHARGE or TRANSFERIN."
+      - name: transaction_method  
+        data_type: text
+        description: "Payment made by CASH, CHECK, ECHECK, COPAY, SYSTEM (adjustments without payment), or CC (credit card)."
+      - name: transaction_from_date
+        data_type: date
+        description: "Transaction start date."
+      - name: transaction_to_date
+        data_type: date
+        description: "Transaction end date."
+      - name: place_of_service
+        data_type: text
+        description: "Foreign key to the organization."
+        tests:
+          - relationships:
+              to: ref('stg_synthea__organizations')
+              field: organization_id
+      - name: procedure_code
+        data_type: text
+      - name: procedure_code_modifier1
+        data_type: text 
+      - name: procedure_code_modifier2  
+        data_type: text
+      - name: claim_diagnosis_ref1
+        data_type: double precision 
+        description: "Number indicating which diagnosis code from the claim applies to this transaction, 1-8 are valid options."
+      - name: claim_diagnosis_ref2
+        data_type: double precision
+        description: "Number indicating which diagnosis code from the claim applies to this transaction, 1-8 are valid options."
+      - name: claim_diagnosis_ref3
+        data_type: double precision
+        description: "Number indicating which diagnosis code from the claim applies to this transaction, 1-8 are valid options."
+      - name: claim_diagnosis_ref4
+        data_type: double precision
+        description: "Number indicating which diagnosis code from the claim applies to this transaction, 1-8 are valid options."
+      - name: service_units
+        data_type: double precision
+        description: "Number of units of the service."
+      - name: department_id
+        data_type: double precision
+      - name: transaction_notes
+        data_type: text
+      - name: per_unit_amount
+        data_type: double precision
+        description: "Cost per unit."
+      - name: transfer_out_id 
+        data_type: double precision
+        description: "If the transaction is a TRANSFERIN, the Charge ID of the corresponding TRANSFEROUT row."
+      - name: transfer_type
+        data_type: text
+        description: "1 if transferred to the primary insurance, 2 if transferred to the secondary insurance, or p if transferred to the patient."
+      - name: payments
+        data_type: double precision
+        description: "Dollar amount of a payment for a PAYMENT row."
+      - name: adjustments
+        data_type: double precision
+        description: "Dollar amount of an adjustment for an ADJUSTMENT row."
+      - name: transfers
+        data_type: double precision
+        description: "Dollar amount of a transfer for a TRANSFERIN or TRANSFEROUT row."
+      - name: outstanding
+        data_type: double precision
+        description: "Dollar amount left unpaid after this transaction was applied."
+      - name: encounter_id
+        data_type: text
+        description: "Foreign key to the encounter."
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: claim_transaction_line_note
+        data_type: text
+      - name: patient_insurance_id
+        data_type: text
+        description: "Foreign key to the Payer Transitions table member ID."
+        tests:
+          - relationships:
+              to: ref('stg_synthea__payer_transitions')
+              field: member_id
+      - name: fee_schedule_id
+        data_type: double precision
+        description: "Fixed to 1."
+      - name: provider_id
+        data_type: text
+        description: "Foreign key to the provider."
+        tests:
+          - relationships:
+              to: ref('stg_synthea__providers')
+              field: provider_id
+      - name: supervising_provider_id
+        data_type: text
+        description: "Foreign key to the supervising provider."
+        tests:
+          - relationships:
+              to: ref('stg_synthea__providers')
+              field: provider_id
