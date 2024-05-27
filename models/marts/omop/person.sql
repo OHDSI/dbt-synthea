@@ -1,7 +1,7 @@
 SELECT
 
-    {{ dbt_utils.generate_surrogate_key(['patient_id']) }} AS person_id,
-    0 AS gender_concept_id
+    {{ dbt_utils.generate_surrogate_key(['patient_id']) }} AS person_id
+    , 0 AS gender_concept_id
     , DATE_PART('year', birth_date) AS year_of_birth
     , DATE_PART('month', birth_date) AS month_of_birth
     , DATE_PART('day', birth_date) AS day_of_birth
