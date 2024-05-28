@@ -69,3 +69,16 @@ dbt run
 ```bash
 dbt test
 ```
+
+ 11. Install SQLFluff:
+```bash
+pip3 install sqlfluff==3.0.7 sqlfluff-templater-dbt
+```
+  - Verify installation with `sqlfluff version`
+
+ 12. Install pre-commit:
+```bash
+pip3 install pre-commit==3.7.1
+pre-commit install
+```
+  - Verify functionality upon your first commit to the repo.  SQLFluff should run lint and fix on your files.  You must fix any unfixable violations manually before you'll be allowed to commit

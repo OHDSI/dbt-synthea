@@ -54,6 +54,8 @@ dbt_project/
 
 ### General SQL Conventions
 
+Note that SQLFluff will enforce these conventions automatically if properly installed.  Pre-commit hooks will ensure all newly-committed SQL code is linted and compliant with conventions.
+
 1. **Uppercase SQL Keywords**:
    - Always use all-caps for SQL keywords for better readability.
    ```sql
@@ -87,17 +89,6 @@ dbt_project/
        AND condition_2;
    ```
 
-4. **Joins**:
-   - Align JOIN clauses for better readability.
-   ```sql
-   SELECT
-       a.column_1
-     , b.column_2
-   FROM table_a a
-   JOIN
-       table_b b
-       ON a.id = b.id;
-   ```
 ### Jinja Syntax
 
 1. **Use Double Curly Braces**:
