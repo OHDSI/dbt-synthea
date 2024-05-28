@@ -6,12 +6,7 @@
 WITH cte_careplans_lower AS (
 
     SELECT
-
-    {% for column_name in column_names %} -- noqa:disable=LT02
-        "{{ column_name }}" AS {{ column_name | lower }} -- noqa:disable=LT02
-        {% if not loop.last %},{% endif %} -- noqa:disable=LT02
-    {% endfor %} -- noqa:disable=LT02
-
+        {{ lowercase_columns(column_names) }}
     FROM {{ source('synthea','careplans') }}
 )
 
