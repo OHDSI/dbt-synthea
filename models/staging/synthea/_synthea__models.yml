@@ -98,22 +98,22 @@ models:
       - name: allergy_category
         data_type: text
         description: "Identify the allergy category as drug, medication, food, or environment."
-      - name: reaction1_code
+      - name: reaction_1_code
         data_type: text
         description: "Optional SNOMED code of the patient's reaction."
-      - name: reaction1_description
+      - name: reaction_1_description
         data_type: text
         description: "Optional description of the Reaction1 SNOMED code."
-      - name: reaction1_severity
+      - name: reaction_1_severity
         data_type: text
         description: "Severity of the reaction: MILD, MODERATE, or SEVERE."
-      - name: reaction2_code
+      - name: reaction_2_code
         data_type: text
         description: "Optional SNOMED code of the patient's second reaction."
-      - name: reaction2_description
+      - name: reaction_2_description
         data_type: text
         description: "Optional description of the Reaction2 SNOMED code."
-      - name: reaction2_severity
+      - name: reaction_2_severity
         data_type: text
         description: "Severity of the second reaction: MILD, MODERATE, or SEVERE."
 
@@ -197,20 +197,20 @@ models:
               field: organization_id
       - name: procedure_code
         data_type: text
-      - name: procedure_code_modifier1
+      - name: procedure_code_modifier_1
         data_type: text 
-      - name: procedure_code_modifier2  
+      - name: procedure_code_modifier_2  
         data_type: text
-      - name: claim_diagnosis_ref1
+      - name: claim_diagnosis_ref_1
         data_type: double precision 
         description: "Number indicating which diagnosis code from the claim applies to this transaction, 1-8 are valid options."
-      - name: claim_diagnosis_ref2
+      - name: claim_diagnosis_ref_2
         data_type: double precision
         description: "Number indicating which diagnosis code from the claim applies to this transaction, 1-8 are valid options."
-      - name: claim_diagnosis_ref3
+      - name: claim_diagnosis_ref_3
         data_type: double precision
         description: "Number indicating which diagnosis code from the claim applies to this transaction, 1-8 are valid options."
-      - name: claim_diagnosis_ref4
+      - name: claim_diagnosis_ref_4
         data_type: double precision
         description: "Number indicating which diagnosis code from the claim applies to this transaction, 1-8 are valid options."
       - name: service_units
@@ -274,3 +274,114 @@ models:
           - relationships:
               to: ref('stg_synthea__providers')
               field: provider_id
+
+  - name: stg_synthea__claims
+    description: Synthea claims table
+    columns:
+      - name: claim_id
+        data_type: text
+        tests:
+          - unique
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: provider_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__providers')
+              field: provider_id
+      - name: primary_patient_insurance_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__payers')
+              field: payer_id
+      - name: secondary_patient_insurance_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__payers')
+              field: payer_id
+      - name: department_id
+        data_type: integer
+      - name: patient_department_id
+        data_type: integer
+      - name: diagnosis_1
+        data_type: text
+      - name: diagnosis_2
+        data_type: text
+      - name: diagnosis_3
+        data_type: text
+      - name: diagnosis_4
+        data_type: text
+      - name: diagnosis_5
+        data_type: text
+      - name: diagnosis_6
+        data_type: text
+      - name: diagnosis_7
+        data_type: text
+      - name: diagnosis_8
+        data_type: text
+      - name: referring_provider_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__providers')
+              field: provider_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: current_ilness_date
+        data_type: date
+        description: "The date the patient experienced symptoms."
+      - name: service_date
+        data_type: date
+        description: "The date of the services on the claim."
+      - name: supervising_provider_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__providers')
+              field: provider_id
+      - name: claim_status_1
+        data_type: text
+        description: "Status of the claim from the Primary Insurance. BILLED or CLOSED."
+      - name: claim_status_2
+        data_type: text
+        description: "Status of the claim from the Secondary Insurance. BILLED or CLOSED."
+      - name: claim_status_patient
+        data_type: text
+        description: "Status of the claim from the Patient. BILLED or CLOSED."
+      - name: outstanding_1
+        data_type: double precision
+        description: "Total amount of money owed by Primary Insurance."
+      - name: outstanding_2
+        data_type: double precision
+        description: "Total amount of money owed by Secondary Insurance."
+      - name: outstanding_patient
+        data_type: double precision
+        description: "Total amount of money owed by Patient."
+      - name: last_billed_date_1
+        data_type: date
+        description: "Date the claim was sent to Primary Insurance."
+      - name: last_billed_date_2
+        data_type: date
+        description: "Date the claim was sent to Secondary Insurance."
+      - name: last_billed_date_patient
+        data_type: date
+        description: "Date the claim was sent to Patient."
+      - name: claim_type_id_1
+        data_type: integer
+        description: "Type of claim: 1 is professional, 2 is institutional."
+      - name: claim_type_id_2
+        data_type: integer
+        description: "Type of claim: 1 is professional, 2 is institutional."
+      
+      

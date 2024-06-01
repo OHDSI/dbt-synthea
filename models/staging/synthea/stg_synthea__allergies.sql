@@ -22,12 +22,12 @@ WITH cte_allergies_lower AS (
         , "description" AS allergy_description
         , "type" AS allergy_type
         , category AS allergy_category
-        , reaction1 AS reaction1_code
-        , description1 AS reaction1_description
-        , severity1 AS reaction1_severity
-        , reaction2 AS reaction2_code
-        , description2 AS reaction2_description
-        , severity2 AS reaction2_severity
+        , reaction1 AS reaction_1_code
+        , description1 AS reaction_1_description
+        , severity1 AS reaction_1_severity
+        , reaction2 AS reaction_2_code
+        , description2 AS reaction_2_description
+        , severity2 AS reaction_2_severity
     FROM cte_allergies_lower
 
 )

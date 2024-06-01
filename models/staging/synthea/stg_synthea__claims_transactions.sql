@@ -24,12 +24,12 @@ WITH cte_claims_transactions_lower AS (
         , todate AS transaction_to_date
         , placeofservice AS place_of_service
         , procedurecode AS procedure_code
-        , modifier1 AS procedure_code_modifier1
-        , modifier2 AS procedure_code_modifier2
-        , diagnosisref1 AS claim_diagnosis_ref1
-        , diagnosisref2 AS claim_diagnosis_ref2
-        , diagnosisref3 AS claim_diagnosis_ref3
-        , diagnosisref4 AS claim_diagnosis_ref4
+        , modifier1 AS procedure_code_modifier_1
+        , modifier2 AS procedure_code_modifier_2
+        , diagnosisref1 AS claim_diagnosis_ref_1
+        , diagnosisref2 AS claim_diagnosis_ref_2
+        , diagnosisref3 AS claim_diagnosis_ref_3
+        , diagnosisref4 AS claim_diagnosis_ref_4
         , units AS service_units
         , departmentid AS department_id
         , notes AS transaction_notes
