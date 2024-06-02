@@ -29,7 +29,7 @@ pip3 install dbt-postgres==1.7.4
 ```
 
  5. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
-   - Run `touch ~/.dbt/profiles.yml` if you don't already have a profiles.yml file on your machine
+   - Create a directory `.dbt` in your root directory if one doesn't exist already, then create a `profiles.yml` file in `.dbt` 
    - Add the following block to the file:
 ```yaml
 synthea_omop_etl:
@@ -69,3 +69,16 @@ dbt run
 ```bash
 dbt test
 ```
+
+ 11. Install SQLFluff:
+```bash
+pip3 install sqlfluff==3.0.7 sqlfluff-templater-dbt
+```
+  - Verify installation with `sqlfluff version`
+
+ 12. Install pre-commit:
+```bash
+pip3 install pre-commit==3.7.1
+pre-commit install
+```
+  - Verify functionality upon your first commit to the repo.  SQLFluff should run lint and fix on your files.  You must fix any unfixable violations manually before you'll be allowed to commit
