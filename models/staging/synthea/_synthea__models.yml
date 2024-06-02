@@ -383,5 +383,90 @@ models:
       - name: claim_type_id_2
         data_type: integer
         description: "Type of claim: 1 is professional, 2 is institutional."
-      
+  
+  - name: stg_synthea__devices
+    description: Synthea devices table
+    columns:
+      - name: device_start_date
+        data_type: datetime
+        description: "The date and time the device was associated to the patient."
+      - name: device_stop_datetime
+        data_type: datetime
+        description: "The date and time the device was removed, if applicable."
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: device_code
+        data_type: text
+      - name: device_description
+        data_type: text
+      - name: udi
+        data_type: text
+        description: "Unique Device Identifier."
+
+  - name: stg_synthea__encounters
+    description: Synthea encounters table
+    columns:
+      - name: encounter_id
+        data_type: text
+        tests:
+          - unique
+      - name: encounter_start_datetime
+        data_type: datetime
+      - name: encounter_stop_datetime
+        data_type: datetime
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: organization_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__organizations')
+              field: organization_id
+      - name: provider_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__providers')
+              field: provider_id
+      - name: payer_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__payers')
+              field: payer_id
+      - name: encounter_class
+        data_type: text
+        description: "The class of the encounter, such as ambulatory, emergency, inpatient, wellness, or urgentcare."
+      - name: encounter_code
+        data_type: text
+      - name: encounter_description
+        data_type: text
+      - name: base_encounter_cost
+        data_type: double precision
+        description: "The base cost of the encounter, not including any line item costs related to medications, immunizations, procedures, or other services."
+      - name: total_encounter_cost
+        data_type: double precision
+        description: "The total cost of the encounter, including all line items."
+      - name: payer_coverage
+        data_type: double precision
+        description: "The amount of cost covered by the payer."
+      - name: reason_code
+        data_type: text
+        description: "Diagnosis code from SNOMED-CT, only if this encounter targeted a specific condition."
+      - name: reason_description
+        data_type: text
       
