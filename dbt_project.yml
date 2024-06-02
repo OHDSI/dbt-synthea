@@ -43,6 +43,7 @@ seeds:
           DIAGNOSIS6: varchar
           DIAGNOSIS7: varchar
           DIAGNOSIS8: varchar
+          REFERRINGPROVIDERID: varchar
       conditions:
         +column_types:
           CODE: varchar

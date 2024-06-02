@@ -16,8 +16,14 @@ WITH cte_claims_lower AS (
         id AS claim_id
         , patientid AS patient_id
         , providerid AS provider_id
-        , primarypatientinsuranceid AS primary_patient_insurance_id
-        , secondarypatientinsuranceid AS secondary_patient_insurance_id
+        , CASE
+            WHEN primarypatientinsuranceid = '0' THEN NULL
+            ELSE primarypatientinsuranceid
+        END AS primary_patient_insurance_id
+        , CASE
+            WHEN secondarypatientinsuranceid = '0' THEN NULL
+            ELSE secondarypatientinsuranceid
+        END AS secondary_patient_insurance_id
         , departmentid AS department_id
         , patientdepartmentid AS patient_department_id
         , diagnosis1 AS diagnosis_1
