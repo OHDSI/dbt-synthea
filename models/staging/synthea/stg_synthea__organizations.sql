@@ -19,8 +19,8 @@ WITH cte_organizations_lower AS (
         , city AS organization_city
         , state AS organization_state
         , zip AS organization_zip
-        , lat AS organization_lat
-        , lon AS organization_lon
+        , lat AS organization_latitude
+        , lon AS organization_longitude
         , phone AS organization_phone
         , revenue AS organization_revenue
         , utilization AS organization_utilization

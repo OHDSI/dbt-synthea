@@ -13,7 +13,7 @@ WITH cte_observations_lower AS (
 , cte_observations_rename AS (
 
     SELECT
-        "date" AS observation_date
+        "date" AS observation_datetime
         , patient AS patient_id
         , encounter AS encounter_id
         , category AS observation_category
@@ -21,7 +21,7 @@ WITH cte_observations_lower AS (
         , "description" AS observation_description
         , "value" AS observation_value
         , units AS observation_units
-        , type AS observation_type
+        , "type" AS observation_value_type
     FROM cte_observations_lower
 
 )

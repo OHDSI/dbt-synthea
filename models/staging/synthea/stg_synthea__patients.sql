@@ -27,7 +27,7 @@ WITH cte_patients_lower AS (
         , marital AS marital_status
         , race
         , ethnicity
-        , gender
+        , gender AS patient_gender
         , birthplace
         , "address" AS patient_address
         , city AS patient_city

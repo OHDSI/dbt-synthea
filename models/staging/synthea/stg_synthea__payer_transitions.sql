@@ -15,10 +15,10 @@ WITH cte_payer_transitions_lower AS (
     SELECT
         patient AS patient_id
         , memberid AS member_id
-        , start_year AS payer_start_year
-        , end_year AS payer_end_year
+        , start_year AS coverage_start_year
+        , end_year AS coverage_end_year
         , payer AS payer_id
-        , SECONDARY_PAYER AS secondary_payer_id
+        , secondary_payer AS secondary_payer_id
         , "ownership" AS plan_owner_relationship
         , ownername AS plan_owner_name
     FROM cte_payer_transitions_lower

@@ -22,12 +22,12 @@ WITH cte_payers_lower AS (
         , amount_covered AS payer_amount_covered
         , amount_uncovered AS payer_amount_uncovered
         , revenue AS payer_revenue
-        , covered_encounters AS payer_covered_encounters
-        , uncovered_encounters AS payer_uncovered_encounters
-        , covered_procedures AS payer_covered_procedures
-        , uncovered_procedures AS payer_uncovered_procedures
-        , covered_immunizations AS payer_covered_immunizations
-        , uncovered_immunizations AS payer_uncovered_immunizations
+        , covered_encounters
+        , uncovered_encounters
+        , covered_procedures
+        , uncovered_procedures
+        , covered_immunizations
+        , uncovered_immunizations
         , unique_customers
         , qols_avg
         , member_months AS payer_member_months

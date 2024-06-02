@@ -384,6 +384,30 @@ models:
         data_type: integer
         description: "Type of claim: 1 is professional, 2 is institutional."
   
+  - name: stg_synthea__conditions
+    description: Synthea conditions table
+    columns:
+      - name: condition_start_date
+        data_type: date
+      - name: condition_stop_date
+        data_type: date
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: condition_code
+        data_type: text
+      - name: condition_description
+        data_type: text
+  
   - name: stg_synthea__devices
     description: Synthea devices table
     columns:
@@ -461,12 +485,372 @@ models:
       - name: total_encounter_cost
         data_type: double precision
         description: "The total cost of the encounter, including all line items."
-      - name: payer_coverage
+      - name: encounter_payer_coverage
         data_type: double precision
         description: "The amount of cost covered by the payer."
-      - name: reason_code
+      - name: encounter_reason_code
         data_type: text
         description: "Diagnosis code from SNOMED-CT, only if this encounter targeted a specific condition."
-      - name: reason_description
+      - name: encounter_reason_description
         data_type: text
+  
+  - name: stg_synthea__imaging_studies
+    description: Synthea imaging studies table
+    columns:
+      - name: imaging_id
+        data_type: text
+        tests:
+          - unique
+      - name: imaging_datetime
+        data_type: datetime
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: series_uid
+        data_type: text
+      - name: bodysite_code
+        data_type: text
+      - name: bodysite_description
+        data_type: text
+      - name: modality_code
+        data_type: text
+        description: "A DICOM-DCM code describing the method used to take the images."
+      - name: modality_description
+        data_type: text
+      - name: instance_uid
+        data_type: text
+      - name: sop_code
+        data_type: text
+        description: "A DICOM-SOP code describing the Subject-Object Pair (SOP) that constitutes the image."
+      - name: sop_description
+        data_type: text
+      - name: imaging_procedure_code
+        data_type: text
+
+  - name: stg_synthea__immunizations
+    description: Synthea immunizations table
+    columns:
+      - name: immunization_date
+        data_type: date
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: immunization_code
+        data_type: text
+      - name: immunization_description
+        data_type: text
+      - name: immunization_base_cost
+        data_type: double precision
+        description: "The line item cost of the immunization."
+  
+  - name: stg_synthea__medications
+    description: Synthea medications table
+    columns:
+      - name: medication_start_datetime
+        data_type: datetime
+      - name: medication_stop_datetime
+        data_type: datetime
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: payer_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__payers')
+              field: payer_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: medication_code
+        data_type: text
+      - name: medication_description
+        data_type: text
+      - name: medication_base_cost
+        data_type: double precision
+        description: "The line item cost of the medication."
+      - name: medication_payer_coverage
+        data_type: double precision
+        description: "The amount of cost covered by the payer."
+      - name: dispenses
+        data_type: integer
+        description: "The number of times the prescription was filled."
+      - name: medication_total_cost
+        data_type: double precision
+        description: "The total cost of the prescription, including all dispenses."
+      - name: medication_reason_code
+        data_type: text
+        description: "Diagnosis code from SNOMED-CT specifying why this medication was prescribed."
+      - name: medication_reason_description
+        data_type: text
+  
+  - name: stg_synthea__observations
+    description: Synthea observations table
+    columns:
+      - name: observation_datetime
+        data_type: datetime
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: observation_category
+        data_type: text
+      - name: observation_code
+        data_type: text
+      - name: observation_description
+        data_type: text
+      - name: observation_value
+        data_type: text
+      - name: observation_units
+        data_type: text
+      - name: observation_value_type
+        data_type: text
+        description: "The datatype of Value: text or numeric."
+
+  - name: stg_synthea__organizations
+    description: Synthea organizations table
+    columns:
+      - name: organization_id
+        data_type: text
+        tests:
+          - unique
+      - name: organization_name
+        data_type: text
+      - name: organization_address
+        data_type: text
+      - name: organization_city
+        data_type: text
+      - name: organization_state
+        data_type: text
+      - name: organization_zip
+        data_type: text
+      - name: organization_latitude
+        data_type: double precision
+      - name: organization_longitude
+        data_type: double precision
+      - name: organization_phone
+        data_type: text
+      - name: organization_revenue
+        data_type: double precision
+        description: "The monetary revenue of the organization during the entire simulation."
+      - name: organization_utilization
+        data_type: integer
+        description: "The number of Encounters performed by this Organization."
+
+  - name: stg_synthea__payer_transitions
+    description: Synthea payer transitions table
+    columns:
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: member_id
+        data_type: text
+      - name: coverage_start_year
+        data_type: integer
+      - name: coverage_end_year
+        data_type: integer
+      - name: payer_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__payers')
+              field: payer_id
+      - name: secondary_payer_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__payers')
+              field: payer_id
+      - name: plan_owner_relationship
+        data_type: text
+        description: "The owner of the insurance policy. Legal values: Guardian, Self, Spouse."
+      - name: plan_owner_name
+        data_type: text
+        description: "The name of the insurance policy owner."
+
+  - name: stg_synthea__payers
+    description: Synthea payers table
+    columns:
+      - name: payer_id
+        data_type: text
+        tests:
+          - unique
+      - name: payer_name
+        data_type: text
+      - name: payer_city
+        data_type: text
+      - name: payer_state_headquartered
+        data_type: text
+      - name: payer_zip
+        data_type: text
+      - name: payer_phone
+        data_type: text
+      - name: payer_amount_covered
+        data_type: double precision
+        description: "The monetary amount paid to Organizations during the entire simulation."
+      - name: payer_amount_uncovered
+        data_type: double precision
+        description: "The monetary amount not paid to Organizations during the entire simulation, and covered out of pocket by patients."
+      - name: payer_revenue
+        data_type: double precision
+        description: "The monetary revenue of the payer during the entire simulation."
+      - name: covered_encounters
+        data_type: integer
+        description: "The number of Encounters paid for by this Payer."
+      - name: uncovered_encounters
+        data_type: integer
+        description: "The number of Encounters not paid for by this Payer, and paid out of pocket by patients."
+      - name: covered_medications
+        data_type: integer
+        description: "The number of Medications paid for by this Payer."
+      - name: uncovered_medications
+        data_type: integer
+        description: "The number of Medications not paid for by this Payer, and paid out of pocket by patients."
+      - name: covered_procedures
+        data_type: integer
+        description: "The number of Procedures paid for by this Payer."
+      - name: uncovered_procedures
+        data_type: integer
+        description: "The number of Procedures not paid for by this Payer, and paid out of pocket by patients."
+      - name: covered_immunizations
+        data_type: integer
+        description: "The number of Immunizations paid for by this Payer."
+      - name: uncovered_immunizations
+        data_type: integer
+        description: "The number of Immunizations not paid for by this Payer, and paid out of pocket by patients."
+      - name: unique_customers
+        data_type: integer
+        description: "The number of unique patients enrolled with this Payer during the entire simulation."
+      - name: avg_qols
+        data_type: double precision
+        description: "The average Quality of Life Scores (QOLS) for all patients enrolled with this Payer during the entire simulation."
+      - name: member_months
+        data_type: integer
+        description: "The total number of months that patients were enrolled with this Payer during the simulation and paid monthly premiums (if any)."
+      
+  - name: stg_synthea__procedures
+    description: Synthea procedures table
+    columns:
+      - name: procedure_start_datetime
+        data_type: datetime
+      - name: procedure_stop_datetime
+        data_type: datetime
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: procedure_code
+        data_type: text
+      - name: procedure_description
+        data_type: text
+      - name: procedure_base_cost
+        data_type: double precision
+        description: "The line item cost of the procedure."
+      - name: procedure_reason_code
+        data_type: text
+        description: "Diagnosis code from SNOMED-CT specifying why this procedure was performed."
+      - name: procedure_reason_description
+        data_type: text
+
+  - name: stg_synthea__providers
+    description: Synthea providers table
+    columns:
+      - name: provider_id
+        data_type: text
+        tests:
+          - unique
+      - name: organization_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__organizations')
+              field: organization_id
+      - name: provider_name
+        data_type: text
+      - name: provider_gender
+        data_type: text
+      - name: provider_specialty
+        data_type: text
+      - name: provider_address
+        data_type: text
+      - name: provider_city
+        data_type: text
+      - name: provider_state
+        data_type: text
+      - name: provider_zip
+        data_type: text
+      - name: provider_latitude
+        data_type: double precision
+      - name: provider_longitude
+        data_type: double precision
+      - name: provider_utilization
+        data_type: integer
+        description: "The number of Encounters performed by this Provider."
+  
+  - name: stg_synthea__supplies
+    description: Synthea supplies table
+    columns:
+      - name: supply_date
+        data_type: date
+      - name: patient_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__patients')
+              field: patient_id
+      - name: encounter_id
+        data_type: text
+        tests:
+          - relationships:
+              to: ref('stg_synthea__encounters')
+              field: encounter_id
+      - name: supply_code
+        data_type: text
+      - name: supply_description
+        data_type: text
+      - name: supply_quantity
+        data_type: integer
       

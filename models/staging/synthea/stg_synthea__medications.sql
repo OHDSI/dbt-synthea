@@ -13,8 +13,8 @@ WITH cte_medications_lower AS (
 , cte_medications_rename AS (
 
     SELECT
-        "start" AS medication_start_date
-        , "stop" AS medication_stop_date
+        "start" AS medication_start_datetime
+        , "stop" AS medication_stop_datetime
         , patient AS patient_id
         , payer AS payer_id
         , encounter AS encounter_id
@@ -22,7 +22,7 @@ WITH cte_medications_lower AS (
         , "description" AS medication_description
         , base_cost AS medication_base_cost
         , payer_coverage AS medication_payer_coverage
-        , dispenses AS medication_dispenses
+        , dispenses
         , totalcost AS medication_total_cost
         , reasoncode AS medication_reason_code
         , reasondescription AS medication_reason_description

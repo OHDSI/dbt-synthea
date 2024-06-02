@@ -14,17 +14,17 @@ WITH cte_imaging_studies_lower AS (
 
     SELECT
         "id" AS imaging_id
-        , "date" AS imaging_date
+        , "date" AS imaging_datetime
         , patient AS patient_id
         , encounter AS encounter_id
-        , series_uid AS imaging_series_uid
-        , bodysite_code AS imaging_bodysite_code
-        , bodysite_description AS imaging_bodysite_description
-        , modality_code AS imaging_modality_code
-        , modality_description AS imaging_modality_description
-        , instance_uid AS imaging_instance_uid
-        , sop_code AS imaging_sop_code
-        , sop_description AS imaging_sop_description
+        , series_uid
+        , bodysite_code
+        , bodysite_description
+        , modality_code
+        , modality_description
+        , instance_uid
+        , sop_code
+        , sop_description
         , procedure_code AS imaging_procedure_code
     FROM cte_imaging_studies_lower
 

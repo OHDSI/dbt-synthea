@@ -13,8 +13,8 @@ WITH cte_procedures_lower AS (
 , cte_procedures_rename AS (
 
     SELECT
-        "start" AS procedure_start_date
-        , "stop" AS procedure_stop_date
+        "start" AS procedure_start_datetime
+        , "stop" AS procedure_stop_datetime
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS procedure_code

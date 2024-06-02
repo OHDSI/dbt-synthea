@@ -25,9 +25,9 @@ WITH cte_encounters_lower AS (
         , description AS encounter_description
         , base_encounter_cost
         , total_claim_cost AS total_encounter_cost
-        , payer_coverage
-        , reasoncode AS reason_code
-        , reasondescription AS reason_description
+        , payer_coverage AS encounter_payer_coverage
+        , reasoncode AS encounter_reason_code
+        , reasondescription AS encounter_reason_description
     FROM cte_encounters_lower
 
 )

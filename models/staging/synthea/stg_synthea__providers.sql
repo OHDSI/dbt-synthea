@@ -22,8 +22,8 @@ WITH cte_providers_lower AS (
         , city AS provider_city
         , "state" AS provider_state
         , zip AS provider_zip
-        , lat AS provider_lat
-        , lon AS provider_lon
+        , lat AS provider_latitude
+        , lon AS provider_longitude
         , utilization AS provider_utilization
     FROM cte_providers_lower
 
