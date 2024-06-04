@@ -1,11 +1,11 @@
-select
-  *,
-  row_number() over (order by patient_id) as visit_occurrence_id
-from
-  (
-    select * from {{ ref('int__ip_visits') }}
-    union all
-    select * from {{ ref('int__er_visits') }}
-    union all
-    select * from {{ ref('int__op_visits') }}
-  ) as t1
+SELECT
+    *
+    , row_number() OVER (ORDER BY patient_id) AS visit_occurrence_id
+FROM
+    (
+        SELECT * FROM {{ ref('int__ip_visits') }}
+        UNION ALL
+        SELECT * FROM {{ ref('int__er_visits') }}
+        UNION ALL
+        SELECT * FROM {{ ref('int__op_visits') }}
+    ) AS t1

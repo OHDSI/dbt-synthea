@@ -1,22 +1,22 @@
-select
-  c.patient_id,
-  c.encounter_id,
-  srctostdvm.target_concept_id as observation_concept_id,
-  c.condition_start_date as observation_date,
-  c.condition_start_date as observation_datetime,
-  38000280 as observation_type_concept_id,
-  c.condition_code as observation_source_value,
-  srctosrcvm.source_concept_id as observation_source_concept_id
-from {{ ref ('stg_synthea__conditions') }} as c
-inner join {{ ref ('int__source_to_standard_vocab_map') }} as srctostdvm
-  on
-    c.condition_code = srctostdvm.source_code
-    and srctostdvm.target_domain_id = 'Observation'
-    and srctostdvm.target_vocabulary_id = 'SNOMED'
-    and srctostdvm.target_standard_concept = 'S'
-    and srctostdvm.target_invalid_reason is null
-inner join {{ ref ('int__source_to_source_vocab_map') }} as srctosrcvm
-  on
-    c.condition_code = srctosrcvm.source_code
-    and srctosrcvm.source_vocabulary_id = 'SNOMED'
-    and srctosrcvm.source_domain_id = 'Observation'
+SELECT
+    c.patient_id
+    , c.encounter_id
+    , srctostdvm.target_concept_id AS observation_concept_id
+    , c.condition_start_date AS observation_date
+    , c.condition_start_date AS observation_datetime
+    , 38000280 AS observation_type_concept_id
+    , c.condition_code AS observation_source_value
+    , srctosrcvm.source_concept_id AS observation_source_concept_id
+FROM {{ ref ('stg_synthea__conditions') }} AS c
+INNER JOIN {{ ref ('int__source_to_standard_vocab_map') }} AS srctostdvm
+    ON
+        c.condition_code = srctostdvm.source_code
+        AND srctostdvm.target_domain_id = 'Observation'
+        AND srctostdvm.target_vocabulary_id = 'SNOMED'
+        AND srctostdvm.target_standard_concept = 'S'
+        AND srctostdvm.target_invalid_reason IS null
+INNER JOIN {{ ref ('int__source_to_source_vocab_map') }} AS srctosrcvm
+    ON
+        c.condition_code = srctosrcvm.source_code
+        AND srctosrcvm.source_vocabulary_id = 'SNOMED'
+        AND srctosrcvm.source_domain_id = 'Observation'

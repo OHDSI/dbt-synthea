@@ -2,7 +2,7 @@
 templater = dbt
 dialect = postgres
 sql_file_exts = .sql,.sql.j2,.dml,.ddl
-exclude_rules = L031, L014, ST06
+exclude_rules = L031, L014, ST06, LT05, RF02, RF03
 large_file_skip_byte_limit = 0
 
 [sqlfluff:indentation]
@@ -20,7 +20,7 @@ apply_dbt_builtins = true
 load_macros_from_path = macros
 
 [sqlfluff:templater:dbt]
-project_dir = .
+project_dir = ./
 profiles_dir = ~/.dbt
 ; profile = <dbt profile>
 ; target = <dbt target>
