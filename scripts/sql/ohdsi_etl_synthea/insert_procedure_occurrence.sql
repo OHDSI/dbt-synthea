@@ -46,14 +46,14 @@ pr.code                                  procedure_source_value,
 srctosrcvm.source_concept_id             procedure_source_concept_id,
 null                                     modifier_source_value
 from @synthea_schema.procedures pr
-join @cdm_schema.source_to_standard_vocab_map srctostdvm
+join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
   on srctostdvm.source_code             = pr.code
  and srctostdvm.target_domain_id        = 'Procedure'
  and srctostdvm.target_vocabulary_id    = 'SNOMED'
  and srctostdvm.source_vocabulary_id    = 'SNOMED'
  and srctostdvm.target_standard_concept = 'S'
  and srctostdvm.target_invalid_reason is null
-join @cdm_schema.source_to_source_vocab_map srctosrcvm
+join @cdm_schema.int__source_to_source_vocab_map srctosrcvm
   on srctosrcvm.source_code             = pr.code
  and srctosrcvm.source_vocabulary_id    = 'SNOMED'
 left join @cdm_schema.final_visit_ids fv

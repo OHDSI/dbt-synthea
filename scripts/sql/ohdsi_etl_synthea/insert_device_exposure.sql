@@ -43,14 +43,14 @@ cast(null as varchar)                       unit_source_value,
 cast(null as int)                           unit_source_concept_id
 
 from @synthea_schema.devices d
-join @cdm_schema.source_to_standard_vocab_map srctostdvm
+join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
   on srctostdvm.source_code             = d.code
  and srctostdvm.target_domain_id        = 'Device'
  and srctostdvm.target_vocabulary_id    = 'SNOMED'
  and srctostdvm.source_vocabulary_id    = 'SNOMED'
  and srctostdvm.target_standard_concept = 'S'
  and srctostdvm.target_invalid_reason is null
-join @cdm_schema.source_to_source_vocab_map srctosrcvm
+join @cdm_schema.int__source_to_source_vocab_map srctosrcvm
   on srctosrcvm.source_code             = d.code
  and srctosrcvm.source_vocabulary_id    = 'SNOMED'
 left join @cdm_schema.final_visit_ids fv

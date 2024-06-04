@@ -1,7 +1,7 @@
 with all_drugs as (
-  select * from {{ ref('stg__drug_medications') }}
+  select * from {{ ref('int__drug_medications') }}
   union all
-  select * from {{ ref('stg__drug_immunisations') }}
+  select * from {{ ref('int__drug_immunisations') }}
 )
 select
   row_number() over (order by p.person_id) as drug_exposure_id,
@@ -29,13 +29,13 @@ select
   dose_unit_source_value
 from 
   all_drugs as ad
-  left join {{ ref ('stg__final_visit_ids') }} as fv
-    on ad.encounter = fv.encounter_id
-  left join {{ ref ('synthea_encounters') }} as e
+  left join {{ ref ('int__final_visit_ids') }} as fv
+    on ad.encounter_id = fv.encounter_id
+  left join {{ ref ('stg_synthea__encounters') }} as e
     on
-      ad.encounter = e.id
-      and ad.patient = e.patient
+      ad.encounter_id = e.encounter_id
+      and ad.patient_id = e.patient_id
   left join {{ ref ('provider') }} as pr
-    on e.provider = pr.provider_source_value
+    on e.provider_id = pr.provider_source_value
   inner join {{ ref ('person') }} as p
-    on ad.patient = p.person_source_value
+    on ad.patient_id = p.person_source_value

@@ -27,7 +27,7 @@ select p.person_id                              person_id,
        e.reasoncode                             cause_source_value,
        srctostdvm.source_concept_id             cause_source_concept_id
   from @synthea_schema.encounters e
-  join @cdm_schema.source_to_standard_vocab_map srctostdvm
+  join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
     on srctostdvm.source_code             = e.reasoncode
    and srctostdvm.target_domain_id        = 'Condition'
    and srctostdvm.source_domain_id        = 'Condition'

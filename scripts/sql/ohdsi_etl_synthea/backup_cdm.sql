@@ -13,5 +13,5 @@ if object_id('@cdm_schema.concept_relationship', 'U') is not null rename object 
 if object_id('@cdm_schema.concept_synonym_orig', 'U') is not null drop table @cdm_schema.concept_synonym_orig;
 if object_id('@cdm_schema.concept_synonym', 'U') is not null rename object @cdm_schema.concept_synonym to concept_synonym_orig;
 
-if object_id('@cdm_schema.source_to_concept_map_orig', 'U') is not null drop table @cdm_schema.source_to_concept_map_orig;
-if object_id('@cdm_schema.source_to_concept_map', 'U') is not null rename object @cdm_schema.source_to_concept_map to source_to_concept_map_orig;
+if object_id('@cdm_schema.stg_vocabulary__source_to_standard_vocab_map_orig', 'U') is not null drop table @cdm_schema.stg_vocabulary__source_to_standard_vocab_map_orig;
+if object_id('@cdm_schema.stg_vocabulary__source_to_standard_vocab_map', 'U') is not null rename object @cdm_schema.stg_vocabulary__source_to_standard_vocab_map to stg_vocabulary__source_to_standard_vocab_map_orig;

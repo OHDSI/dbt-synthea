@@ -68,13 +68,13 @@ cast(null as varchar)                       value_source_value,
 cast(null as bigint)                        observation_event_id,
 cast(null as int)                           obs_event_field_concept_id
 from @synthea_schema.allergies a
-join @cdm_schema.source_to_standard_vocab_map srctostdvm
+join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
   on srctostdvm.source_code             = a.code
  and srctostdvm.target_domain_id        = 'Observation'
  and srctostdvm.target_vocabulary_id    = 'SNOMED'
  and srctostdvm.target_standard_concept = 'S'
  and srctostdvm.target_invalid_reason is null
-join @cdm_schema.source_to_source_vocab_map srctosrcvm
+join @cdm_schema.int__source_to_source_vocab_map srctosrcvm
   on srctosrcvm.source_code             = a.code
  and srctosrcvm.source_vocabulary_id    = 'SNOMED'
  and srctosrcvm.source_domain_id        = 'Observation'
@@ -113,13 +113,13 @@ cast(null as bigint)                       observation_event_id,
 cast(null as int)                          obs_event_field_concept_id
 
 from @synthea_schema.conditions c
-join @cdm_schema.source_to_standard_vocab_map srctostdvm
+join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
   on srctostdvm.source_code             = c.code
  and srctostdvm.target_domain_id        = 'Observation'
  and srctostdvm.target_vocabulary_id    = 'SNOMED'
  and srctostdvm.target_standard_concept = 'S'
  and srctostdvm.target_invalid_reason is null
-join @cdm_schema.source_to_source_vocab_map srctosrcvm
+join @cdm_schema.int__source_to_source_vocab_map srctosrcvm
   on srctosrcvm.source_code              = c.code
  and srctosrcvm.source_vocabulary_id     = 'SNOMED'
  and srctosrcvm.source_domain_id         = 'Observation'
@@ -158,13 +158,13 @@ cast(null as bigint)                       observation_event_id,
 cast(null as int)                          obs_event_field_concept_id
 
 from @synthea_schema.observations o
-join @cdm_schema.source_to_standard_vocab_map srctostdvm
+join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
   on srctostdvm.source_code             = o.code
  and srctostdvm.target_domain_id        = 'Observation'
  and srctostdvm.target_vocabulary_id    = 'LOINC'
  and srctostdvm.target_standard_concept = 'S'
  and srctostdvm.target_invalid_reason is null
-join @cdm_schema.source_to_source_vocab_map srctosrcvm
+join @cdm_schema.int__source_to_source_vocab_map srctosrcvm
   on srctosrcvm.source_code              = o.code
  and srctosrcvm.source_vocabulary_id     = 'LOINC'
  and srctosrcvm.source_domain_id         = 'Observation'

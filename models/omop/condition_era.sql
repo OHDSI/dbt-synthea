@@ -8,12 +8,12 @@ with cteConditionTarget as (
     co.condition_concept_id,
     co.condition_start_date,
     coalesce(
-      nullif(co.condition_end_date, NULL), dateadd(day, 1, condition_start_date)
+      nullif(co.condition_end_date, NULL), co.condition_start_date + interval '1 day'
     ) as condition_end_date
   from {{ ref ('condition_occurrence') }} as co
 /* Depending on the needs of your data, you can put more filters on to your code. We assign 0 to our unmapped condition_concept_id's,
-	 * and since we don't want different conditions put in the same era, we put in the filter below.
- 	 */
+   * and since we don't want different conditions put in the same era, we put in the filter below.
+   */
 ---WHERE condition_concept_id != 0
 ),
 
@@ -21,7 +21,7 @@ cteEndDates as (
   select
     person_id,
     condition_concept_id,
-    dateadd(day, -30, event_date) as end_date -- unpad the end date
+    event_date - interval '30 days' as end_date -- unpad the end date
   from
     (
       select
@@ -51,7 +51,7 @@ cteEndDates as (
           select
             person_id,
             condition_concept_id,
-            dateadd(day, 30, condition_end_date),
+            condition_end_date + interval '30 days',
             1 as event_type,
             NULL
           from cteConditionTarget

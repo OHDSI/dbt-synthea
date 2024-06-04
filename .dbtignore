@@ -1,13 +1,3 @@
 scripts
 notebooks
 dbt_packages
-
-# Uncomment only one of the following two lines to allow dbt to pick up
-# the correct Synthea models as the source layer (commented line is used by dbt)
-# (not to be confused with dbt sources)
-# dbt advise against using large seed files for data ingestion.
-# https://docs.getdbt.com/docs/build/seeds
-# The seed files included in this project are simply for demonstration.
-
-seeds/synthea
-# models/synthea

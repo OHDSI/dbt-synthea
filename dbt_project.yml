@@ -1,5 +1,5 @@
 name: 'synthea_omop_etl'
-version: '0.2.0'
+version: '0.1.0'
 config-version: 2
 
 profile: 'synthea_omop_etl'
@@ -13,43 +13,15 @@ snapshot-paths: ["snapshots"]
 
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
-  # Don't clean the dbt_packages every time as this requires reinstalling with `dbt deps`
-  # - "dbt_packages"
-
-
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
 
 models:
   synthea_omop_etl:
-    synthea:
-      +materialized: view
-      +docs:
-        node_color: "#FFA600"
-      +tags:
-        - synthea
-    vocab:
-      +materialized: view
-      +docs:
-        node_color: "#D45087"
-      +tags:
-        - vocab
-    staging:
-      +materialized: table
-      +docs:
-        node_color: "#F95D6A"
-      +tags:
-        - omop
-    omop:
-      +materialized: table
-      +docs:
-        node_color: "#665191"
-      +tags:
-        - omop
+    +materialized: table
+
 seeds:
   synthea_omop_etl:
+    vocabulary:
     synthea:
-      +database: dbt_synthea
       +schema: synthea
       allergies:
         +column_types:
@@ -72,6 +44,7 @@ seeds:
           DIAGNOSIS6: varchar
           DIAGNOSIS7: varchar
           DIAGNOSIS8: varchar
+          REFERRINGPROVIDERID: varchar
       conditions:
         +column_types:
           CODE: varchar
@@ -99,6 +72,10 @@ seeds:
       observations:
         +column_types:
           CODE: varchar
+      patients:
+        +column_types:
+          SUFFIX: varchar
+          ZIP: varchar
       procedures:
         +column_types:
           CODE: varchar

@@ -1,12 +1,12 @@
 with all_costs as (
 
-  select * from {{ ref('stg__cost_condition') }}
+  select * from {{ ref('int__cost_condition') }}
   union all
-  select * from {{ ref('stg__cost_drug_exposure_1') }}
+  select * from {{ ref('int__cost_drug_exposure_1') }}
   union all
-  select * from {{ ref('stg__cost_drug_exposure_2') }}
+  select * from {{ ref('int__cost_drug_exposure_2') }}
   union all
-  select * from {{ ref('stg__cost_procedure') }}
+  select * from {{ ref('int__cost_procedure') }}
 )
 
 select

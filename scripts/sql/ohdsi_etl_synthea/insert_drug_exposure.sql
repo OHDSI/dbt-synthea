@@ -76,13 +76,13 @@ srctosrcvm.source_concept_id                 drug_source_concept_id,
 cast(null as varchar)                        route_source_value,
 cast(null as varchar)                        dose_unit_source_value
 from @synthea_schema.medications m
-join @cdm_schema.source_to_standard_vocab_map srctostdvm
+join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
   on srctostdvm.source_code             = m.code
  and srctostdvm.target_domain_id        = 'Drug'
  and srctostdvm.target_vocabulary_id    = 'RxNorm'
  and srctostdvm.target_standard_concept = 'S'
  and srctostdvm.target_invalid_reason is null
-join @cdm_schema.source_to_source_vocab_map srctosrcvm
+join @cdm_schema.int__source_to_source_vocab_map srctosrcvm
   on srctosrcvm.source_code             = m.code
  and srctosrcvm.source_vocabulary_id    = 'RxNorm'
 left join @cdm_schema.final_visit_ids fv
@@ -121,13 +121,13 @@ srctosrcvm.source_concept_id                drug_source_concept_id,
 cast(null as varchar)                       route_source_value,
 cast(null as varchar)                       dose_unit_source_value
 from @synthea_schema.immunizations i
-join @cdm_schema.source_to_standard_vocab_map srctostdvm
+join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
   on srctostdvm.source_code             = i.code
  and srctostdvm.target_domain_id        = 'Drug'
  and srctostdvm.target_vocabulary_id    = 'CVX'
  and srctostdvm.target_standard_concept = 'S'
  and srctostdvm.target_invalid_reason is null
-join @cdm_schema.source_to_source_vocab_map srctosrcvm
+join @cdm_schema.int__source_to_source_vocab_map srctosrcvm
   on srctosrcvm.source_code             = i.code
  and srctosrcvm.source_vocabulary_id    = 'CVX'
 left join @cdm_schema.final_visit_ids fv

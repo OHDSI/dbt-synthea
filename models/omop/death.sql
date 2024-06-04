@@ -10,16 +10,16 @@
 
 select
   p.person_id as person_id,
-  e.start as death_date,
-  e.start as death_datetime,
+  e.encounter_start_datetime as death_date,
+  e.encounter_start_datetime as death_datetime,
   32817 as death_type_concept_id,
   srctostdvm.target_concept_id as cause_concept_id,
-  e.reasoncode as cause_source_value,
+  e.encounter_reason_code as cause_source_value,
   srctostdvm.source_concept_id as cause_source_concept_id
-from {{ ref('synthea_encounters') }} as e
-inner join {{ ref('source_to_standard_vocab_map') }} as srctostdvm
+from {{ ref('stg_synthea__encounters') }} as e
+inner join {{ ref('int__source_to_standard_vocab_map') }} as srctostdvm
   on
-    e.reasoncode = srctostdvm.source_code
+    e.encounter_reason_code = srctostdvm.source_code
     and srctostdvm.target_domain_id = 'Condition'
     and srctostdvm.source_domain_id = 'Condition'
     and srctostdvm.target_vocabulary_id = 'SNOMED'
@@ -27,5 +27,5 @@ inner join {{ ref('source_to_standard_vocab_map') }} as srctostdvm
     and srctostdvm.target_standard_concept = 'S'
     and srctostdvm.target_invalid_reason is null
 inner join {{ ref('person') }} as p
-  on e.patient = p.person_source_value
-where e.code = '308646001'
+  on e.patient_id = p.person_source_value
+where e.encounter_code = '308646001'

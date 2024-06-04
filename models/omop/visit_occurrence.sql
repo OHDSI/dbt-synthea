@@ -1,7 +1,7 @@
 select
   av.visit_occurrence_id,
   p.person_id,
-  case lower(av.encounterclass)
+  case lower(av.encounter_class)
     when 'ambulatory' then 9202
     when 'emergency' then 9203
     when 'inpatient' then 9201
@@ -28,16 +28,16 @@ select
       partition by p.person_id
       order by av.visit_start_date
     ) as preceding_visit_occurrence_id
-from {{ ref( 'stg__all_visits') }} as av
+from {{ ref( 'int__all_visits') }} as av
 inner join {{ ref( 'person') }} as p
-  on av.patient = p.person_source_value
-inner join {{ ref('synthea_encounters') }} as e
+  on av.patient_id = p.person_source_value
+inner join {{ ref('stg_synthea__encounters') }} as e
   on
-    av.encounter_id = e.id
-    and av.patient = e.patient
+    av.encounter_id = e.encounter_id
+    and av.patient_id = e.patient_id
 inner join {{ ref( 'provider') }} as pr
-  on e.provider = pr.provider_source_value
+  on e.provider_id = pr.provider_source_value
 where av.visit_occurrence_id in (
   select distinct visit_occurrence_id_new
-  from {{ ref( 'stg__final_visit_ids') }}
+  from {{ ref( 'int__final_visit_ids') }}
 )

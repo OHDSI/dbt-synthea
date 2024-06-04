@@ -38,14 +38,14 @@ null                                       condition_status_source_value,
 0                                          condition_status_concept_id
 
 from @synthea_schema.conditions c
-join @cdm_schema.source_to_standard_vocab_map srctostdvm
+join @cdm_schema.int__source_to_standard_vocab_map srctostdvm
   on srctostdvm.source_code             = c.code
  and srctostdvm.target_domain_id        = 'Condition'
  and srctostdvm.target_vocabulary_id    = 'SNOMED'
  and srctostdvm.source_vocabulary_id    = 'SNOMED'
  and srctostdvm.target_standard_concept = 'S'
  and srctostdvm.target_invalid_reason is null
-join @cdm_schema.source_to_source_vocab_map srctosrcvm
+join @cdm_schema.int__source_to_source_vocab_map srctosrcvm
   on srctosrcvm.source_code             = c.code
  and srctosrcvm.source_vocabulary_id    = 'SNOMED'
  and srctosrcvm.source_domain_id        = 'Condition'

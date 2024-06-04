@@ -1,42 +1,10 @@
+# .pre-commit-config.yaml
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
-  hooks:
-  - id: check-yaml
-  - id: end-of-file-fixer
-  - id: trailing-whitespace
-  - id: detect-private-key
-  - id: check-added-large-files
-    args: ['maxkb=1024']
-  - id: check-executables-have-shebangs
-  - id: check-merge-conflict
-  # - id: no-commit-to-branch
-  #   args: [--branch, main]
-  - id: requirements-txt-fixer
-
-- repo: https://github.com/psf/black
-  rev: 24.1.1
-  hooks:
-  - id: black-jupyter
-    language_version: python3.12
-# Caution: This will remove output cells in all Jupyter notebooks.
-# However, prevents accidentally committing sensitive outputs in notebooks.
-# To share output of notebooks that are not reproducible for others, export to html and save in reports/ folder.
-- repo: https://github.com/kynan/nbstripout
-  rev: 0.6.1
-  hooks:
-    - id: nbstripout
-# https://docs.sqlfluff.com/en/stable/production.html
-# - repo: https://github.com/sqlfluff/sqlfluff
-#   rev: 2.3.5
-#   hooks:
-#     # - id: sqlfluff-lint
-#     #   # For dbt projects, this installs the dbt "extras".
-#     #   # You will need to select the relevant dbt adapter for your dialect
-#     #   # (https://docs.getdbt.com/docs/available-adapters):
-#     #   additional_dependencies: ['dbt-databricks', 'sqlfluff-templater-dbt']
-#     - id: sqlfluff-fix
-#       # Arbitrary arguments to show an example
-#       # args: [--rules, "LT02,CP02"]
-#       additional_dependencies: ['dbt-databricks', 'sqlfluff-templater-dbt']
-#       args: [--config, '.sqlfluff']
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.0.7  # Use the latest version or specify a specific version
+    hooks:
+      - id: sqlfluff-lint
+        additional_dependencies: ['dbt-postgres', 'sqlfluff-templater-dbt']
+      - id: sqlfluff-fix
+        additional_dependencies: ['dbt-postgres', 'sqlfluff-templater-dbt']
+        args: [--config, '.sqlfluff']

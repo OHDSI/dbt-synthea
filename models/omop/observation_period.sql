@@ -7,10 +7,10 @@ select
 from (
   select
     p.person_id,
-    min(e.start) as start_date,
-    max(e.stop) as end_date
+    min(e.encounter_start_datetime) as start_date,
+    max(e.encounter_stop_datetime) as end_date
   from {{ ref ('person') }} as p
-  inner join {{ ref ('synthea_encounters') }} as e
-    on p.person_source_value = e.patient
+  inner join {{ ref ('stg_synthea__encounters') }} as e
+    on p.person_source_value = e.patient_id
   group by p.person_id
 ) as tmp
