@@ -68,9 +68,9 @@ dbt seed
  
  6. **If you'd like to run the ETL on your own Synthea dataset,** load your Synthea and Vocabulary data into the database by running the following commands (modify the commands as needed to specify the path to the folder storing the Synthea and vocabulary csv files, respectively).  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".  **NOTE only Synthea v3.0.0 is supported at this time.**
 ``` bash
-file_dict=$(python3 scripts/python/load_data_duckdb.py path/to/synthea/csvs)
+file_dict=$(python3 scripts/python/get_csv_filepaths.py path/to/synthea/csvs)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: false}"
-file_dict=$(python3 scripts/python/load_data_duckdb.py path/to/vocab/csvs)
+file_dict=$(python3 scripts/python/get_csv_filepaths.py path/to/vocab/csvs)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: true}"
 ```
 
