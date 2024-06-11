@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: vocabulary
+    schema: "{{ target.schema }}"
+    tables:
+      - name: concept
+      - name: concept_ancestor
+      - name: concept_class
+      - name: concept_relationship
+      - name: concept_synonym
+      - name: domain
+      - name: drug_strength
+      - name: relationship
+      - name: vocabulary

@@ -15,8 +15,8 @@ WITH cte_payer_transitions_lower AS (
     SELECT
         patient AS patient_id
         , memberid AS member_id
-        , start_year AS coverage_start_year
-        , end_year AS coverage_end_year
+        , EXTRACT(YEAR FROM start_year) AS coverage_start_year
+        , EXTRACT(YEAR FROM end_year) AS coverage_end_year
         , payer AS payer_id
         , secondary_payer AS secondary_payer_id
         , "ownership" AS plan_owner_relationship
