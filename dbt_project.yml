@@ -21,7 +21,9 @@ models:
 seeds:
   synthea_omop_etl:
     vocabulary:
+      +enabled: true
     synthea:
+      +enabled: true
       +schema: synthea
       allergies:
         +column_types:

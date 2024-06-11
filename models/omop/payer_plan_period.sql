@@ -4,10 +4,10 @@ SELECT
     AS payer_plan_period_id
     , per.person_id
     , cast(
-        concat(cast(pt.coverage_start_year AS varchar), '01', '01') AS date
+        concat(cast(pt.coverage_start_year AS varchar), '-01', '-01') AS date
     ) AS payer_plan_period_start_date
     , cast(
-        concat(cast(pt.coverage_end_year AS varchar), '12', '31') AS date
+        concat(cast(pt.coverage_end_year AS varchar), '-12', '-31') AS date
     ) AS payer_plan_period_end_date
     , 0 AS payer_concept_id
     , pt.payer_id AS payer_source_value

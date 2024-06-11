@@ -1,4 +1,3 @@
-# Synthea sources to be used when not using the demonstration seeds
 version: 2
 
 sources:
@@ -13,5 +12,4 @@ sources:
       - name: domain
       - name: drug_strength
       - name: relationship
-      - name: source_to_concept_map
       - name: vocabulary

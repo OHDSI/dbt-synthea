@@ -5,3 +5,6 @@ dbt-env/
 target/
 dbt_packages/
 logs/
+data/
+seeds/synthea_external/
+seeds/vocabulary_external/
