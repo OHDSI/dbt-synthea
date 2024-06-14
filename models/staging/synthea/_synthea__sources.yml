@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: synthea
-    schema: "{{ target.schema }}_synthea"
+    schema: "{% if var('seed_source') %}{{ target.schema ~ '_synthea_seeds' }}{% else %}{{ target.schema ~ '_synthea' }}{% endif %}"
     tables:
       - name: allergies
       - name: careplans

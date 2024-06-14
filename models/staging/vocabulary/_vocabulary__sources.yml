@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: vocabulary
-    schema: "{{ target.schema }}"
+    schema: "{% if var('seed_source') %}{{ target.schema ~ '_vocab_seeds' }}{% else %}{{ target.schema }}{% endif %}"
     tables:
       - name: concept
       - name: concept_ancestor

@@ -14,6 +14,9 @@ snapshot-paths: ["snapshots"]
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
 
+vars:
+  seed_source: true
+
 models:
   synthea_omop_etl:
     +materialized: table
@@ -22,9 +25,10 @@ seeds:
   synthea_omop_etl:
     vocabulary:
       +enabled: true
+      +schema: vocab_seeds
     synthea:
       +enabled: true
-      +schema: synthea
+      +schema: synthea_seeds
       allergies:
         +column_types:
           CODE: varchar
