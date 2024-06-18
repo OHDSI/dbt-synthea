@@ -680,10 +680,10 @@ models:
               field: patient_id
       - name: member_id
         data_type: text
-      - name: coverage_start_year
-        data_type: integer
-      - name: coverage_end_year
-        data_type: integer
+      - name: coverage_start_datetime
+        data_type: datetime
+      - name: coverage_end_datetime
+        data_type: datetime
       - name: payer_id
         data_type: text
         tests:

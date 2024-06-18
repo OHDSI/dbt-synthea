@@ -16,14 +16,16 @@ SELECT
     , 0 AS refills
     , 0 AS quantity
     , coalesce(
-        date_part(
-            'day', m.medication_stop_datetime - m.medication_start_datetime
-        )
+        {{ dbt.datediff(
+            dbt.safe_cast("m.medication_start_datetime", api.Column.translate_type("date")),
+            dbt.safe_cast("m.medication_stop_datetime", api.Column.translate_type("date")), 
+            "day") 
+        }}
         , 0
     ) AS days_supply
     , cast(null AS varchar) AS sig
     , 0 AS route_concept_id
-    , 0 AS lot_number
+    , '0' AS lot_number
     , m.medication_code AS drug_source_value
     , srctosrcvm.source_concept_id AS drug_source_concept_id
     , cast(null AS varchar) AS route_source_value

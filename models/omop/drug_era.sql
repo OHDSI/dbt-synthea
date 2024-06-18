@@ -196,14 +196,30 @@ WITH ctePreDrugTarget AS (
         , days_exposed
 )
 
+, cteDrugEra AS (
+    SELECT
+        ROW_NUMBER() OVER (ORDER BY person_id) AS drug_era_id
+        , person_id
+        , drug_concept_id
+        , MIN(drug_sub_exposure_start_date) AS drug_era_start_date
+        , {{ dbt.safe_cast("drug_era_end_date", api.Column.translate_type("date")) }} AS drug_era_end_date
+        , SUM(drug_exposure_count) AS drug_exposure_count
+        , MIN(drug_sub_exposure_start_date) AS min_drug_sub_exposure_start_date
+        , SUM(days_exposed) AS sum_days_exposed
+    FROM cteDrugEraEnds
+    GROUP BY person_id, drug_concept_id, drug_era_end_date
+)
+
 SELECT
-    ROW_NUMBER() OVER (ORDER BY person_id) AS drug_era_id
+    drug_era_id
     , person_id
     , drug_concept_id
-    , MIN(drug_sub_exposure_start_date) AS drug_era_start_date
+    , drug_era_start_date
     , drug_era_end_date
-    , SUM(drug_exposure_count) AS drug_exposure_count
-    , EXTRACT(DAY FROM MIN(drug_sub_exposure_start_date) - drug_era_end_date)
-    - SUM(days_exposed) AS gap_days
-FROM cteDrugEraEnds
-GROUP BY person_id, drug_concept_id, drug_era_end_date
+    , drug_exposure_count
+    , {{ dbt.datediff(
+            dbt.safe_cast("min_drug_sub_exposure_start_date", api.Column.translate_type("date")),
+            dbt.safe_cast("drug_era_end_date", api.Column.translate_type("date")), 
+            "day") 
+    }} - sum_days_exposed AS gap_days
+FROM cteDrugEra

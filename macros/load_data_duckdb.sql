@@ -16,6 +16,10 @@
     {% if vocab_tables %}
         {% do run_query("ALTER TABLE " ~ target_schema ~ ".concept ALTER valid_start_date TYPE DATE USING strptime(CAST(valid_start_date AS VARCHAR), '%Y%m%d');") %}
         {% do run_query("ALTER TABLE " ~ target_schema ~ ".concept ALTER valid_end_date TYPE DATE USING strptime(CAST(valid_end_date AS VARCHAR), '%Y%m%d');") %}
+        {% do run_query("ALTER TABLE " ~ target_schema ~ ".concept_relationship ALTER valid_start_date TYPE DATE USING strptime(CAST(valid_start_date AS VARCHAR), '%Y%m%d');") %}
+        {% do run_query("ALTER TABLE " ~ target_schema ~ ".concept_relationship ALTER valid_end_date TYPE DATE USING strptime(CAST(valid_end_date AS VARCHAR), '%Y%m%d');") %}
+        {% do run_query("ALTER TABLE " ~ target_schema ~ ".drug_strength ALTER valid_start_date TYPE DATE USING strptime(CAST(valid_start_date AS VARCHAR), '%Y%m%d');") %}
+        {% do run_query("ALTER TABLE " ~ target_schema ~ ".drug_strength ALTER valid_end_date TYPE DATE USING strptime(CAST(valid_end_date AS VARCHAR), '%Y%m%d');") %}
     {% else %}
         {% do run_query("ALTER TABLE " ~ target_schema ~ ".medications ALTER CODE TYPE VARCHAR;") %}
         {% do run_query("ALTER TABLE " ~ target_schema ~ ".allergies ALTER CODE TYPE VARCHAR;") %}

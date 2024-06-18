@@ -40,6 +40,12 @@ seeds:
       claims_transactions:
         +column_types:
           PROCEDURECODE: varchar
+          AMOUNT: numeric
+          UNITAMOUNT: numeric
+          PAYMENTS: numeric
+          ADJUSTMENTS: numeric
+          TRANSFERS: numeric
+          OUTSTANDING: numeric
       claims:
         +column_types:
           DIAGNOSIS1: varchar
@@ -57,10 +63,14 @@ seeds:
       devices:
         +column_types:
           CODE: varchar
+          STOP: timestamp
       encounters:
         +column_types:
           CODE: varchar
           REASONCODE: varchar
+          BASE_ENCOUNTER_COST: numeric
+          TOTAL_CLAIM_COST: numeric
+          PAYER_COVERAGE: numeric
       imaging_studies:
         +column_types:
           CODE: varchar
@@ -71,10 +81,14 @@ seeds:
       immunizations:
         +column_types:
           CODE: varchar
+          BASE_COST: numeric
       medications:
         +column_types:
           CODE: varchar
           REASONCODE: varchar
+          BASE_COST: numeric
+          PAYER_COVERAGE: numeric
+          TOTALCOST: numeric
       observations:
         +column_types:
           CODE: varchar
@@ -86,6 +100,7 @@ seeds:
         +column_types:
           CODE: varchar
           REASONCODE: varchar
+          BASE_COST: numeric
       supplies:
         +column_types:
           CODE: varchar

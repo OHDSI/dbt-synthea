@@ -3,6 +3,12 @@ The purpose of this project is to re-create the Synthea-->OMOP ETL implemented i
 
 The project is currently under development and is not yet ready for production use.
 
+## Who Is This Project For?
+
+We built dbt-synthea to demonstrate the power of dbt for building OMOP ETLs.  **ETL developers** will benefit from this project because they can use it as inspiration for their own dbt-based OMOP ETL.  **Analysts** will appreciate the transparency of dbt's SQL-based ETL code and utilize this project to better understand how source data may be mapped into the OMOP CDM.  **Software developers** are welcome to use this project to transform a Synthea data of their choosing into OMOP to use for testing.
+
+...and this is just the beginning!  We hope someday to grow the OHDSI dbt ecosystem to include a generic dbt project template and source-specific macros and models.  Stay tuned and please reach out if you are interested in contributing.
+
 ## Developer Setup
 
 Currently this project is set up to run an OMOP ETL into either duckdb or Postgres.  Setup instructions for each are provided below.

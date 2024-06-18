@@ -2,9 +2,9 @@ WITH snomed_measurements AS (
     SELECT
         p.person_id
         , srctostdvm.target_concept_id AS measurement_concept_id
-        , e.encounter_start_datetime AS measurement_date
-        , e.encounter_start_datetime AS measurement_datetime
-        , e.encounter_start_datetime AS measurement_time
+        , {{ dbt.safe_cast("pr.procedure_start_datetime", api.Column.translate_type("date")) }} AS measurement_date
+        , pr.procedure_start_datetime AS measurement_datetime
+        , {{ dbt.safe_cast("pr.procedure_start_datetime", api.Column.translate_type("time")) }} AS measurement_time
         , 32827 AS measurement_type_concept_id
         , 0 AS operator_concept_id
         , cast(null AS float) AS value_as_number
@@ -22,7 +22,6 @@ WITH snomed_measurements AS (
         , cast(null AS int) AS unit_source_concept_id
         , cast(null AS bigint) AS measurement_event_id
         , cast(null AS int) AS meas_event_field_concept_id
-
     FROM {{ ref ('stg_synthea__procedures') }} AS pr
     INNER JOIN {{ ref ('int__source_to_standard_vocab_map') }} AS srctostdvm
         ON
@@ -52,9 +51,9 @@ WITH snomed_measurements AS (
     SELECT
         p.person_id
         , srctostdvm.target_concept_id AS measurement_concept_id
-        , o.observation_datetime AS measurement_date
+        , {{ dbt.safe_cast("o.observation_datetime", api.Column.translate_type("date")) }} AS measurement_date
         , o.observation_datetime AS measurement_datetime
-        , o.observation_datetime AS measurement_time
+        , {{ dbt.safe_cast("o.observation_datetime", api.Column.translate_type("time")) }} AS measurement_time
         , 32827 AS measurement_type_concept_id
         , 0 AS operator_concept_id
         , CASE

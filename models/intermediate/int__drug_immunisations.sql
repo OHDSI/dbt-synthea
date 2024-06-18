@@ -14,7 +14,7 @@ SELECT
     , 0 AS days_supply
     , cast(null AS varchar) AS sig
     , 0 AS route_concept_id
-    , 0 AS lot_number
+    , '0' AS lot_number
     , i.immunization_code AS drug_source_value
     , srctosrcvm.source_concept_id AS drug_source_concept_id
     , cast(null AS varchar) AS route_source_value

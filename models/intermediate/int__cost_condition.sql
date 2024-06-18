@@ -3,12 +3,12 @@ WITH cte AS (
         co.condition_occurrence_id
         , ppp.payer_plan_period_id
         , coalesce(
-            sum(CASE WHEN ct.transfer_type = '1' THEN ct.transaction_amount END)
+            sum(CASE WHEN ct.transfer_type = '1' THEN {{ dbt.safe_cast("ct.transaction_amount", api.Column.translate_type("decimal")) }} END)
             , 0
         )
         AS payer_paid
         , coalesce(
-            sum(CASE WHEN ct.transfer_type = 'p' THEN ct.transaction_amount END)
+            sum(CASE WHEN ct.transfer_type = 'p' THEN {{ dbt.safe_cast("ct.transaction_amount", api.Column.translate_type("decimal")) }} END)
             , 0
         )
         AS patient_paid
@@ -57,9 +57,9 @@ SELECT
     , 'condition' AS cost_domain_id
     , 32814 AS cost_type_concept_id
     , 44818668 AS currency_concept_id
-    , payer_paid + patient_paid AS total_charge
-    , payer_paid + patient_paid AS total_cost
-    , payer_paid + patient_paid AS total_paid
+    , {{ dbt.safe_cast("payer_paid ", api.Column.translate_type("decimal")) }} + {{ dbt.safe_cast("patient_paid", api.Column.translate_type("decimal")) }} AS total_charge
+    , {{ dbt.safe_cast("payer_paid ", api.Column.translate_type("decimal")) }} + {{ dbt.safe_cast("patient_paid", api.Column.translate_type("decimal")) }} AS total_cost
+    , {{ dbt.safe_cast("payer_paid ", api.Column.translate_type("decimal")) }} + {{ dbt.safe_cast("patient_paid", api.Column.translate_type("decimal")) }} AS total_paid
     , payer_paid AS paid_by_payer
     , patient_paid AS paid_by_patient
     , cast(null AS numeric) AS paid_patient_copay

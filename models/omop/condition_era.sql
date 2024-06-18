@@ -88,7 +88,7 @@ SELECT
     , person_id
     , condition_concept_id
     , min(condition_start_date) AS condition_era_start_date
-    , era_end_date AS condition_era_end_date
+    , {{ dbt.safe_cast("era_end_date", api.Column.translate_type("date")) }} AS condition_era_end_date
     , count(*) AS condition_occurrence_count
 FROM cteConditionEnds
 GROUP BY person_id, condition_concept_id, era_end_date

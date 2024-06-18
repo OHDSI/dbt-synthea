@@ -15,9 +15,9 @@ SELECT
         ELSE 0
     END AS visit_detail_concept_id
 
-    , av.visit_start_date AS visit_detail_start_date
+    , {{ dbt.safe_cast("av.visit_start_date", api.Column.translate_type("date")) }} AS visit_detail_start_date
     , av.visit_start_date AS visit_detail_start_datetime
-    , av.visit_end_date AS visit_detail_end_date
+    , {{ dbt.safe_cast("av.visit_end_date", api.Column.translate_type("date")) }} AS visit_detail_end_date
     , av.visit_end_date AS visit_detail_end_datetime
     , 32827 AS visit_detail_type_concept_id
     , pr.provider_id
