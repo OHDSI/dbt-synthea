@@ -41,152 +41,548 @@ models:
       - name: ethnicity_source_value
       - name: ethnicity_source_concept_id
   
-  - name: condition_occurrence
+  - name: care_site
     columns:
-      - name: condition_occurrence_id
-        description: "A unique identifier for each condition occurrence."
+      - name: care_site_id
+        type: integer
         tests:
           - unique
           - not_null
-      - name: person_id
-        description: "A foreign key to the person table."
+      - name: care_site_name
+        type: varchar
+      - name: care_site_source_value
+        type: varchar
+      - name: location_id
+        type: integer
+      - name: place_of_service_concept_id
+        type: integer
+      - name: place_of_service_source_value
+        type: varchar
+
+  - name: cdm_source
+    columns:
+      - name: cdm_etl_reference
+        type: string
+      - name: cdm_holder
+        type: string
         tests:
           - not_null
+      - name: cdm_release_date
+        type: date
+        tests:
+          - not_null
+      - name: cdm_source_abbreviation
+        type: string
+        tests:
+          - not_null
+      - name: cdm_source_name
+        type: string
+        tests:
+          - not_null
+      - name: cdm_version
+        type: string
+      - name: cdm_version_concept_id
+        type: integer
+        tests:
+          - not_null
+      - name: source_description
+        type: string
+      - name: source_documentation_reference
+        type: string
+      - name: source_release_date
+        type: date
+        tests:
+          - not_null
+      - name: vocabulary_version
+        type: string
+        tests:
+          - not_null
+
+  - name: condition_era
+    columns:
+      - name: condition_era_id
+        type: integer
+        tests:
+          - unique
+          - not_null
       - name: condition_concept_id
+        type: integer
+        tests:
+          - not_null
+      - name: condition_era_start_date
+        type: datetime
+        tests:
+          - not_null
+      - name: condition_era_end_date
+        type: datetime
+        tests:
+          - not_null
+      - name: condition_occurrence_count
+        type: integer
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
+
+  - name: condition_occurrence
+    columns:
+      - name: condition_occurrence_id
+        type: integer
+        tests:
+          - unique
+          - not_null
+      - name: condition_concept_id
+        type: integer
         tests:
           - not_null
       - name: condition_start_date
-        description: "The date when the condition started."
+        type: date
         tests:
           - not_null
+      - name: condition_start_datetime
+        type: datetime
       - name: condition_end_date
-        description: "The date when the condition ended."
+        type: date
+      - name: condition_end_datetime
+        type: datetime
       - name: condition_type_concept_id
+        type: integer
         tests:
           - not_null
+      - name: condition_status_concept_id
+        type: integer
       - name: condition_source_value
+        type: string
       - name: condition_source_concept_id
+        type: integer
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
+      - name: provider_id
+        type: integer
+      - name: stop_reason
+        type: string
+      - name: visit_occurrence_id
+        type: integer
+      - name: visit_detail_id
+        type: integer
+
+  - name: cost
+    columns:
+      - name: cost_id
+        type: integer
+        tests:
+          - unique
+          - not_null
+      - name: amount_allowed
+        type: float
+      - name: cost_domain_id
+        type: string
+        tests:
+          - not_null
+      - name: cost_event_id
+        type: integer
+        tests:
+          - not_null
+      - name: cost_type_concept_id
+        type: integer
+        tests:
+          - not_null
+      - name: currency_concept_id
+        type: integer
+      - name: drg_concept_id
+        type: integer
+      - name: drg_source_value
+        type: string
+      - name: paid_by_patient
+        type: float
+      - name: paid_by_payer
+        type: float
+      - name: paid_by_primary
+        type: float
+      - name: paid_dispensing_fee
+        type: float
+      - name: paid_ingredient_cost
+        type: float
+      - name: paid_patient_coinsurance
+        type: float
+      - name: paid_patient_copay
+        type: float
+      - name: paid_patient_deductible
+        type: float
+      - name: payer_plan_period_id
+        type: integer
+      - name: revenue_code_concept_id
+        type: integer
+      - name: revenue_code_source_value
+        type: string
+      - name: total_charge
+        type: float
+      - name: total_cost
+        type: float
+      - name: total_paid
+        type: float
+
+  - name: death
+    columns:
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
+      - name: cause_concept_id
+        type: integer
+      - name: cause_source_concept_id
+        type: integer
+      - name: cause_source_value
+        type: string
+      - name: death_date
+        type: date
+        tests:
+          - not_null
+      - name: death_datetime
+        type: datetime
+      - name: death_type_concept_id
+        type: integer
+
+  - name: device_exposure
+    columns:
+      - name: device_exposure_id
+        type: integer
+        tests:
+          - unique
+          - not_null
+      - name: device_concept_id
+        type: integer
+        tests:
+          - not_null
+      - name: device_exposure_start_date
+        type: date
+        tests:
+          - not_null
+      - name: device_exposure_start_datetime
+        type: datetime
+      - name: device_exposure_end_date
+        type: date
+      - name: device_exposure_end_datetime
+        type: datetime
+      - name: device_type_concept_id
+        type: integer
+        tests:
+          - not_null
+      - name: device_source_concept_id
+        type: integer
+      - name: device_source_value
+        type: string
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
+      - name: provider_id
+        type: integer
+      - name: quantity
+        type: integer
+      - name: unique_device_id
+        type: string
+      - name: unit_concept_id
+        type: integer
+      - name: unit_source_concept_id
+        type: integer
+      - name: unit_source_value
+        type: string
+      - name: visit_occurrence_id
+        type: integer
+      - name: visit_detail_id
+        type: integer
+
+  - name: drug_era
+    columns:
+      - name: drug_era_id
+        type: integer
+        tests:
+          - unique
+          - not_null
+      - name: drug_concept_id
+        type: integer
+        tests:
+          - not_null
+      - name: drug_era_start_date
+        type: datetime
+        tests:
+          - not_null
+      - name: drug_era_end_date
+        type: datetime
+        tests:
+          - not_null
+      - name: drug_exposure_count
+        type: integer
+      - name: gap_days
+        type: integer
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
 
   - name: drug_exposure
     columns:
       - name: drug_exposure_id
-        description: "A unique identifier for each drug exposure."
+        type: integer
         tests:
           - unique
           - not_null
-      - name: person_id
-        description: "A foreign key to the person table."
-        tests:
-          - not_null
       - name: drug_concept_id
+        type: integer
         tests:
           - not_null
       - name: drug_exposure_start_date
-        description: "The date when the drug exposure started."
+        type: date
         tests:
           - not_null
+      - name: drug_exposure_start_datetime
+        type: datetime
       - name: drug_exposure_end_date
-        description: "The date when the drug exposure ended."
+        type: date
+      - name: drug_exposure_end_datetime
+        type: datetime
       - name: drug_type_concept_id
+        type: integer
         tests:
           - not_null
-      - name: drug_source_value
       - name: drug_source_concept_id
+        type: integer
+      - name: drug_source_value
+        type: string
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
+      - name: provider_id
+        type: integer
+      - name: quantity
+        type: float
+      - name: refills
+        type: integer
+      - name: route_concept_id
+        type: integer
+      - name: route_source_value
+        type: string
+      - name: sig
+        type: string
+      - name: stop_reason
+        type: string
+      - name: verbatim_end_date
+        type: date
+      - name: visit_occurrence_id
+        type: integer
+      - name: visit_detail_id
+        type: integer
+
+  - name: location
+    columns:
+      - name: location_id
+        type: integer
+        tests:
+          - unique
+          - not_null
+      - name: address_1
+        type: string
+      - name: address_2
+        type: string
+      - name: city
+        type: string
+      - name: state
+        type: string
+      - name: county
+        type: string
+      - name: zip
+        type: string
+      - name: country_concept_id
+        type: integer
+      - name: country_source_value
+        type: string
+      - name: latitude
+        type: float
+      - name: longitude
+        type: float
+      - name: location_source_value
+        type: string
 
   - name: measurement
     columns:
       - name: measurement_id
-        description: "A unique identifier for each measurement."
+        type: integer
         tests:
           - unique
           - not_null
-      - name: person_id
-        description: "A foreign key to the person table."
-        tests:
-          - not_null
+      - name: meas_event_field_concept_id
+        type: integer
       - name: measurement_concept_id
+        type: integer
         tests:
           - not_null
       - name: measurement_date
-        description: "The date when the measurement was taken."
+        type: date
         tests:
           - not_null
-      - name: measurement_type_concept_id
-        tests:
-          - not_null
-      - name: measurement_source_value
+      - name: measurement_datetime
+        type: datetime
+      - name: measurement_event_id
+        type: bigint
       - name: measurement_source_concept_id
+        type: integer
+      - name: measurement_source_value
+        type: string
+      - name: measurement_type_concept_id
+        type: integer
+        tests:
+          - not_null
+      - name: operator_concept_id
+        type: integer
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
+      - name: provider_id
+        type: integer
+      - name: range_high
+        type: float
+      - name: range_low
+        type: float
+      - name: unit_concept_id
+        type: integer
+      - name: unit_source_concept_id
+        type: integer
+      - name: unit_source_value
+        type: string
+      - name: value_as_concept_id
+        type: integer
+      - name: value_as_number
+        type: float
+      - name: value_source_value
+        type: string
+      - name: visit_occurrence_id
+        type: integer
+      - name: visit_detail_id
+        type: integer
 
   - name: observation
     columns:
       - name: observation_id
-        description: "A unique identifier for each observation."
+        type: integer
         tests:
           - unique
           - not_null
-      - name: person_id
-        description: "A foreign key to the person table."
-        tests:
-          - not_null
+      - name: obs_event_field_concept_id
+        type: integer
       - name: observation_concept_id
+        type: integer
         tests:
           - not_null
       - name: observation_date
-        description: "The date when the observation was made."
+        type: date
         tests:
           - not_null
-      - name: observation_type_concept_id
-        tests:
-          - not_null
-      - name: observation_source_value
+      - name: observation_datetime
+        type: datetime
+      - name: observation_event_id
+        type: bigint
       - name: observation_source_concept_id
-
-  - name: procedure_occurrence
-    columns:
-      - name: procedure_occurrence_id
-        description: "A unique identifier for each procedure occurrence."
+        type: integer
+      - name: observation_source_value
+        type: string
+      - name: observation_type_concept_id
+        type: integer
         tests:
-          - unique
           - not_null
       - name: person_id
-        description: "A foreign key to the person table."
+        type: integer
         tests:
           - not_null
-      - name: procedure_concept_id
-        tests:
-          - not_null
-      - name: procedure_date
-        description: "The date when the procedure was performed."
-        tests:
-          - not_null
-      - name: procedure_type_concept_id
-        tests:
-          - not_null
-      - name: procedure_source_value
-      - name: procedure_source_concept_id
-
-  - name: visit_occurrence
-    columns:
+      - name: provider_id
+        type: integer
+      - name: qualifier_concept_id
+        type: integer
+      - name: qualifier_source_value
+        type: string
+      - name: unit_concept_id
+        type: integer
+      - name: unit_source_value
+        type: string
+      - name: value_as_concept_id
+        type: Integer
+      - name: value_as_number
+        type: float
+      - name: value_as_string
+        type: string
+      - name: value_source_value
+        type: string
       - name: visit_occurrence_id
-        description: "A unique identifier for each visit occurrence."
+        type: integer
+      - name: visit_detail_id
+        type: integer
+
+  - name: observation_period
+    columns:
+      - name: observation_period_id
+        type: integer
         tests:
           - unique
           - not_null
       - name: person_id
-        description: "A foreign key to the person table."
+        type: integer
         tests:
           - not_null
-      - name: visit_concept_id
+      - name: observation_period_start_date
+        type: date
         tests:
           - not_null
-      - name: visit_start_date
-        description: "The date when the visit started."
+      - name: observation_period_end_date
+        type: date
         tests:
           - not_null
-      - name: visit_end_date
-        description: "The date when the visit ended."
-      - name: visit_type_concept_id
+      - name: period_type_concept_id
+        type: integer
         tests:
           - not_null
-      - name: visit_source_value
-      - name: visit_source_concept_id
+
+  - name: payer_plan_period
+    columns:
+      - name: payer_plan_period_id
+        type: integer
+        tests:
+          - unique
+          - not_null
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
+      - name: payer_concept_id
+        type: integer
+      - name: payer_source_concept_id
+        type: integer
+      - name: payer_source_value
+        type: string
+      - name: plan_concept_id
+        type: integer
+      - name: plan_source_concept_id
+        type: integer
+      - name: plan_source_value
+        type: string
+      - name: sponsor_concept_id
+        type: integer
+      - name: sponsor_source_concept_id
+        type: integer
+      - name: sponsor_source_value
+        type: string
+      - name: family_source_value
+        type: string
+      - name: payer_plan_period_start_date
+        type: date
+        tests:
+          - not_null
+      - name: payer_plan_period_end_date
+        type: date
+        tests:
+          - not_null
+      - name: stop_reason_concept_id
+        type: integer

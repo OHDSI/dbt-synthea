@@ -6,3 +6,5 @@ target/
 dbt_packages/
 logs/
 data/
+.Rdata
+.Rhistory
