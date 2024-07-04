@@ -67,7 +67,7 @@ dbt debug
 dbt deps
 ```
 
- 5. **If you'd like to run the default ETL using the pre-seeded Synthea dataset,** run `dbt seed` to load the CSVs with the Synthea dataset and vocabulary data. This materializes the seed CSVs as tables in your target schema (vocab) and a _synthea schema (Synthea tables).  **Then, skip to step 8 below.**
+ 5. **If you'd like to run the default ETL using the pre-seeded Synthea dataset,** run `dbt seed` to load the CSVs with the Synthea dataset and vocabulary data. This materializes the seed CSVs as tables in your target schema (vocab) and a _synthea schema (Synthea tables).  **Then, skip to step 9 below.**
 ```bash
 dbt seed
 ```
@@ -81,12 +81,17 @@ file_dict=$(python3 scripts/python/get_csv_filepaths.py path/to/vocab/csvs)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: true}"
 ```
 
- 8. Build the OMOP tables:
+ 8. Seed the location mapper:
+```bash
+dbt seed --select states
+```
+
+ 9. Build the OMOP tables:
 ```bash
 dbt run
 ```
 
- 9. Run tests:
+ 10. Run tests:
 ```bash
 dbt test
 ```
@@ -122,7 +127,7 @@ dbt debug
 dbt deps
 ```
 
- 5. **If you'd like to run the default ETL using the pre-seeded Synthea dataset,** run `dbt seed` to load the CSVs with the Synthea dataset and vocabulary data. This materializes the seed CSVs as tables in your target schema (vocab) and a _synthea schema (Synthea tables).  **Then, skip to step 9 below.**
+ 5. **If you'd like to run the default ETL using the pre-seeded Synthea dataset,** run `dbt seed` to load the CSVs with the Synthea dataset and vocabulary data. This materializes the seed CSVs as tables in your target schema (vocab) and a _synthea schema (Synthea tables).  **Then, skip to step 10 below.**
 ```bash
 dbt seed
 ```
@@ -137,12 +142,17 @@ dbt run-operation create_synthea_tables
 
  8. **[BYO DATA ONLY]** Use the technology/package of your choice to load the OMOP vocabulary and raw Synthea files into these newly-created tables. **NOTE only Synthea v3.0.0 is supported at this time.**
 
- 9. Build the OMOP tables:
+ 9. Seed the location mapper:
+```bash
+dbt seed --select states
+```
+
+ 10. Build the OMOP tables:
 ```bash
 dbt run
 ```
 
- 10. Run tests:
+ 11. Run tests:
 ```bash
 dbt test
 ```

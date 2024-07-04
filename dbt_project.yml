@@ -23,6 +23,9 @@ models:
 
 seeds:
   synthea_omop_etl:
+    map:
+      +enabled: true
+      +schema: map_seeds
     vocabulary:
       +enabled: true
       +schema: vocab_seeds

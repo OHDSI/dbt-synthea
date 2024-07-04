@@ -13,3 +13,4 @@ sources:
       - name: drug_strength
       - name: relationship
       - name: vocabulary
+      - name: source_to_concept_map
