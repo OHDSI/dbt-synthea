@@ -586,3 +586,201 @@ models:
           - not_null
       - name: stop_reason_concept_id
         type: integer
+
+  - name: dose_era
+    columns: 
+      - name: dose_era_id
+        type: integer
+      - name: person_id
+        type: integer
+      - name: drug_concept_id
+        type: integer
+      - name: unit_concept_id
+        type: integer
+      - name: dose_value
+        type: float
+      - name: dose_era_start_date
+        type: datetime
+      - name: dose_era_end_date
+        type: datetime
+  
+  - name: episode
+    columns:
+      - name: episode_id
+        type: integer
+        tests:
+          - not_null
+      - name: person_id
+        type: integer
+        tests:
+          - not_null
+      - name: episode_concept_id
+        type: integer
+      - name: episode_start_date
+        type: date
+        tests:
+          - not_null
+      - name: episode_start_datetime
+        type: datetime
+      - name: episode_end_date
+        type: date
+        tests:
+          - not_null
+      - name: episode_end_datetime
+        type: datetime
+      - name: episode_parent_id
+        type: integer
+      - name: episode_number
+        type: integer
+      - name: episode_object_concept_id
+        type: integer
+      - name: episode_type_concept_id
+        type: integer
+      - name: episode_source_value
+        type: string
+      - name: episode_source_concept_id
+        type: integer
+  
+  - name: episode_event
+    columns:
+      - name: episode_id
+        type: integer
+      - name: event_id
+        type: integer
+      - name: episode_event_field_concept_id
+        type: integer
+  
+  - name: fact_relationship
+    columns:
+      - name: domain_concept_id_1
+        type: integer
+      - name: fact_id_1
+        type: integer
+      - name: domain_concept_id_2
+        type: integer
+      - name: fact_id_2
+        type: integer
+      - name: relationship_concept_id
+        type: integer
+  
+  - name: metadata
+    columns:
+    - name: metadata
+      columns:
+      - name: metadata_id
+        type: integer
+      - name: metadata_concept_id
+        type: integer
+      - name: metadata_type_concept_id
+        type: integer
+      - name: name
+        type: string
+      - name: value_as_string
+        type: string
+      - name: value_as_concept_id
+        type: integer
+      - name: value_as_number
+        type: float
+      - name: metadata_date
+        type: date
+      - name: metadata_datetime
+        type: datetime
+  
+  - name: note_nlp
+    columns:
+    - name: note_nlp_id
+      type: integer
+    - name: note_id
+      type: integer
+    - name: section_concept_id
+      type: integer
+    - name: snippet
+      type: string
+    - name: offset
+      type: integer
+    - name: lexical_variant
+      type: string
+    - name: note_nlp_concept_id
+      type: integer
+    - name: note_nlp_source_concept_id
+      type: integer
+    - name: nlp_system
+      type: string
+    - name: nlp_date
+      type: date
+    - name: nlp_datetime
+      type: datetime
+    - name: term_exists
+      type: string
+    - name: term_temporal
+      type: string
+    - name: term_modifiers
+      type: string
+
+  - name: note
+    columns:
+      - name: note_id
+        type: integer
+      - name: person_id
+        type: integer
+      - name: note_date
+        type: date
+      - name: note_datetime
+        type: datetime
+      - name: note_type_concept_id
+        type: integer
+      - name: note_class_concept_id
+        type: integer
+      - name: note_title
+        type: string
+      - name: note_text
+        type: string
+      - name: encoding_concept_id
+        type: integer
+      - name: language_concept_id
+        type: integer
+      - name: provider_id
+        type: integer
+      - name: visit_occurrence_id
+        type: integer
+      - name: visit_detail_id
+        type: integer
+      - name: note_source_value
+        type: string
+      - name: note_event_id
+        type: integer
+      - name: note_event_field_concept_id
+        type: integer
+  
+  - name: specimen
+    columns:
+      - name: specimen_id
+        type: integer
+      - name: person_id
+        type: integer
+      - name: specimen_concept_id
+        type: integer
+      - name: specimen_type_concept_id
+        type: integer
+      - name: specimen_date
+        type: date
+      - name: specimen_datetime
+        type: datetime
+      - name: quantity
+        type: float
+      - name: unit_concept_id
+        type: integer
+      - name: anatomic_site_concept_id
+        type: integer
+      - name: disease_status_concept_id
+        type: integer
+      - name: specimen_source_id
+        type: integer
+      - name: specimen_source_value
+        type: string
+      - name: unit_source_value
+        type: string
+      - name: anatomic_site_source_value
+        type: string
+      - name: disease_status_source_value
+        type: string

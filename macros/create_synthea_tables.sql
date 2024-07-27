@@ -48,8 +48,8 @@
         {% if not check_if_exists(database, schema, "encounters") %}
             CREATE TABLE {{schema}}.encounters (
                 id              VARCHAR(1000),
-                "start"           DATETIME,
-                "stop"            DATETIME,
+                "start"           TIMESTAMP,
+                "stop"            TIMESTAMP,
                 patient         VARCHAR(1000),
                 organization    VARCHAR(1000),
                 "provider"        VARCHAR(1000),
@@ -66,7 +66,7 @@
         {% endif %}
         {% if not check_if_exists(database, schema, "immunizations") %}
             CREATE TABLE {{schema}}.immunizations (
-                "date"        DATETIME,
+                "date"        TIMESTAMP,
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
@@ -77,7 +77,7 @@
         {% if not check_if_exists(database, schema, "imaging_studies") %}
             CREATE TABLE {{schema}}.imaging_studies (
                 id              VARCHAR(1000),
-                "date"          DATETIME,
+                "date"          TIMESTAMP,
                 patient         VARCHAR(1000),
                 encounter       VARCHAR(1000),
                 series_uid      VARCHAR(1000),
@@ -93,8 +93,8 @@
         {% endif %}
         {% if not check_if_exists(database, schema, "medications") %}
             CREATE TABLE {{schema}}.medications (
-                "start"         DATETIME,
-                "stop"          DATETIME,
+                "start"         TIMESTAMP,
+                "stop"          TIMESTAMP,
                 patient       VARCHAR(1000),
                 payer         VARCHAR(1000),
                 encounter     VARCHAR(1000),
@@ -110,7 +110,7 @@
         {% endif %}
         {% if not check_if_exists(database, schema, "observations") %}
             CREATE TABLE {{schema}}.observations (
-                "date"         DATETIME,
+                "date"         TIMESTAMP,
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 category      VARCHAR(1000),
@@ -167,8 +167,8 @@
         {% endif %}
         {% if not check_if_exists(database, schema, "procedures") %}
             CREATE TABLE {{schema}}.procedures (
-                "start"         DATETIME,
-                "stop"          DATETIME,
+                "start"         TIMESTAMP,
+                "stop"          TIMESTAMP,
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
@@ -196,8 +196,8 @@
         {% endif %}
         {% if not check_if_exists(database, schema, "devices") %}
             CREATE TABLE {{schema}}.devices (
-                "start"         DATETIME,
-                "stop"          DATETIME,
+                "start"         TIMESTAMP,
+                "stop"          TIMESTAMP,
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
@@ -224,8 +224,8 @@
                 diagnosis8                   VARCHAR(1000),
                 referringproviderid          VARCHAR(1000),
                 appointmentid                VARCHAR(1000),
-                currentillnessdate           DATETIME,
-                servicedate                  DATETIME,
+                currentillnessdate           TIMESTAMP,
+                servicedate                  TIMESTAMP,
                 supervisingproviderid        VARCHAR(1000),
                 status1                      VARCHAR(1000),
                 status2                      VARCHAR(1000),
@@ -233,9 +233,9 @@
                 outstanding1                 NUMERIC,
                 outstanding2                 NUMERIC,
                 outstandingp                 NUMERIC,
-                lastbilleddate1              DATETIME,
-                lastbilleddate2              DATETIME,
-                lastbilleddatep              DATETIME,
+                lastbilleddate1              TIMESTAMP,
+                lastbilleddate2              TIMESTAMP,
+                lastbilleddatep              TIMESTAMP,
                 healthcareclaimtypeid1       NUMERIC,
                 healthcareclaimtypeid2       NUMERIC
             );
@@ -249,8 +249,8 @@
                 "type"                 VARCHAR(1000),
                 amount                 NUMERIC,
                 method                 VARCHAR(1000),
-                fromdate               DATETIME,
-                todate                 DATETIME,
+                fromdate               TIMESTAMP,
+                todate                 TIMESTAMP,
                 placeofservice         VARCHAR(1000),
                 procedurecode          VARCHAR(1000),
                 modifier1              VARCHAR(1000),
@@ -281,8 +281,8 @@
             CREATE TABLE {{schema}}.payer_transitions (
                 patient           VARCHAR(1000),
                 memberid         VARCHAR(1000),
-                start_year       DATETIME,
-                end_year         DATETIME,
+                start_year       TIMESTAMP,
+                end_year         TIMESTAMP,
                 payer            VARCHAR(1000),
                 secondary_payer  VARCHAR(1000),
                 "ownership"        VARCHAR(1000),

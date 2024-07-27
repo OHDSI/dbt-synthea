@@ -13,16 +13,13 @@ SELECT
     , m.medication_stop_datetime AS verbatim_end_date
     , 32838 AS drug_type_concept_id
     , cast(null AS varchar) AS stop_reason
-    , 0 AS refills
-    , 0 AS quantity
-    , coalesce(
-        {{ dbt.datediff(
+    , cast(null AS integer) AS refills
+    , cast(null AS integer) AS quantity
+    , {{ dbt.datediff(
             dbt.safe_cast("m.medication_start_datetime", api.Column.translate_type("date")),
             dbt.safe_cast("m.medication_stop_datetime", api.Column.translate_type("date")), 
             "day") 
-        }}
-        , 0
-    ) AS days_supply
+    }} AS days_supply
     , cast(null AS varchar) AS sig
     , 0 AS route_concept_id
     , '0' AS lot_number
