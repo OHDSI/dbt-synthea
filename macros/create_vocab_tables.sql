@@ -82,6 +82,18 @@
                 valid_end_date date NOT NULL,
                 invalid_reason varchar(1) NULL );
         {% endif %}
+        {% if not check_if_exists(database, schema, "source_to_concept_map") %}
+            CREATE TABLE {{schema}}.source_to_concept_map (
+                source_code VARCHAR(50),
+                source_concept_id INTEGER,
+                source_vocabulary_id VARCHAR(20),
+                source_code_description VARCHAR(255),
+                target_concept_id INTEGER,
+                target_vocabulary_id VARCHAR(20),
+                valid_start_date DATE,
+                valid_end_date DATE,
+                invalid_reason VARCHAR(1));
+        {% endif %}
         COMMIT;
     {% endset %}
 

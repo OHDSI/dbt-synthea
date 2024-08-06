@@ -7,7 +7,7 @@ SELECT
     , extract(YEAR FROM p.birth_date) AS year_of_birth
     , extract(MONTH FROM p.birth_date) AS month_of_birth
     , extract(DAY FROM p.birth_date) AS day_of_birth
-    , NULL AS birth_datetime
+    , cast(NULL AS TIMESTAMP) AS birth_datetime
     , CASE upper(p.race)
         WHEN 'WHITE' THEN 8527
         WHEN 'BLACK' THEN 8516

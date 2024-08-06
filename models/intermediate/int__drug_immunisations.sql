@@ -9,9 +9,9 @@ SELECT
     , i.immunization_date AS verbatim_end_date
     , 32827 AS drug_type_concept_id
     , cast(null AS varchar) AS stop_reason
-    , 0 AS refills
-    , 0 AS quantity
-    , 0 AS days_supply
+    , cast(null AS integer) AS refills
+    , cast(null AS integer) AS quantity
+    , cast(null AS integer) AS days_supply
     , cast(null AS varchar) AS sig
     , 0 AS route_concept_id
     , '0' AS lot_number

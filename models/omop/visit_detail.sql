@@ -22,7 +22,7 @@ SELECT
     , 32827 AS visit_detail_type_concept_id
     , pr.provider_id
     , null AS care_site_id
-    , 0 AS admitted_from_source_concept_id
+    , 0 AS admitted_from_concept_id
     , 0 AS discharged_to_concept_id
     , lag(av.visit_occurrence_id)
         OVER (

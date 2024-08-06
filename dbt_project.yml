@@ -26,6 +26,9 @@ seeds:
     map:
       +enabled: true
       +schema: map_seeds
+    omop:
+      +enabled: true
+      +schema: omop_seeds
     vocabulary:
       +enabled: true
       +schema: vocab_seeds
