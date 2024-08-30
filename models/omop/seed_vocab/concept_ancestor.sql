@@ -1,7 +1,3 @@
-{% if var('seed_source', true) %}
-{{ config(enabled=true) }}
-{% else %}
-{{ config(enabled=false) }}
-{% endif %}
+{{ config(enabled=var('seed_source', true)) }}
 
 SELECT * FROM {{ ref('stg_vocabulary__concept_ancestor') }}
