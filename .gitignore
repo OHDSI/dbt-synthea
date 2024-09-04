@@ -8,3 +8,4 @@ logs/
 data/
 .Rdata
 .Rhistory
+*.duckdb
