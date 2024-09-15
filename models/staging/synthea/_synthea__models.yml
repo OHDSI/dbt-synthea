@@ -252,11 +252,6 @@ models:
         data_type: text
       - name: patient_insurance_id
         data_type: text
-        description: "Foreign key to the Payer Transitions table member ID."
-        tests:
-          - relationships:
-              to: ref('stg_synthea__payer_transitions')
-              field: member_id
       - name: fee_schedule_id
         data_type: double precision
         description: "Fixed to 1."
