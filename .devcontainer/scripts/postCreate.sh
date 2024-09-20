@@ -4,6 +4,8 @@ git config --global init.defaultBranch main
 
 # Install requirements
 cd /workspaces/dbt-synthea
+python -m venv dbt-env
+source dbt-env/bin/activate 
 pip install -r .devcontainer/scripts/minimal_requirements.txt
 
 # Setup pre-commit

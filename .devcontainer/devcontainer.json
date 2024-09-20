@@ -31,7 +31,8 @@
                 "[python]": {
                     "editor.defaultFormatter": "ms-python.black-formatter",
                     "editor.formatOnSave": true
-                }
+                },
+                "python.defaultInterpreterPath": "./dbt-env/bin/python3"
             }
         }
     },
