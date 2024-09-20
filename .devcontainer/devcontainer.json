@@ -1,0 +1,42 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+    "name": "Python 3",
+    // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+    "image": "mcr.microsoft.com/devcontainers/python:3.12",
+    // Features to add to the dev container. More info: https://containers.dev/features.
+    // "features": {},
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    // "forwardPorts": [],
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": "bash ./.devcontainer/scripts/postCreate.sh",
+    "postStartCommand": "bash ./.devcontainer/scripts/postStart.sh",
+    // "mounts": [],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "davidanson.vscode-markdownlint",
+                "editorconfig.editorconfig",
+                "mads-hartmann.bash-ide-vscode",
+                "mechatroner.rainbow-csv",
+                "ms-python.black-formatter",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "njpwerner.autodocstring",
+                "innoverio.vscode-dbt-power-user"
+            ],
+            "settings": {
+                "python.formatting.provider": "black",
+                "python.analysis.completeFunctionParens": true,
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.formatOnSave": true
+                }
+            }
+        }
+    },
+    // Configure tool-specific properties.
+    // "customizations": {},
+    // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+    // "remoteUser": "root"
+}
