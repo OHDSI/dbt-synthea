@@ -106,7 +106,7 @@ synthea_omop_etl:
       password: <password>
       port: 5432
       schema: dbt_synthea_dev
-      threads: 8
+      threads: 4 # See https://docs.getdbt.com/docs/running-a-dbt-project/using-threads for more details
       type: postgres
   target: dev
 ```
