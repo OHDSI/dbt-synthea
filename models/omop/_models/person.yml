@@ -1,23 +1,25 @@
 models:
   - name: person
     description: >-
-      This table serves as the central identity management for all Persons in
-      the database. It contains records that uniquely identify each person or
-      patient, and some demographic information.
+      This table serves as the central identity management for all Persons in the database. It
+      contains records that uniquely identify each person or patient, and some demographic
+      information.
 
       ### User Guide
 
       All records in this table are independent Persons.
     columns:
       - name: person_id
-        description: It is assumed that every person with a different unique identifier
-          is in fact a different person and should be treated independently.
+        description:
+          It is assumed that every person with a different unique identifier is in fact a different
+          person and should be treated independently.
         tests:
           - not_null
           - unique
       - name: gender_concept_id
-        description: This field is meant to capture the biological sex at birth of the
-          Person. This field should not be used to study gender identity issues.
+        description:
+          This field is meant to capture the biological sex at birth of the Person. This field
+          should not be used to study gender identity issues.
         tests:
           - not_null
           - dbt_utils.relationships_where:
@@ -38,7 +40,7 @@ models:
           - dbt_utils.relationships_where:
               field: concept_id
               to: ref('concept')
-              from_condition: race_concept_id <> 0 
+              from_condition: race_concept_id <> 0
               to_condition: domain_id = 'Race'
       - name: ethnicity_concept_id
         tests:
@@ -46,25 +48,25 @@ models:
           - dbt_utils.relationships_where:
               field: concept_id
               to: ref('concept')
-              from_condition: race_concept_id <> 0 
+              from_condition: race_concept_id <> 0
               to_condition: domain_id = 'Ethnicity'
       - name: location_id
         description: A foreign key to the location table.
-        tests: 
+        tests:
           - relationships:
               field: location_id
               to: ref('location')
       - name: provider_id
-        tests: 
+        tests:
           - relationships:
               field: provider_id
               to: ref('provider')
         description: A foreign key to the provider table.
       - name: care_site_id
         tests:
-        - relationships:
-            field: care_site_id
-            to: ref('care_site')
+          - relationships:
+              field: care_site_id
+              to: ref('care_site')
         description: A foreign key to the care site table.
       - name: person_source_value
       - name: gender_source_value
