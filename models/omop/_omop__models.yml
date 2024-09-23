@@ -478,31 +478,6 @@ models:
         type: integer
       - name: visit_detail_id
         type: integer
-
-  - name: observation_period
-    columns:
-      - name: observation_period_id
-        type: integer
-        tests:
-          - unique
-          - not_null
-      - name: person_id
-        type: integer
-        tests:
-          - not_null
-      - name: observation_period_start_date
-        type: date
-        tests:
-          - not_null
-      - name: observation_period_end_date
-        type: date
-        tests:
-          - not_null
-      - name: period_type_concept_id
-        type: integer
-        tests:
-          - not_null
-
   - name: payer_plan_period
     columns:
       - name: payer_plan_period_id
