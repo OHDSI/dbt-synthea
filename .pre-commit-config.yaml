@@ -5,5 +5,5 @@ repos:
       - id: sqlfluff-lint
         additional_dependencies: ['dbt-postgres', 'dbt-duckdb', 'sqlfluff-templater-dbt']
       - id: sqlfluff-fix
-        additional_dependencies: ['dbt-postgres', 'dbt-duckdb','sqlfluff-templater-dbt']
+        additional_dependencies: ['dbt-postgres', 'dbt-duckdb', 'sqlfluff-templater-dbt']
         args: [--config, '.sqlfluff']
