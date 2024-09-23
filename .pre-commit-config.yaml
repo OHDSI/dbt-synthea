@@ -4,7 +4,7 @@ repos:
     rev: 3.0.7  # Use the latest version or specify a specific version
     hooks:
       - id: sqlfluff-lint
-        additional_dependencies: ['dbt-postgres', 'sqlfluff-templater-dbt']
+        additional_dependencies: ['dbt-postgres', 'dbt-duckdb', 'sqlfluff-templater-dbt']
       - id: sqlfluff-fix
-        additional_dependencies: ['dbt-postgres', 'sqlfluff-templater-dbt']
+        additional_dependencies: ['dbt-postgres', 'dbt-duckdb','sqlfluff-templater-dbt']
         args: [--config, '.sqlfluff']
