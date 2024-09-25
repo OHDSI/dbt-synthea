@@ -1,7 +1,7 @@
 # A script to generate dbt YAML files from the OMOP CDM documentation
 #
 # Requires `BeautifulSoup4` and `ruamel.yaml` to be installed
-# Get the OMOP CDM documentation with:
+# Get the OMOP CDM documentation with e.g.:
 #   `wget https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/docs/cdm54.html`
 
 import argparse
@@ -27,7 +27,7 @@ class omop_documentation_container:
 
 def table_handler(table) -> list[omop_documentation_container]:
     """
-    Takes a table and returns a list of
+    Takes a table and returns a list of objects that represent the tables in the table.
     """
     rows = table.find_all("tr")
 
