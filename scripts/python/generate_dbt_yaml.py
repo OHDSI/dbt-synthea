@@ -109,14 +109,14 @@ def row_handler(rows) -> omop_documentation_container:
     return omop_documentation_container(**cells)
 
 
-def sentinel_to_bool(text):
+def sentinel_to_bool(text) -> bool:
     if text == "Yes":
         return True
     else:
         return False
 
 
-def omop_docs_to_dbt_config(obj: omop_documentation_container):
+def omop_docs_to_dbt_config(obj: omop_documentation_container) -> dict:
     """
     With an OMOP documentation object, we can use some simple string parsing/heuristic
     to create dbt test configs.
@@ -168,7 +168,7 @@ def omop_docs_to_dbt_config(obj: omop_documentation_container):
 def main(
     cdm_docs_path: Path,
     output_dir: Path,
-):
+) -> None:
     """
     Main loop to generate dbt YAML files from the OMOP CDM documentation
     """
