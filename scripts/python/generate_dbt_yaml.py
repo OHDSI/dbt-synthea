@@ -11,47 +11,6 @@ from pathlib import Path
 from ruamel.yaml import YAML
 from bs4 import BeautifulSoup
 
-TABLES = [
-    "observation_period",
-    "visit_occurrence",
-    "visit_detail",
-    "condition_occurrence",
-    "drug_exposure",
-    "procedure_occurrence",
-    "device_exposure",
-    "measurement",
-    "observation",
-    "death",
-    "note",
-    "note_nlp",
-    "specimen",
-    "fact_relationship",
-    "location",
-    "care_site",
-    "provider",
-    "payer_plan_period",
-    "cost",
-    "drug_era",
-    "dose_era",
-    "condition_era",
-    "episode",
-    "episode_event",
-    "metadata",
-    "cdm_source",
-    "concept",
-    "vocabulary",
-    "domain",
-    "concept_class",
-    "concept_relationship",
-    "relationship",
-    "concept_synonym",
-    "concept_ancestor",
-    "source_to_concept_map",
-    "drug_strength",
-    "cohort",
-    "cohort_definition",
-]
-
 
 @dataclass
 class omop_documentation_container:
@@ -173,6 +132,19 @@ def omop_docs_to_dbt_config(obj: omop_documentation_container) -> dict:
     return column_config
 
 
+def extract_table_names(soup_obj: BeautifulSoup) -> list[str]:
+    """
+    Dynamically extract table names from the OMOP CDM documentation
+    """
+    table_names = []
+
+    for div in soup_obj.find_all(
+        "div", attrs={"class": "section level3 tabset tabset-pills"}
+    ):
+        table_names.append(div.find("h3").text)
+    return table_names
+
+
 def main(
     cdm_docs_path: Path,
     output_dir: Path,
@@ -185,9 +157,10 @@ def main(
 
     soup = BeautifulSoup(file, features="html.parser")
 
-    for table in TABLES:
-        # For each table generate the desired dbt yaml
+    tables = extract_table_names(soup)
 
+    for table in tables:
+        # For each table generate the desired dbt yaml
         # Get desired div with table
         table_handle = soup.find("div", attrs={"id": table})
 
@@ -204,15 +177,11 @@ def main(
                 }
             ]
         }
-        # Output YAML for dbt, do not alphabetically sort keys so the names and documentation
-        # will be output in our desired order.
 
         yaml = YAML()
         yaml.indent(mapping=2, sequence=4, offset=2)
         yaml.width = 100
         yaml.dump(table_dict, open(f"{output_dir}/{table}.yml", "w"))
-        # output = yaml.YAML(table_dict)
-        # output.dump(open(f"{output_dir}/{table}.yml", "w"))
 
 
 # == Handle arguments ==
