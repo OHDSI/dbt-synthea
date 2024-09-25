@@ -1,0 +1,29 @@
+models:
+  - name: cohort
+    description: The subject of a cohort can have multiple, discrete records in thecohort table per cohort_definition_id,
+      subject_id, and non-overlappingtime periods. The definition of the cohort is contained within theCOHORT_DEFINITION
+      table. It is listed as part of the RESULTS schemabecause it is a table that users of the database
+      as well as tools suchas ATLAS need to be able to write to. The CDM and Vocabulary tables areall
+      read-only so it is suggested that the COHORT and COHORT_DEFINTIONtables are kept in a separate schema
+      to alleviate confusion.
+    columns:
+      - name: cohort_definition_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+      - name: subject_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+      - name: cohort_start_date
+        description: ''
+        data_type: date
+        tests:
+          - not_null
+      - name: cohort_end_date
+        description: ''
+        data_type: date
+        tests:
+          - not_null

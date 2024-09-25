@@ -1,0 +1,107 @@
+models:
+  - name: note
+    description: The NOTE table captures unstructured information that was recorded bya provider about
+      a patient in free text (in ASCII, or preferably in UTF8format) notes on a given date. The type of
+      note_text is CLOB orvarchar(MAX) depending on RDBMS.
+    columns:
+      - name: note_id
+        description: A unique identifier for each note.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: note_date
+        description: The date the note was recorded.
+        data_type: date
+        tests:
+          - not_null
+      - name: note_datetime
+        description: ''
+        data_type: datetime
+      - name: note_type_concept_id
+        description: The provenance of the note. Most likely this will be EHR.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: note_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: note_class_concept_id
+        description: A Standard Concept Id representing the HL7 LOINC Document TypeVocabulary classification
+          of the note.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: note_title
+        description: The title of the note.
+        data_type: varchar(250)
+      - name: note_text
+        description: The content of the note.
+        data_type: varchar(MAX)
+        tests:
+          - not_null
+      - name: encoding_concept_id
+        description: This is the Concept representing the character encoding type.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: language_concept_id
+        description: The language of the note.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: provider_id
+        description: The Provider who wrote the note.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('provider')
+              field: provider_id
+      - name: visit_occurrence_id
+        description: The Visit during which the note was written.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_occurrence')
+              field: visit_occurrence_id
+      - name: visit_detail_id
+        description: The Visit Detail during which the note was written.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_detail')
+              field: visit_detail_id
+      - name: note_source_value
+        description: ''
+        data_type: varchar(50)
+      - name: note_event_id
+        description: If the Note record is related to another record in the database, thisfield is the
+          primary key of the linked record.
+        data_type: integer
+      - name: note_event_field_concept_id
+        description: If the Note record is related to another record in the database, thisfield is the
+          CONCEPT_ID that identifies which table the primary key ofthe linked record came from.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id

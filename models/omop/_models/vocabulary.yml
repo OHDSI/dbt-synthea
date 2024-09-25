@@ -1,0 +1,32 @@
+models:
+  - name: vocabulary
+    description: The VOCABULARY table includes a list of the Vocabularies integratedfrom various sources
+      or created de novo in OMOP CDM. This referencetable contains a single record for each Vocabulary
+      and includes adescriptive name and other associated attributes for the Vocabulary.
+    columns:
+      - name: vocabulary_id
+        description: A unique identifier for each Vocabulary, such as ICD9CM, SNOMED, Visit.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - unique
+      - name: vocabulary_name
+        description: The name describing the vocabulary, for example, InternationalClassification of Diseases,
+          Ninth Revision, Clinical Modification,Volume 1 and 2 (NCHS) etc.
+        data_type: varchar(255)
+        tests:
+          - not_null
+      - name: vocabulary_reference
+        description: External reference to documentation or available download of the aboutthe vocabulary.
+        data_type: varchar(255)
+      - name: vocabulary_version
+        description: Version of the Vocabulary as indicated in the source.
+        data_type: varchar(255)
+      - name: vocabulary_concept_id
+        description: A Concept that represents the Vocabulary the VOCABULARY record belongsto.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id

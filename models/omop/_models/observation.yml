@@ -1,0 +1,157 @@
+models:
+  - name: observation
+    description: The OBSERVATION table captures clinical facts about a Person obtainedin the context of
+      examination, questioning or a procedure. Any data thatcannot be represented by any other domains,
+      such as social and lifestylefacts, medical history, family history, etc. are recorded here.
+    columns:
+      - name: observation_id
+        description: The unique key given to an Observation record for a Person. Refer to theETL for how
+          duplicate Observations during the same Visit were handled.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: The PERSON_ID of the Person for whom the Observation is recorded. Thismay be a system
+          generated code.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: observation_concept_id
+        description: The OBSERVATION_CONCEPT_ID field is recommended for primary use inanalyses, and must
+          be used for network studies.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: observation_date
+        description: The date of when the Observation was obtained. Depending on what theObservation represents
+          this could be the date of a lab test, the date ofa survey, or the date a patient’s family history
+          was taken.
+        data_type: date
+        tests:
+          - not_null
+      - name: observation_datetime
+        description: ''
+        data_type: datetime
+      - name: observation_type_concept_id
+        description: This field can be used to determine the provenance of the Observationrecord, as in
+          whether the measurement was from an EHR system, insuranceclaim, registry, or other sources.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: observation_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: value_as_number
+        description: This is the numerical value of the Result of the Observation, ifapplicable and available.
+          It is not expected that all Observations willhave numeric results, rather, this field is here
+          to house values shouldthey exist.
+        data_type: float
+      - name: value_as_string
+        description: This is the categorical value of the Result of the Observation, ifapplicable and
+          available.
+        data_type: varchar(60)
+      - name: value_as_concept_id
+        description: It is possible that some records destined for the Observation table havetwo clinical
+          ideas represented in one source code. This is common withICD10 codes that describe a family
+          history of some Condition, forexample. In OMOP the Vocabulary breaks these two clinical ideas
+          into twocodes; one becomes the OBSERVATION_CONCEPT_ID and the other becomes theVALUE_AS_CONCEPT_ID.
+          It is important when using the Observation table tokeep this possibility in mind and to examine
+          the VALUE_AS_CONCEPT_IDfield for relevant information.
+        data_type: Integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: qualifier_concept_id
+        description: This field contains all attributes specifying the clinical fact further,such as as
+          degrees, severities, drug-drug interaction alerts etc.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: unit_concept_id
+        description: There is currently no recommended unit for individual observationconcepts. UNIT_SOURCE_VALUES
+          should be mapped to a Standard Concept inthe Unit domain that best represents the unit as given
+          in the sourcedata.
+        data_type: integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: unit_concept_id <> 0
+              to_condition: domain_id = 'Unit'
+      - name: provider_id
+        description: The provider associated with the observation record, e.g. the providerwho ordered
+          the test or the provider who recorded the result.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('provider')
+              field: provider_id
+      - name: visit_occurrence_id
+        description: The visit during which the Observation occurred.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_occurrence')
+              field: visit_occurrence_id
+      - name: visit_detail_id
+        description: The VISIT_DETAIL record during which the Observation occurred. Forexample, if the
+          Person was in the ICU at the time the VISIT_OCCURRENCErecord would reflect the overall hospital
+          stay and the VISIT_DETAILrecord would reflect the ICU stay during the hospital visit.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_detail')
+              field: visit_detail_id
+      - name: observation_source_value
+        description: This field houses the verbatim value from the source data representingthe Observation
+          that occurred. For example, this could be an ICD10 orRead code.
+        data_type: varchar(50)
+      - name: observation_source_concept_id
+        description: This is the concept representing the OBSERVATION_SOURCE_VALUE and maynot necessarily
+          be standard. This field is discouraged from use inanalysis because it is not required to contain
+          Standard Concepts thatare used across the OHDSI community, and should only be used whenStandard
+          Concepts do not adequately represent the source detail for theObservation necessary for a given
+          analytic use case. Consider usingOBSERVATION_CONCEPT_ID instead to enable standardized analytics
+          that canbe consistent across the network.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: unit_source_value
+        description: This field houses the verbatim value from the source data representingthe unit of
+          the Observation that occurred.
+        data_type: varchar(50)
+      - name: qualifier_source_value
+        description: This field houses the verbatim value from the source data representingthe qualifier
+          of the Observation that occurred.
+        data_type: varchar(50)
+      - name: value_source_value
+        description: This field houses the verbatim result value of the Observation from thesource data.
+          Do not get confused with the Observation_source_value whichcaptures source value of the observation
+          mapped toobservation_concept_id. This field is the observation result value fromthe source.
+        data_type: varchar(50)
+      - name: observation_event_id
+        description: If the Observation record is related to another record in the database,this field
+          is the primary key of the linked record.
+        data_type: integer
+      - name: obs_event_field_concept_id
+        description: If the Observation record is related to another record in the database,this field
+          is the CONCEPT_ID that identifies which table the primary keyof the linked record came from.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id

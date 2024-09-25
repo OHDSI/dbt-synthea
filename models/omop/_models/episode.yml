@@ -1,0 +1,98 @@
+models:
+  - name: episode
+    description:
+      The EPISODE table aggregates lower-level clinical events(VISIT_OCCURRENCE, DRUG_EXPOSURE,
+      PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE)into a higher-level abstraction representing clinically and
+      analyticallyrelevant disease phases,outcomes and treatments. The EPISODE_EVENT tableconnects qualifying
+      clinical events (VISIT_OCCURRENCE, DRUG_EXPOSURE,PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE) to the appropriate
+      EPISODE entry.For example cancers including their development over time, theirtreatment, and final
+      resolution.
+    columns:
+      - name: episode_id
+        description: A unique identifier for each Episode.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: The PERSON_ID of the PERSON for whom the episode is recorded.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: episode_concept_id
+        description:
+          The EPISODE_CONCEPT_ID represents the kind abstraction related to thedisease phase,
+          outcome or treatment.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: episode_concept_id <> 0
+              to_condition: domain_id = 'Episode'
+      - name: episode_start_date
+        description: The date when the Episode beings.
+        data_type: date
+        tests:
+          - not_null
+      - name: episode_start_datetime
+        description: The date and time when the Episode begins.
+        data_type: datetime
+      - name: episode_end_date
+        description: The date when the instance of the Episode is considered to have ended.
+        data_type: date
+      - name: episode_end_datetime
+        description: The date when the instance of the Episode is considered to have ended.
+        data_type: datetime
+      - name: episode_parent_id
+        description:
+          Use this field to find the Episode that subsumes the given Episoderecord. This is
+          used in the case that an Episode are nested into eachother.
+        data_type: integer
+      - name: episode_number
+        description:
+          For sequences of episodes, this is used to indicate the order theepisodes occurred.
+          For example, lines of treatment could be indicatedhere.
+        data_type: integer
+      - name: episode_object_concept_id
+        description:
+          A Standard Concept representing the disease phase, outcome, or otherabstraction of
+          which the episode consists. For example, if theEPISODE_CONCEPT_ID is treatmentregimen then the
+          EPISODE_OBJECT_CONCEPT_ID should contain thechemotherapy regimen concept, like Afatinibmonotherapy.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: episode_object_concept_id <> 0
+              to_condition: domain_id = 'Procedure, Regimen'
+      - name: episode_type_concept_id
+        description:
+          This field can be used to determine the provenance of the Episoderecord, as in whether
+          the episode was from an EHR system, insuranceclaim, registry, or other sources.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: episode_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: episode_source_value
+        description:
+          The source code for the Episode as it appears in the source data. Thiscode is mapped
+          to a Standard Condition Concept in the StandardizedVocabularies and the original code is stored
+          here for reference.
+        data_type: varchar(50)
+      - name: episode_source_concept_id
+        description: A foreign key to a Episode Concept that refers to the code used in thesource.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id

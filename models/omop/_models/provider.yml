@@ -1,0 +1,81 @@
+models:
+  - name: provider
+    description: The PROVIDER table contains a list of uniquely identified healthcareproviders; duplication
+      is not allowed. These are individuals providinghands-on healthcare to patients, such as physicians,
+      nurses, midwives,physical therapists etc.
+    columns:
+      - name: provider_id
+        description: It is assumed that every provider with a different unique identifier isin fact a
+          different person and should be treated independently.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: provider_name
+        description: This field contains information that describes a healthcare provider.
+        data_type: varchar(255)
+      - name: npi
+        description: This is the National Provider Number issued to health care providers inthe US by
+          the Centers for Medicare and Medicaid Services (CMS).
+        data_type: varchar(20)
+      - name: dea
+        description: This is the identifier issued by the DEA, a US federal agency, thatallows a provider
+          to write prescriptions for controlled substances.
+        data_type: varchar(20)
+      - name: specialty_concept_id
+        description: This field either represents the most common specialty that occurs inthe data or
+          the most specific concept that represents all specialtieslisted, should the provider have more
+          than one. This includes physicianspecialties such as internal medicine, emergency medicine,
+          etc. andallied health professionals such as nurses, midwives, and pharmacists.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: care_site_id
+        description: This is the CARE_SITE_ID for the location that the provider primarilypractices in.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('care_site')
+              field: care_site_id
+      - name: year_of_birth
+        description: ''
+        data_type: integer
+      - name: gender_concept_id
+        description: This field represents the recorded gender of the provider in the sourcedata.
+        data_type: integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: gender_concept_id <> 0
+              to_condition: domain_id = 'Gender'
+      - name: provider_source_value
+        description: Use this field to link back to providers in the source data. This istypically used
+          for error checking of ETL logic.
+        data_type: varchar(50)
+      - name: specialty_source_value
+        description: This refers to the specific type of healthcare provider or field ofexpertise listed
+          in the source data, encompassing physician specialtieslike internal medicine, emergency medicine,
+          etc., as well as alliedhealth professionals such as nurses, midwives, and pharmacists. Itcovers
+          medical specialties like surgery, internal medicine, andradiology, while other services like
+          prosthetics, acupuncture, andphysical therapy fall under the domain of “Service.”
+        data_type: varchar(50)
+      - name: specialty_source_concept_id
+        description: This is often zero as many sites use proprietary codes to storephysician speciality.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: gender_source_value
+        description: This is provider’s gender as it appears in the source data.
+        data_type: varchar(50)
+      - name: gender_source_concept_id
+        description: This is often zero as many sites use proprietary codes to store providergender.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id

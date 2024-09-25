@@ -1,0 +1,28 @@
+models:
+  - name: domain
+    description: The DOMAIN table includes a list of OMOP-defined Domains to which theConcepts of the
+      Standardized Vocabularies can belong. A Domainrepresents a clinical definition whereby we assign
+      matching Concepts forthe standardized fields in the CDM tables. For example, the ConditionDomain
+      contains Concepts that describe a patient condition, and theseConcepts can only be used in the condition_concept_id
+      field of theCONDITION_OCCURRENCE and CONDITION_ERA tables. This reference table ispopulated with
+      a single record for each Domain, including a Domain IDand a descriptive name for every Domain.
+    columns:
+      - name: domain_id
+        description: A unique key for each domain.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - unique
+      - name: domain_name
+        description: The name describing the Domain, e.g. Condition, Procedure, Measurementetc.
+        data_type: varchar(255)
+        tests:
+          - not_null
+      - name: domain_concept_id
+        description: A Concept representing the Domain Concept the DOMAIN record belongs to.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id

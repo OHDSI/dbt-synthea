@@ -1,0 +1,72 @@
+models:
+  - name: drug_strength
+    description: The DRUG_STRENGTH table contains structured content about the amountor concentration
+      and associated units of a specific ingredient containedwithin a particular drug product. This table
+      is supplemental informationto support standardized analysis of drug utilization.
+    columns:
+      - name: drug_concept_id
+        description: The Concept representing the Branded Drug or Clinical Drug Product.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: ingredient_concept_id
+        description: The Concept representing the active ingredient contained within the drugproduct.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: amount_value
+        description: The numeric value or the amount of active ingredient contained withinthe drug product.
+        data_type: float
+      - name: amount_unit_concept_id
+        description: The Concept representing the Unit of measure for the amount of activeingredient contained
+          within the drug product.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: numerator_value
+        description: The concentration of the active ingredient contained within the drugproduct.
+        data_type: float
+      - name: numerator_unit_concept_id
+        description: The Concept representing the Unit of measure for the concentration ofactive ingredient.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: denominator_value
+        description: The amount of total liquid (or other divisible product, such asointment, gel, spray,
+          etc.).
+        data_type: float
+      - name: denominator_unit_concept_id
+        description: The Concept representing the denominator unit for the concentration ofactive ingredient.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: box_size
+        description: The number of units of Clinical Branded Drug or Quantified Clinical orBranded Drug
+          contained in a box as dispensed to the patient.
+        data_type: integer
+      - name: valid_start_date
+        description: The date when the Concept was first recorded. The default value is1-Jan-1970.
+        data_type: date
+        tests:
+          - not_null
+      - name: valid_end_date
+        description: The date when then Concept became invalid.
+        data_type: date
+        tests:
+          - not_null
+      - name: invalid_reason
+        description: Reason the concept was invalidated. Possible values are D (deleted), U(replaced with
+          an update) or NULL when valid_end_date has the defaultvalue.
+        data_type: varchar(1)

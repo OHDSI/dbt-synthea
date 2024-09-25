@@ -1,0 +1,133 @@
+models:
+  - name: visit_occurrence
+    description: This table contains Events where Persons engage with the healthcaresystem for a duration
+      of time. They are often also called “Encounters”.Visits are defined by a configuration of circumstances
+      under which theyoccur, such as (i) whether the patient comes to a healthcareinstitution, the other
+      way around, or the interaction is remote, (ii)whether and what kind of trained medical staff is
+      delivering the serviceduring the Visit, and (iii) whether the Visit is transient or for alonger
+      period involving a stay in bed.
+    columns:
+      - name: visit_occurrence_id
+        description: Use this to identify unique interactions between a person and the healthcare system.
+          This identifier links across the other CDM event tables toassociate events with a visit.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: visit_concept_id
+        description: This field contains a concept id representing the kind of visit, likeinpatient or
+          outpatient. All concepts in this field should be standardand belong to the Visit domain.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_concept_id <> 0
+              to_condition: domain_id = 'Visit'
+      - name: visit_start_date
+        description: For inpatient visits, the start date is typically the admission date.For outpatient
+          visits the start date and end date will be the same.
+        data_type: date
+        tests:
+          - not_null
+      - name: visit_start_datetime
+        description: ''
+        data_type: datetime
+      - name: visit_end_date
+        description: For inpatient visits the end date is typically the discharge date. If aPerson is
+          still an inpatient in the hospital at the time of the dataextract and does not have a visit_end_date,
+          then set the visit_end_dateto the date of the data pull.
+        data_type: date
+        tests:
+          - not_null
+      - name: visit_end_datetime
+        description: If a Person is still an inpatient in the hospital at the time of thedata extract
+          and does not have a visit_end_datetime, then set thevisit_end_datetime to the datetime of the
+          data pull.
+        data_type: datetime
+      - name: visit_type_concept_id
+        description: Use this field to understand the provenance of the visit record, orwhere the record
+          comes from.
+        data_type: Integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: provider_id
+        description: There will only be one provider per visit record and the ETL documentshould clearly
+          state how they were chosen (attending, admitting, etc.).If there are multiple providers associated
+          with a visit in the source,this can be reflected in the event tables (CONDITION_OCCURRENCE,PROCEDURE_OCCURRENCE,
+          etc.) or in the VISIT_DETAIL table.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('provider')
+              field: provider_id
+      - name: care_site_id
+        description: This field provides information about the Care Site where the Visit tookplace.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('care_site')
+              field: care_site_id
+      - name: visit_source_value
+        description: This field houses the verbatim value from the source data representingthe kind of
+          visit that took place (inpatient, outpatient, emergency,etc.)
+        data_type: varchar(50)
+      - name: visit_source_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: admitted_from_concept_id
+        description: Use this field to determine where the patient was admitted from. Thisconcept is part
+          of the visit domain and can indicate if a patient wasadmitted to the hospital from a long-term
+          care facility, for example.
+        data_type: integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: admitted_from_concept_id <> 0
+              to_condition: domain_id = 'Visit'
+      - name: admitted_from_source_value
+        description: ''
+        data_type: varchar(50)
+      - name: discharged_to_concept_id
+        description: Use this field to determine where the patient was discharged to after avisit. This
+          concept is part of the visit domain and can indicate if apatient was transferred to another
+          hospital or sent to a long-term carefacility, for example. It is assumed that a person is discharged
+          to hometherefore there is not a standard concept id for “home”. Use concept id= 0 when a person
+          is discharged to home.
+        data_type: integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: discharged_to_concept_id <> 0
+              to_condition: domain_id = 'Visit'
+      - name: discharged_to_source_value
+        description: ''
+        data_type: varchar(50)
+      - name: preceding_visit_occurrence_id
+        description: Use this field to find the visit that occurred for the person prior tothe given visit.
+          There could be a few days or a few years in between.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_occurrence')
+              field: visit_occurrence_id

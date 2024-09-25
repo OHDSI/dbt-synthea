@@ -1,0 +1,83 @@
+models:
+  - name: specimen
+    description: The specimen domain contains the records identifying biologicalsamples from a person.
+    columns:
+      - name: specimen_id
+        description: Unique identifier for each specimen.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: The person from whom the specimen is collected.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: specimen_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: specimen_type_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: specimen_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: specimen_date
+        description: The date the specimen was collected.
+        data_type: date
+        tests:
+          - not_null
+      - name: specimen_datetime
+        description: ''
+        data_type: datetime
+      - name: quantity
+        description: The amount of specimen collected from the person.
+        data_type: float
+      - name: unit_concept_id
+        description: The unit for the quantity of the specimen.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: anatomic_site_concept_id
+        description: This is the site on the body where the specimen is from.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: disease_status_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: specimen_source_id
+        description: This is the identifier for the specimen from the source system.
+        data_type: varchar(50)
+      - name: specimen_source_value
+        description: ''
+        data_type: varchar(50)
+      - name: unit_source_value
+        description: ''
+        data_type: varchar(50)
+      - name: anatomic_site_source_value
+        description: ''
+        data_type: varchar(50)
+      - name: disease_status_source_value
+        description: ''
+        data_type: varchar(50)

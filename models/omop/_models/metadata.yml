@@ -1,0 +1,53 @@
+models:
+  - name: metadata
+    description: The METADATA table contains metadata information about a dataset thathas been transformed
+      to the OMOP Common Data Model.
+    columns:
+      - name: metadata_id
+        description: The unique key given to a Metadata record.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: metadata_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: metadata_type_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: name
+        description: ''
+        data_type: varchar(250)
+        tests:
+          - not_null
+      - name: value_as_string
+        description: ''
+        data_type: varchar(250)
+      - name: value_as_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: value_as_number
+        description: This is the numerical value of the result of the Metadata, if applicableand available.
+          It is not expected that all Metadata will have numericresults, rather, this field is here to
+          house values should they exist.
+        data_type: float
+      - name: metadata_date
+        description: ''
+        data_type: date
+      - name: metadata_datetime
+        description: ''
+        data_type: datetime

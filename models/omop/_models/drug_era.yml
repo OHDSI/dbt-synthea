@@ -1,0 +1,49 @@
+models:
+  - name: drug_era
+    description: 'A Drug Era is defined as a span of time when the Person is assumed tobe exposed to a
+      particular active ingredient. A Drug Era is not the sameas a Drug Exposure: Exposures are individual
+      records corresponding tothe source when Drug was delivered to the Person, while successiveperiods
+      of Drug Exposures are combined under certain rules to producecontinuous Drug Eras. Every record
+      in the DRUG_EXPOSURE table should bepart of a drug era based on the dates of exposure.'
+    columns:
+      - name: drug_era_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: drug_concept_id
+        description: The drug_concept_id should conform to the concept class ‘ingredient’ asthe drug_era
+          is an era of time where a person is exposed to a particulardrug ingredient.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_concept_id <> 0
+              to_condition: domain_id = 'Drug'
+      - name: drug_era_start_date
+        description: ''
+        data_type: date
+        tests:
+          - not_null
+      - name: drug_era_end_date
+        description: ''
+        data_type: date
+        tests:
+          - not_null
+      - name: drug_exposure_count
+        description: The count of grouped DRUG_EXPOSURE records that were included in theDRUG_ERA row
+        data_type: integer
+      - name: gap_days
+        description: ''
+        data_type: integer

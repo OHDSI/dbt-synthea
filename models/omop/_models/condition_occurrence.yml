@@ -1,0 +1,118 @@
+models:
+  - name: condition_occurrence
+    description: This table contains records of Events of a Person suggesting thepresence of a disease
+      or medical condition stated as a diagnosis, asign, or a symptom, which is either observed by a Provider
+      or reportedby the patient.
+    columns:
+      - name: condition_occurrence_id
+        description: The unique key given to a condition record for a person. Refer to theETL for how
+          duplicate conditions during the same visit were handled.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: The PERSON_ID of the PERSON for whom the condition is recorded.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: condition_concept_id
+        description: The CONDITION_CONCEPT_ID field is recommended for primary use inanalyses, and must
+          be used for network studies. This is the standardconcept mapped from the source value which
+          represents a condition
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: condition_concept_id <> 0
+              to_condition: domain_id = 'Condition'
+      - name: condition_start_date
+        description: Use this date to determine the start date of the condition
+        data_type: date
+        tests:
+          - not_null
+      - name: condition_start_datetime
+        description: ''
+        data_type: datetime
+      - name: condition_end_date
+        description: Use this date to determine the end date of the condition
+        data_type: date
+      - name: condition_end_datetime
+        description: ''
+        data_type: datetime
+      - name: condition_type_concept_id
+        description: This field can be used to determine the provenance of the Conditionrecord, as in
+          whether the condition was from an EHR system, insuranceclaim, registry, or other sources.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: condition_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: condition_status_concept_id
+        description: This concept represents the point during the visit the diagnosis wasgiven (admitting
+          diagnosis, final diagnosis), whether the diagnosis wasdetermined due to laboratory findings,
+          if the diagnosis wasexclusionary, or if it was a preliminary diagnosis, among others.
+        data_type: integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: condition_status_concept_id <> 0
+              to_condition: domain_id = 'Condition Status'
+      - name: stop_reason
+        description: The Stop Reason indicates why a Condition is no longer valid withrespect to the purpose
+          within the source data. Note that a Stop Reasondoes not necessarily imply that the condition
+          is no longer occurring.
+        data_type: varchar(20)
+      - name: provider_id
+        description: The provider associated with condition record, e.g. the provider whomade the diagnosis
+          or the provider who recorded the symptom.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('provider')
+              field: provider_id
+      - name: visit_occurrence_id
+        description: The visit during which the condition occurred.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_occurrence')
+              field: visit_occurrence_id
+      - name: visit_detail_id
+        description: The VISIT_DETAIL record during which the condition occurred. Forexample, if the person
+          was in the ICU at the time of the diagnosis theVISIT_OCCURRENCE record would reflect the overall
+          hospital stay and theVISIT_DETAIL record would reflect the ICU stay during the hospitalvisit.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_detail')
+              field: visit_detail_id
+      - name: condition_source_value
+        description: This field houses the verbatim value from the source data representingthe condition
+          that occurred. For example, this could be an ICD10 or Readcode.
+        data_type: varchar(50)
+      - name: condition_source_concept_id
+        description: This is the concept representing the condition source value and may notnecessarily
+          be standard. This field is discouraged from use in analysisbecause it is not required to contain
+          Standard Concepts that are usedacross the OHDSI community, and should only be used when StandardConcepts
+          do not adequately represent the source detail for the Conditionnecessary for a given analytic
+          use case. Consider usingCONDITION_CONCEPT_ID instead to enable standardized analytics that canbe
+          consistent across the network.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: condition_status_source_value
+        description: This field houses the verbatim value from the source data representingthe condition
+          status.
+        data_type: varchar(50)
