@@ -229,7 +229,10 @@ args = parser.parse_args()
 cdm_docs_path = Path(args.cdm_html)
 output_dir = Path(args.output_dir)
 
-cdm_docs_path.exists() or parser.error(f"File {cdm_docs_path} does not exist")
-output_dir.exists() or parser.error(f"Directory {output_dir} does not exist")
+if not cdm_docs_path.exists():
+    parser.error(f"File {cdm_docs_path} does not exist")
+
+if not output_dir.exists():
+    parser.error(f"Directory {output_dir} does not exist")
 
 main(cdm_docs_path, output_dir)
