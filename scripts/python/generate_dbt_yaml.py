@@ -1,6 +1,6 @@
 # A script to generate dbt YAML files from the OMOP CDM documentation
 #
-# Requires `BeautifulSoup4` and `PyYAML` to be installed
+# Requires `BeautifulSoup4` and `ruamel.yaml` to be installed
 # Get the OMOP CDM documentation with:
 #   `wget https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/docs/cdm54.html`
 
@@ -8,7 +8,7 @@ import argparse
 from dataclasses import dataclass
 from pathlib import Path
 
-import yaml
+from ruamel.yaml import YAML
 from bs4 import BeautifulSoup
 
 TABLES = [
@@ -66,13 +66,13 @@ class omop_documentation_container:
     foreign_key_domain: str
 
 
-def table_handler(table) -> list:
+def table_handler(table) -> list[omop_documentation_container]:
     """
-    Takes a table and returns a list of rows to then be handled
+    Takes a table and returns a list of
     """
     rows = table.find_all("tr")
 
-    return [row for row in rows]
+    return [row_handler(row) for row in rows]
 
 
 def row_handler(rows) -> omop_documentation_container:
@@ -114,6 +114,14 @@ def sentinel_to_bool(text) -> bool:
         return True
     else:
         return False
+
+
+def extract_table_description(table_handle) -> str:
+    description = table_handle.find(
+        "p", string="Table Description"
+    ).next_sibling.next_sibling.text
+
+    return description.replace("\n", "")
 
 
 def omop_docs_to_dbt_config(obj: omop_documentation_container) -> dict:
@@ -182,20 +190,29 @@ def main(
 
         # Get desired div with table
         table_handle = soup.find("div", attrs={"id": table})
+
         tbody_handle = table_handle.find("table").find("tbody")
         parsed_table = table_handler(tbody_handle)
+        table_description = extract_table_description(table_handle)
 
         table_dict = {
             "models": [
                 {
                     "name": table,
+                    "description": table_description,
                     "columns": [omop_docs_to_dbt_config(obj) for obj in parsed_table],
                 }
             ]
         }
         # Output YAML for dbt, do not alphabetically sort keys so the names and documentation
         # will be output in our desired order.
-        yaml.dump(table_dict, open(f"{output_dir}/{table}.yml", "w"), sort_keys=False)
+
+        yaml = YAML()
+        yaml.indent(mapping=2, sequence=4, offset=2)
+        yaml.width = 100
+        yaml.dump(table_dict, open(f"{output_dir}/{table}.yml", "w"))
+        # output = yaml.YAML(table_dict)
+        # output.dump(open(f"{output_dir}/{table}.yml", "w"))
 
 
 # == Handle arguments ==
