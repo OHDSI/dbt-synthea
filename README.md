@@ -143,10 +143,6 @@ dbt seed --select states omop
 
  10. Build the OMOP tables:
 ```bash
-dbt run
-```
-
- 11. Run tests:
-```bash
-dbt test
+dbt build
+# or `dbt run`, `dbt test`
 ```
