@@ -42,38 +42,36 @@ pre-commit install
    - This will install dbt-core, the dbt duckdb and postgres adapters, SQLFluff (a SQL linter),  pre-commit (in order to run SQLFluff on all newly-committed code in this repo), duckdb (to support bootstrapping scripts), and various dependencies for the listed packages
 
 ### DuckDB Setup
- 1. Create a duckdb database in this repo's `data` directory (e.g. `data/synthea_omop_etl.duckdb`)
-
- 2. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
+ 1. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
    - Create a directory `.dbt` in your root directory if one doesn't exist already, then create a `profiles.yml` file in `.dbt` 
    - Add the following block to the file:
 ```yaml
-  synthea_omop_etl:
+synthea_omop_etl:
   outputs:
     dev:
       type: duckdb
-      path: ./data/synthea_omop_etl.duckdb
+      path: synthea_omop_etl.duckdb
       schema: dbt_synthea_dev
   target: dev
 ```
 
- 3. Ensure your profile is setup correctly using dbt debug:
+ 2. Ensure your profile is setup correctly using dbt debug:
 ```bash
 dbt debug
 ```
 
- 4. Load dbt dependencies:
+ 3. Load dbt dependencies:
 ```bash
 dbt deps
 ```
 
- 5. **If you'd like to run the default ETL using the pre-seeded Synthea dataset,** run `dbt seed` to load the CSVs with the Synthea dataset and vocabulary data. This materializes the seed CSVs as tables in your target schema (vocab) and a _synthea schema (Synthea tables).  **Then, skip to step 9 below.**
+ 4. **If you'd like to run the default ETL using the pre-seeded Synthea dataset,** run `dbt seed` to load the CSVs with the Synthea dataset and vocabulary data. This materializes the seed CSVs as tables in your target schema (vocab) and a _synthea schema (Synthea tables).  **Then, skip to step 9 below.**
 ```bash
 dbt seed
 ```
- 6. **If you'd like to run the ETL on your own Synthea dataset,** first toggle the `seed_source` variable in `dbt_project.yml` to `false`. This will tell dbt not to look for the source data in the seed schemas.
+ 5. **If you'd like to run the ETL on your own Synthea dataset,** first toggle the `seed_source` variable in `dbt_project.yml` to `false`. This will tell dbt not to look for the source data in the seed schemas.
  
- 7. **[BYO DATA ONLY]** Load your Synthea and Vocabulary data into the database by running the following commands (modify the commands as needed to specify the path to the folder storing the Synthea and vocabulary csv files, respectively).  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".  **NOTE only Synthea v3.0.0 is supported at this time.**
+ 6. **[BYO DATA ONLY]** Load your Synthea and Vocabulary data into the database by running the following commands (modify the commands as needed to specify the path to the folder storing the Synthea and vocabulary csv files, respectively).  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".  **NOTE only Synthea v3.0.0 is supported at this time.**
 ``` bash
 file_dict=$(python3 scripts/python/get_csv_filepaths.py path/to/synthea/csvs)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: false}"
@@ -81,19 +79,15 @@ file_dict=$(python3 scripts/python/get_csv_filepaths.py path/to/vocab/csvs)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: true}"
 ```
 
- 8. Seed the location mapper and currently unused empty OMOP tables:
+ 7. Seed the location mapper and currently unused empty OMOP tables:
 ```bash
 dbt seed --select states omop
 ```
 
- 9. Build the OMOP tables:
+ 8. Build the OMOP tables:
 ```bash
-dbt run
-```
-
- 10. Run tests:
-```bash
-dbt test
+dbt build
+# or `dbt run`, `dbt test`
 ```
 
 ### Postgres Setup
@@ -103,17 +97,17 @@ dbt test
    - Create a directory `.dbt` in your root directory if one doesn't exist already, then create a `profiles.yml` file in `.dbt` 
    - Add the following block to the file:
 ```yaml
-  synthea_omop_etl:
+synthea_omop_etl:
   outputs:
     dev:
       dbname: <name of local postgres DB>
       host: <host, e.g. localhost>
-      pass: <password>
+      user: <username>
+      password: <password>
       port: 5432
       schema: dbt_synthea_dev
-      threads: 1
+      threads: 4 # See https://docs.getdbt.com/docs/running-a-dbt-project/using-threads for more details
       type: postgres
-      user: <username>
   target: dev
 ```
 
@@ -149,10 +143,6 @@ dbt seed --select states omop
 
  10. Build the OMOP tables:
 ```bash
-dbt run
-```
-
- 11. Run tests:
-```bash
-dbt test
+dbt build
+# or `dbt run`, `dbt test`
 ```
