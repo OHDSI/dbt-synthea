@@ -142,6 +142,11 @@ def extract_table_names(soup_obj: BeautifulSoup) -> list[str]:
         "div", attrs={"class": "section level3 tabset tabset-pills"}
     ):
         table_names.append(div.find("h3").text)
+
+    print(" [Note] Ignoring `cohort` and `cohort_definition` tables from documentation")
+    table_names.remove("cohort")
+    table_names.remove("cohort_definition")
+
     return table_names
 
 
@@ -158,6 +163,8 @@ def main(
     soup = BeautifulSoup(file, features="html.parser")
 
     tables = extract_table_names(soup)
+
+    print(f" Found {len(tables)} tables in the OMOP CDM documentation")
 
     for table in tables:
         # For each table generate the desired dbt yaml
@@ -182,6 +189,9 @@ def main(
         yaml.indent(mapping=2, sequence=4, offset=2)
         yaml.width = 100
         yaml.dump(table_dict, open(f"{output_dir}/{table}.yml", "w"))
+
+    print(f" Exported to `{output_dir}`")
+    print("  Done!")
 
 
 # == Handle arguments ==
