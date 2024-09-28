@@ -1,8 +1,8 @@
 models:
   - name: condition_occurrence
-    description: This table contains records of Events of a Person suggesting thepresence of a disease
-      or medical condition stated as a diagnosis, asign, or a symptom, which is either observed by a Provider
-      or reportedby the patient.
+    description: This table contains records of Events of a Person suggesting the presence of a disease
+      or medical condition stated as a diagnosis, a sign, or a symptom, which is either observed by a
+      Provider or reported by the patient.
     columns:
       - name: condition_occurrence_id
         description: The unique key given to a condition record for a person. Refer to theETL for how

@@ -1,10 +1,10 @@
 models:
   - name: drug_era
-    description: 'A Drug Era is defined as a span of time when the Person is assumed tobe exposed to a
-      particular active ingredient. A Drug Era is not the sameas a Drug Exposure: Exposures are individual
-      records corresponding tothe source when Drug was delivered to the Person, while successiveperiods
-      of Drug Exposures are combined under certain rules to producecontinuous Drug Eras. Every record
-      in the DRUG_EXPOSURE table should bepart of a drug era based on the dates of exposure.'
+    description: 'A Drug Era is defined as a span of time when the Person is assumed to be exposed to
+      a particular active ingredient. A Drug Era is not the same as a Drug Exposure: Exposures are individual
+      records corresponding to the source when Drug was delivered to the Person, while successive periods
+      of Drug Exposures are combined under certain rules to produce continuous Drug Eras. Every record
+      in the DRUG_EXPOSURE table should be part of a drug era based on the dates of exposure.'
     columns:
       - name: drug_era_id
         description: ''

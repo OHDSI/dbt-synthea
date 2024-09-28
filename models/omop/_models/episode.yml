@@ -1,12 +1,11 @@
 models:
   - name: episode
-    description:
-      The EPISODE table aggregates lower-level clinical events(VISIT_OCCURRENCE, DRUG_EXPOSURE,
-      PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE)into a higher-level abstraction representing clinically and
-      analyticallyrelevant disease phases,outcomes and treatments. The EPISODE_EVENT tableconnects qualifying
-      clinical events (VISIT_OCCURRENCE, DRUG_EXPOSURE,PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE) to the appropriate
-      EPISODE entry.For example cancers including their development over time, theirtreatment, and final
-      resolution.
+    description: The EPISODE table aggregates lower-level clinical events (VISIT_OCCURRENCE, DRUG_EXPOSURE,
+      PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE) into a higher-level abstraction representing clinically and
+      analytically relevant disease phases,outcomes and treatments. The EPISODE_EVENT table connects qualifying
+      clinical events (VISIT_OCCURRENCE, DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE) to the
+      appropriate EPISODE entry. For example cancers including their development over time, their treatment,
+      and final resolution.
     columns:
       - name: episode_id
         description: A unique identifier for each Episode.
@@ -23,8 +22,7 @@ models:
               to: ref('person')
               field: person_id
       - name: episode_concept_id
-        description:
-          The EPISODE_CONCEPT_ID represents the kind abstraction related to thedisease phase,
+        description: The EPISODE_CONCEPT_ID represents the kind abstraction related to thedisease phase,
           outcome or treatment.
         data_type: integer
         tests:
@@ -49,18 +47,15 @@ models:
         description: The date when the instance of the Episode is considered to have ended.
         data_type: datetime
       - name: episode_parent_id
-        description:
-          Use this field to find the Episode that subsumes the given Episoderecord. This is
+        description: Use this field to find the Episode that subsumes the given Episoderecord. This is
           used in the case that an Episode are nested into eachother.
         data_type: integer
       - name: episode_number
-        description:
-          For sequences of episodes, this is used to indicate the order theepisodes occurred.
+        description: For sequences of episodes, this is used to indicate the order theepisodes occurred.
           For example, lines of treatment could be indicatedhere.
         data_type: integer
       - name: episode_object_concept_id
-        description:
-          A Standard Concept representing the disease phase, outcome, or otherabstraction of
+        description: A Standard Concept representing the disease phase, outcome, or otherabstraction of
           which the episode consists. For example, if theEPISODE_CONCEPT_ID is treatmentregimen then the
           EPISODE_OBJECT_CONCEPT_ID should contain thechemotherapy regimen concept, like Afatinibmonotherapy.
         data_type: integer
@@ -72,8 +67,7 @@ models:
               from_condition: episode_object_concept_id <> 0
               to_condition: domain_id = 'Procedure, Regimen'
       - name: episode_type_concept_id
-        description:
-          This field can be used to determine the provenance of the Episoderecord, as in whether
+        description: This field can be used to determine the provenance of the Episoderecord, as in whether
           the episode was from an EHR system, insuranceclaim, registry, or other sources.
         data_type: integer
         tests:
@@ -84,8 +78,7 @@ models:
               from_condition: episode_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
       - name: episode_source_value
-        description:
-          The source code for the Episode as it appears in the source data. Thiscode is mapped
+        description: The source code for the Episode as it appears in the source data. Thiscode is mapped
           to a Standard Condition Concept in the StandardizedVocabularies and the original code is stored
           here for reference.
         data_type: varchar(50)

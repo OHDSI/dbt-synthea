@@ -1,7 +1,7 @@
 models:
   - name: care_site
-    description: The CARE_SITE table contains a list of uniquely identifiedinstitutional (physical or
-      organizational) units where healthcaredelivery is practiced (offices, wards, hospitals, clinics,
+    description: The CARE_SITE table contains a list of uniquely identified institutional (physical or
+      organizational) units where healthcare delivery is practiced (offices, wards, hospitals, clinics,
       etc.).
     columns:
       - name: care_site_id

@@ -1,8 +1,8 @@
 models:
   - name: note
-    description: The NOTE table captures unstructured information that was recorded bya provider about
-      a patient in free text (in ASCII, or preferably in UTF8format) notes on a given date. The type of
-      note_text is CLOB orvarchar(MAX) depending on RDBMS.
+    description: The NOTE table captures unstructured information that was recorded by a provider about
+      a patient in free text (in ASCII, or preferably in UTF8 format) notes on a given date. The type
+      of note_text is CLOB or varchar(MAX) depending on RDBMS.
     columns:
       - name: note_id
         description: A unique identifier for each note.

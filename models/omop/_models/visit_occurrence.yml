@@ -1,10 +1,10 @@
 models:
   - name: visit_occurrence
-    description: This table contains Events where Persons engage with the healthcaresystem for a duration
-      of time. They are often also called “Encounters”.Visits are defined by a configuration of circumstances
-      under which theyoccur, such as (i) whether the patient comes to a healthcareinstitution, the other
-      way around, or the interaction is remote, (ii)whether and what kind of trained medical staff is
-      delivering the serviceduring the Visit, and (iii) whether the Visit is transient or for alonger
+    description: This table contains Events where Persons engage with the healthcare system for a duration
+      of time. They are often also called “Encounters”. Visits are defined by a configuration of circumstances
+      under which they occur, such as (i) whether the patient comes to a healthcare institution, the other
+      way around, or the interaction is remote, (ii) whether and what kind of trained medical staff is
+      delivering the service during the Visit, and (iii) whether the Visit is transient or for a longer
       period involving a stay in bed.
     columns:
       - name: visit_occurrence_id

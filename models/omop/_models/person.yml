@@ -1,7 +1,7 @@
 models:
   - name: person
-    description: This table serves as the central identity management for all Personsin the database.
-      It contains records that uniquely identify each personor patient, and some demographic information.
+    description: This table serves as the central identity management for all Persons in the database.
+      It contains records that uniquely identify each person or patient, and some demographic information.
     columns:
       - name: person_id
         description: It is assumed that every person with a different unique identifier is infact a different

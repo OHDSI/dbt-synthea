@@ -1,8 +1,8 @@
 models:
   - name: observation_period
-    description: 'This table contains records which define spans of time during whichtwo conditions are
-      expected to hold: (i) Clinical Events that happenedto the Person are recorded in the Event tables,
-      and (ii) absence ofrecords indicate such Events did not occur during this span of time.'
+    description: 'This table contains records which define spans of time during which two conditions are
+      expected to hold: (i) Clinical Events that happened to the Person are recorded in the Event tables,
+      and (ii) absence of records indicate such Events did not occur during this span of time.'
     columns:
       - name: observation_period_id
         description: A Person can have multiple discrete Observation Periods which areidentified by the

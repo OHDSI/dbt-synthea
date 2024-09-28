@@ -1,6 +1,6 @@
 models:
   - name: specimen
-    description: The specimen domain contains the records identifying biologicalsamples from a person.
+    description: The specimen domain contains the records identifying biological samples from a person.
     columns:
       - name: specimen_id
         description: Unique identifier for each specimen.

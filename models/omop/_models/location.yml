@@ -1,6 +1,6 @@
 models:
   - name: location
-    description: The LOCATION table represents a generic way to capture physicallocation or address information
+    description: The LOCATION table represents a generic way to capture physical location or address information
       of Persons and Care Sites.
     columns:
       - name: location_id

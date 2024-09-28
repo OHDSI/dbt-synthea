@@ -1,11 +1,11 @@
 models:
   - name: device_exposure
-    description: The Device domain captures information about a person’s exposure to aforeign physical
-      object or instrument which is used for diagnostic ortherapeutic purposes through a mechanism beyond
-      chemical action. Devicesinclude implantable objects (e.g. pacemakers, stents, artificialjoints),
-      medical equipment and supplies (e.g. bandages, crutches,syringes), other instruments used in medical
-      procedures (e.g. sutures,defibrillators) and material used in clinical care (e.g. adhesives, bodymaterial,
-      dental material, surgical material).
+    description: The Device domain captures information about a person’s exposure to a foreign physical
+      object or instrument which is used for diagnostic or therapeutic purposes through a mechanism beyond
+      chemical action. Devices include implantable objects (e.g. pacemakers, stents, artificial joints),
+      medical equipment and supplies (e.g. bandages, crutches, syringes), other instruments used in medical
+      procedures (e.g. sutures, defibrillators) and material used in clinical care (e.g. adhesives, body
+      material, dental material, surgical material).
     columns:
       - name: device_exposure_id
         description: The unique key given to records a person’s exposure to a foreignphysical object or

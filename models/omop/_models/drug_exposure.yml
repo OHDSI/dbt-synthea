@@ -1,10 +1,10 @@
 models:
   - name: drug_exposure
-    description: This table captures records about the exposure to a Drug ingested orotherwise introduced
-      into the body. A Drug is a biochemical substanceformulated in such a way that when administered
-      to a Person it willexert a certain biochemical effect on the metabolism. Drugs includeprescription
-      and over-the-counter medicines, vaccines, andlarge-molecule biologic therapies. Radiological devices
-      ingested orapplied locally do not count as Drugs.
+    description: This table captures records about the exposure to a Drug ingested or otherwise introduced
+      into the body. A Drug is a biochemical substance formulated in such a way that when administered
+      to a Person it will exert a certain biochemical effect on the metabolism. Drugs include prescription
+      and over-the-counter medicines, vaccines, and large-molecule biologic therapies. Radiological devices
+      ingested or applied locally do not count as Drugs.
     columns:
       - name: drug_exposure_id
         description: The unique key given to records of drug dispensings or administrationsfor a person.

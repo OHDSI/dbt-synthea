@@ -1,9 +1,10 @@
 models:
   - name: concept_relationship
-    description: The CONCEPT_RELATIONSHIP table contains records that definerelationships between any
-      two Concepts and the nature or type of therelationship. This table captures various types of relationships,including
-      hierarchical, associative, and other semantic connections,enabling comprehensive analysis and interpretation
-      of clinical concepts.Every kind of relationship is defined in the RELATIONSHIP table.
+    description: The CONCEPT_RELATIONSHIP table contains records that define relationships between any
+      two Concepts and the nature or type of the relationship. This table captures various types of relationships,
+      including hierarchical, associative, and other semantic connections, enabling comprehensive analysis
+      and interpretation of clinical concepts. Every kind of relationship is defined in the RELATIONSHIP
+      table.
     columns:
       - name: concept_id_1
         description: ''

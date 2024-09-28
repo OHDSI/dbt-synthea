@@ -1,8 +1,8 @@
 models:
   - name: vocabulary
-    description: The VOCABULARY table includes a list of the Vocabularies integratedfrom various sources
-      or created de novo in OMOP CDM. This referencetable contains a single record for each Vocabulary
-      and includes adescriptive name and other associated attributes for the Vocabulary.
+    description: The VOCABULARY table includes a list of the Vocabularies integrated from various sources
+      or created de novo in OMOP CDM. This reference table contains a single record for each Vocabulary
+      and includes a descriptive name and other associated attributes for the Vocabulary.
     columns:
       - name: vocabulary_id
         description: A unique identifier for each Vocabulary, such as ICD9CM, SNOMED, Visit.

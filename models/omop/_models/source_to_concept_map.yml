@@ -1,12 +1,12 @@
 models:
   - name: source_to_concept_map
-    description: The source to concept map table is recommended for use in ETLprocesses to maintain local
-      source codes which are not available asConcepts in the Standardized Vocabularies, and to establish
-      mappings foreach source code into a Standard Concept as target_concept_ids that canbe used to populate
-      the Common Data Model tables. TheSOURCE_TO_CONCEPT_MAP table is no longer populated with content
-      withinthe Standardized Vocabularies published to the OMOP community.There are OHDSI tools to help
-      you populate this table; Usagi and Perseus. You can read moreabout OMOP vocabulary mapping in TheBook
-      of OHDSI Chapter 6.3.
+    description: The source to concept map table is recommended for use in ETL processes to maintain local
+      source codes which are not available as Concepts in the Standardized Vocabularies, and to establish
+      mappings for each source code into a Standard Concept as target_concept_ids that can be used to
+      populate the Common Data Model tables. The SOURCE_TO_CONCEPT_MAP table is no longer populated with
+      content within the Standardized Vocabularies published to the OMOP community. There are OHDSI tools
+      to help you populate this table; Usagi and Perseus. You can read more about OMOP vocabulary mapping
+      in The Book of OHDSI Chapter 6.3.
     columns:
       - name: source_code
         description: The source code being translated into a Standard Concept.

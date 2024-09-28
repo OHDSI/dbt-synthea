@@ -1,11 +1,11 @@
 models:
   - name: visit_detail
-    description: The VISIT_DETAIL table is an optional table used to representsdetails of each record
-      in the parent VISIT_OCCURRENCE table. A goodexample of this would be the movement between units
-      in a hospital duringan inpatient stay or claim lines associated with a one insurance claim.For every
-      record in the VISIT_OCCURRENCE table there may be 0 or morerecords in the VISIT_DETAIL table with
-      a 1:n relationship where n may be0. The VISIT_DETAIL table is structurally very similar toVISIT_OCCURRENCE
-      table and belongs to the visit domain.
+    description: The VISIT_DETAIL table is an optional table used to represents details of each record
+      in the parent VISIT_OCCURRENCE table. A good example of this would be the movement between units
+      in a hospital during an inpatient stay or claim lines associated with a one insurance claim. For
+      every record in the VISIT_OCCURRENCE table there may be 0 or more records in the VISIT_DETAIL table
+      with a 1:n relationship where n may be 0. The VISIT_DETAIL table is structurally very similar to
+      VISIT_OCCURRENCE table and belongs to the visit domain.
     columns:
       - name: visit_detail_id
         description: Use this to identify unique interactions between a person and the healthcare system.

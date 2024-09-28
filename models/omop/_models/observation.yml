@@ -1,8 +1,8 @@
 models:
   - name: observation
-    description: The OBSERVATION table captures clinical facts about a Person obtainedin the context of
-      examination, questioning or a procedure. Any data thatcannot be represented by any other domains,
-      such as social and lifestylefacts, medical history, family history, etc. are recorded here.
+    description: The OBSERVATION table captures clinical facts about a Person obtained in the context
+      of examination, questioning or a procedure. Any data that cannot be represented by any other domains,
+      such as social and lifestyle facts, medical history, family history, etc. are recorded here.
     columns:
       - name: observation_id
         description: The unique key given to an Observation record for a Person. Refer to theETL for how

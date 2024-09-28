@@ -1,8 +1,8 @@
 models:
   - name: cost
-    description: The COST table captures records containing the cost of any medicalevent recorded in one
-      of the OMOP clinical event tables such asDRUG_EXPOSURE, PROCEDURE_OCCURRENCE, VISIT_OCCURRENCE,
-      VISIT_DETAIL,DEVICE_OCCURRENCE, OBSERVATION or MEASUREMENT.
+    description: The COST table captures records containing the cost of any medical event recorded in
+      one of the OMOP clinical event tables such as DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, VISIT_OCCURRENCE,
+      VISIT_DETAIL, DEVICE_OCCURRENCE, OBSERVATION or MEASUREMENT.
     columns:
       - name: cost_id
         description: ''

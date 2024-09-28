@@ -1,8 +1,8 @@
 models:
   - name: provider
-    description: The PROVIDER table contains a list of uniquely identified healthcareproviders; duplication
-      is not allowed. These are individuals providinghands-on healthcare to patients, such as physicians,
-      nurses, midwives,physical therapists etc.
+    description: The PROVIDER table contains a list of uniquely identified healthcare providers; duplication
+      is not allowed. These are individuals providing hands-on healthcare to patients, such as physicians,
+      nurses, midwives, physical therapists etc.
     columns:
       - name: provider_id
         description: It is assumed that every provider with a different unique identifier isin fact a

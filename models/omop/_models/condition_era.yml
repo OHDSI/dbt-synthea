@@ -1,9 +1,9 @@
 models:
   - name: condition_era
-    description: 'A Condition Era is defined as a span of time when the Person isassumed to have a given
-      condition. Similar to Drug Eras, Condition Erasare chronological periods of Condition Occurrence
-      and every ConditionOccurrence record should be part of a Condition Era. Combiningindividual Condition
-      Occurrences into a single Condition Era serves twopurposes:'
+    description: 'A Condition Era is defined as a span of time when the Person is assumed to have a given
+      condition. Similar to Drug Eras, Condition Eras are chronological periods of Condition Occurrence
+      and every Condition Occurrence record should be part of a Condition Era. Combining individual Condition
+      Occurrences into a single Condition Era serves two purposes:'
     columns:
       - name: condition_era_id
         description: ''

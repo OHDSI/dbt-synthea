@@ -1,8 +1,8 @@
 models:
   - name: drug_strength
-    description: The DRUG_STRENGTH table contains structured content about the amountor concentration
-      and associated units of a specific ingredient containedwithin a particular drug product. This table
-      is supplemental informationto support standardized analysis of drug utilization.
+    description: The DRUG_STRENGTH table contains structured content about the amount or concentration
+      and associated units of a specific ingredient contained within a particular drug product. This table
+      is supplemental information to support standardized analysis of drug utilization.
     columns:
       - name: drug_concept_id
         description: The Concept representing the Branded Drug or Clinical Drug Product.

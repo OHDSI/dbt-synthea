@@ -1,16 +1,17 @@
 models:
   - name: measurement
-    description: The MEASUREMENT table contains records of Measurements,i.e. structured values (numerical
-      or categorical) obtained throughsystematic and standardized examination or testing of a Person orPerson’s
-      sample. The MEASUREMENT table contains both orders and resultsof such Measurements as laboratory
-      tests, vital signs, quantitativefindings from pathology reports, etc. Measurements are stored asattribute
-      value pairs, with the attribute as the Measurement Concept andthe value representing the result.
-      The value can be a Concept (stored inVALUE_AS_CONCEPT), or a numerical value (VALUE_AS_NUMBER) with
-      a Unit(UNIT_CONCEPT_ID). The Procedure for obtaining the sample is housed inthe PROCEDURE_OCCURRENCE
-      table, though it is unnecessary to create aPROCEDURE_OCCURRENCE record for each measurement if one
-      does not existin the source data. Measurements differ from Observations in that theyrequire a standardized
-      test or some other activity to generate aquantitative or qualitative result. If there is no result,
-      it is assumedthat the lab test was conducted but the result was not captured.
+    description: The MEASUREMENT table contains records of Measurements, i.e. structured values (numerical
+      or categorical) obtained through systematic and standardized examination or testing of a Person
+      or Person’s sample. The MEASUREMENT table contains both orders and results of such Measurements
+      as laboratory tests, vital signs, quantitative findings from pathology reports, etc. Measurements
+      are stored as attribute value pairs, with the attribute as the Measurement Concept and the value
+      representing the result. The value can be a Concept (stored in VALUE_AS_CONCEPT), or a numerical
+      value (VALUE_AS_NUMBER) with a Unit (UNIT_CONCEPT_ID). The Procedure for obtaining the sample is
+      housed in the PROCEDURE_OCCURRENCE table, though it is unnecessary to create a PROCEDURE_OCCURRENCE
+      record for each measurement if one does not exist in the source data. Measurements differ from Observations
+      in that they require a standardized test or some other activity to generate a quantitative or qualitative
+      result. If there is no result, it is assumed that the lab test was conducted but the result was
+      not captured.
     columns:
       - name: measurement_id
         description: The unique key given to a Measurement record for a Person. Refer to theETL for how

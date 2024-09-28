@@ -1,6 +1,6 @@
 models:
   - name: metadata
-    description: The METADATA table contains metadata information about a dataset thathas been transformed
+    description: The METADATA table contains metadata information about a dataset that has been transformed
       to the OMOP Common Data Model.
     columns:
       - name: metadata_id

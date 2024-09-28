@@ -1,8 +1,8 @@
 models:
   - name: episode_event
-    description: The EPISODE_EVENT table connects qualifying clinical events (such asCONDITION_OCCURRENCE,
-      DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, MEASUREMENT)to the appropriate EPISODE entry. For example,
-      linking the preciselocation of the metastasis (cancer modifier in MEASUREMENT) to thedisease episode.
+    description: The EPISODE_EVENT table connects qualifying clinical events (such as CONDITION_OCCURRENCE,
+      DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, MEASUREMENT) to the appropriate EPISODE entry. For example,
+      linking the precise location of the metastasis (cancer modifier in MEASUREMENT) to the disease episode.
     columns:
       - name: episode_id
         description: Use this field to link the EPISODE_EVENT record to its EPISODE.

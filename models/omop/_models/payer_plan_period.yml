@@ -1,14 +1,14 @@
 models:
   - name: payer_plan_period
-    description: The PAYER_PLAN_PERIOD table captures details of the period of timethat a Person is continuously
-      enrolled under a specific health Planbenefit structure from a given Payer. Each Person receiving
-      healthcareis typically covered by a health benefit plan, which pays for (fully orpartially), or
-      directly provides, the care. These benefit plans areprovided by payers, such as health insurances
-      or state or governmentagencies. In each plan the details of the health benefits are definedfor the
-      Person or her family, and the health benefit Plan might changeover time typically with increasing
-      utilization (reaching certain costthresholds such as deductibles), plan availability and purchasingchoices
-      of the Person. The unique combinations of Payer organizations,health benefit Plans and time periods
-      in which they are valid for aPerson are recorded in this table.
+    description: The PAYER_PLAN_PERIOD table captures details of the period of time that a Person is continuously
+      enrolled under a specific health Plan benefit structure from a given Payer. Each Person receiving
+      healthcare is typically covered by a health benefit plan, which pays for (fully or partially), or
+      directly provides, the care. These benefit plans are provided by payers, such as health insurances
+      or state or government agencies. In each plan the details of the health benefits are defined for
+      the Person or her family, and the health benefit Plan might change over time typically with increasing
+      utilization (reaching certain cost thresholds such as deductibles), plan availability and purchasing
+      choices of the Person. The unique combinations of Payer organizations, health benefit Plans and
+      time periods in which they are valid for a Person are recorded in this table.
     columns:
       - name: payer_plan_period_id
         description: A unique identifier for each unique combination of a Person, Payer,Plan, and Period
