@@ -80,7 +80,7 @@ def extract_table_description(table_handle) -> str:
         "p", string="Table Description"
     ).next_sibling.next_sibling.text
 
-    return description.replace("\n", "")
+    return description.replace("\n", " ")
 
 
 def omop_docs_to_dbt_config(obj: omop_documentation_container) -> dict:
