@@ -3,13 +3,13 @@ SELECT DISTINCT
     , 'Procedure' AS cost_domain_id
     , 32814 AS cost_type_concept_id
     , 44818668 AS currency_concept_id
-    , {{ dbt.safe_cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }} + {{ dbt.safe_cast("pr.procedure_base_cost", api.Column.translate_type("decimal")) }} AS total_charge
-    , {{ dbt.safe_cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }} + {{ dbt.safe_cast("pr.procedure_base_cost", api.Column.translate_type("decimal")) }} AS total_cost
-    , {{ dbt.safe_cast("e.encounter_payer_coverage", api.Column.translate_type("decimal")) }} + {{ dbt.safe_cast("pr.procedure_base_cost", api.Column.translate_type("decimal")) }} AS total_paid
+    , {{ dbt.cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }} + {{ dbt.cast("pr.procedure_base_cost", api.Column.translate_type("decimal")) }} AS total_charge
+    , {{ dbt.cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }} + {{ dbt.cast("pr.procedure_base_cost", api.Column.translate_type("decimal")) }} AS total_cost
+    , {{ dbt.cast("e.encounter_payer_coverage", api.Column.translate_type("decimal")) }} + {{ dbt.cast("pr.procedure_base_cost", api.Column.translate_type("decimal")) }} AS total_paid
     , e.encounter_payer_coverage AS paid_by_payer
-    , {{ dbt.safe_cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }}
-    + {{ dbt.safe_cast("pr.procedure_base_cost", api.Column.translate_type("decimal")) }}
-    - {{ dbt.safe_cast("e.encounter_payer_coverage", api.Column.translate_type("decimal")) }} AS paid_by_patient
+    , {{ dbt.cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }}
+    + {{ dbt.cast("pr.procedure_base_cost", api.Column.translate_type("decimal")) }}
+    - {{ dbt.cast("e.encounter_payer_coverage", api.Column.translate_type("decimal")) }} AS paid_by_patient
     , cast(null AS numeric) AS paid_patient_copay
     , cast(null AS numeric) AS paid_patient_coinsurance
     , cast(null AS numeric) AS paid_patient_deductible

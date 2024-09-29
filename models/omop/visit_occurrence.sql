@@ -10,9 +10,9 @@ SELECT
         WHEN 'outpatient' THEN 9202
         ELSE 0
     END AS visit_concept_id
-    , {{ dbt.safe_cast("av.visit_start_date", api.Column.translate_type("date")) }} AS visit_start_date
+    , {{ dbt.cast("av.visit_start_date", api.Column.translate_type("date")) }} AS visit_start_date
     , av.visit_start_date AS visit_start_datetime
-    , {{ dbt.safe_cast("av.visit_end_date", api.Column.translate_type("date")) }} AS visit_end_date
+    , {{ dbt.cast("av.visit_end_date", api.Column.translate_type("date")) }} AS visit_end_date
     , av.visit_end_date AS visit_end_datetime
     , 32827 AS visit_type_concept_id
     , pr.provider_id

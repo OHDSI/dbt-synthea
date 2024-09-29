@@ -10,7 +10,7 @@ SELECT
     row_number() OVER (ORDER BY person_id) AS observation_id
     , p.person_id
     , observation_concept_id
-    , {{ dbt.safe_cast("observation_date", api.Column.translate_type("date")) }} AS observation_date
+    , {{ dbt.cast("observation_date", api.Column.translate_type("date")) }} AS observation_date
     , observation_datetime
     , observation_type_concept_id
     , cast(null AS float) AS value_as_number

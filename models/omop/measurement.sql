@@ -2,9 +2,9 @@ WITH snomed_measurements AS (
     SELECT
         p.person_id
         , srctostdvm.target_concept_id AS measurement_concept_id
-        , {{ dbt.safe_cast("pr.procedure_start_datetime", api.Column.translate_type("date")) }} AS measurement_date
+        , {{ dbt.cast("pr.procedure_start_datetime", api.Column.translate_type("date")) }} AS measurement_date
         , pr.procedure_start_datetime AS measurement_datetime
-        , {{ dbt.safe_cast("pr.procedure_start_datetime", api.Column.translate_type("time")) }} AS measurement_time
+        , {{ dbt.cast("pr.procedure_start_datetime", api.Column.translate_type("time")) }} AS measurement_time
         , 32827 AS measurement_type_concept_id
         , 0 AS operator_concept_id
         , cast(null AS float) AS value_as_number
@@ -51,9 +51,9 @@ WITH snomed_measurements AS (
     SELECT
         p.person_id
         , srctostdvm.target_concept_id AS measurement_concept_id
-        , {{ dbt.safe_cast("o.observation_datetime", api.Column.translate_type("date")) }} AS measurement_date
+        , {{ dbt.cast("o.observation_datetime", api.Column.translate_type("date")) }} AS measurement_date
         , o.observation_datetime AS measurement_datetime
-        , {{ dbt.safe_cast("o.observation_datetime", api.Column.translate_type("time")) }} AS measurement_time
+        , {{ dbt.cast("o.observation_datetime", api.Column.translate_type("time")) }} AS measurement_time
         , 32827 AS measurement_type_concept_id
         , 0 AS operator_concept_id
         , CASE

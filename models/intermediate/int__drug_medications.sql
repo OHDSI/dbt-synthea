@@ -16,8 +16,8 @@ SELECT
     , cast(null AS integer) AS refills
     , cast(null AS integer) AS quantity
     , {{ dbt.datediff(
-            dbt.safe_cast("m.medication_start_datetime", api.Column.translate_type("date")),
-            dbt.safe_cast("m.medication_stop_datetime", api.Column.translate_type("date")), 
+            dbt.cast("m.medication_start_datetime", api.Column.translate_type("date")),
+            dbt.cast("m.medication_stop_datetime", api.Column.translate_type("date")), 
             "day") 
     }} AS days_supply
     , cast(null AS varchar) AS sig
