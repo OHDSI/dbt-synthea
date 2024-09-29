@@ -25,4 +25,5 @@
             "packages.yml"
         ]
     },
+    "dbt.enableNewLineagePanel": true,
 }
