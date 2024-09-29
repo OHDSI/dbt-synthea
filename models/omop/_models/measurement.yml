@@ -1,0 +1,179 @@
+models:
+  - name: measurement
+    description: The MEASUREMENT table contains records of Measurements, i.e. structured values (numerical
+      or categorical) obtained through systematic and standardized examination or testing of a Person
+      or Person’s sample. The MEASUREMENT table contains both orders and results of such Measurements
+      as laboratory tests, vital signs, quantitative findings from pathology reports, etc. Measurements
+      are stored as attribute value pairs, with the attribute as the Measurement Concept and the value
+      representing the result. The value can be a Concept (stored in VALUE_AS_CONCEPT), or a numerical
+      value (VALUE_AS_NUMBER) with a Unit (UNIT_CONCEPT_ID). The Procedure for obtaining the sample is
+      housed in the PROCEDURE_OCCURRENCE table, though it is unnecessary to create a PROCEDURE_OCCURRENCE
+      record for each measurement if one does not exist in the source data. Measurements differ from Observations
+      in that they require a standardized test or some other activity to generate a quantitative or qualitative
+      result. If there is no result, it is assumed that the lab test was conducted but the result was
+      not captured.
+    columns:
+      - name: measurement_id
+        description: The unique key given to a Measurement record for a Person. Refer to theETL for how
+          duplicate Measurements during the same Visit were handled.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: The PERSON_ID of the Person for whom the Measurement is recorded. Thismay be a system
+          generated code.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: measurement_concept_id
+        description: The MEASUREMENT_CONCEPT_ID field is recommended for primary use inanalyses, and must
+          be used for network studies. This is the standardconcept mapped from the source value which
+          represents a measurement.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: measurement_concept_id <> 0
+              to_condition: domain_id = 'Measurement'
+      - name: measurement_date
+        description: Use this date to determine the date of the measurement.
+        data_type: date
+        tests:
+          - not_null
+      - name: measurement_datetime
+        description: ''
+        data_type: datetime
+      - name: measurement_time
+        description: ''
+        data_type: varchar(10)
+      - name: measurement_type_concept_id
+        description: This field can be used to determine the provenance of the Measurementrecord, as in
+          whether the measurement was from an EHR system, insuranceclaim, registry, or other sources.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: measurement_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: operator_concept_id
+        description: The meaning of Concept 4172703for ‘=’ is identical to omission of a OPERATOR_CONCEPT_ID
+          value. Sincethe use of this field is rare, it’s important when devising analyses tonot to forget
+          testing for the content of this field for values differentfrom =.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: value_as_number
+        description: This is the numerical value of the Result of the Measurement, ifavailable. Note that
+          measurements such as blood pressures will be splitinto their component parts i.e. one record
+          for systolic, one record fordiastolic.
+        data_type: float
+      - name: value_as_concept_id
+        description: If the raw data gives a categorial result for measurements those valuesare captured
+          and mapped to standard concepts in the ‘Meas Value’ domain.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: unit_concept_id
+        description: At present, there isn’t a prescribed unit for individual measurements,such as Hemoglobin
+          A1C, meaning it’s not obligatory to express thesemeasurements as a percentage. UNIT_SOURCE_VALUES
+          should be linked to aStandard Concept within the Unit domain that most accurately reflectsthe
+          unit provided in the source data.
+        data_type: integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: unit_concept_id <> 0
+              to_condition: domain_id = 'Unit'
+      - name: range_low
+        description: Ranges have the same unit as the VALUE_AS_NUMBER. These ranges areprovided by the
+          source and should remain NULL if not given.
+        data_type: float
+      - name: range_high
+        description: Ranges have the same unit as the VALUE_AS_NUMBER. These ranges areprovided by the
+          source and should remain NULL if not given.
+        data_type: float
+      - name: provider_id
+        description: The provider associated with measurement record, e.g. the provider whoordered the
+          test or the provider who recorded the result.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('provider')
+              field: provider_id
+      - name: visit_occurrence_id
+        description: The visit during which the Measurement occurred.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_occurrence')
+              field: visit_occurrence_id
+      - name: visit_detail_id
+        description: The VISIT_DETAIL record during which the Measurement occurred. Forexample, if the
+          Person was in the ICU at the time the VISIT_OCCURRENCErecord would reflect the overall hospital
+          stay and the VISIT_DETAILrecord would reflect the ICU stay during the hospital visit.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_detail')
+              field: visit_detail_id
+      - name: measurement_source_value
+        description: This field contains the exact value from the source data that representsthe measurement
+          that occurred.
+        data_type: varchar(50)
+      - name: measurement_source_concept_id
+        description: This is the concept representing the MEASUREMENT_SOURCE_VALUE and maynot necessarily
+          be standard. This field is discouraged from use inanalysis because it is not required to contain
+          Standard Concepts thatare used across the OHDSI community, and should only be used whenStandard
+          Concepts do not adequately represent the source detail for theMeasurement necessary for a given
+          analytic use case. Consider usingMEASUREMENT_CONCEPT_ID instead to enable standardized analytics
+          that canbe consistent across the network.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: unit_source_value
+        description: This field contains the exact value from the source data that representsthe unit
+          of measurement used.
+        data_type: varchar(50)
+      - name: unit_source_concept_id
+        description: “This is the concept representing the UNIT_SOURCE_VALUE and may notnecessarily be
+          standard. This field is discouraged from use in analysisbecause it is not required to contain
+          Standard Concepts that are usedacross the OHDSI community, and should only be used when StandardConcepts
+          do not adequately represent the source detail for theMeasurement necessary for a given analytic
+          use case. Consider usingUNIT_CONCEPT_ID instead to enable standardized analytics that can beconsistent
+          across the network.”
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: value_source_value
+        description: This field houses the verbatim result value of the Measurement from thesource data
+          .
+        data_type: varchar(50)
+      - name: measurement_event_id
+        description: If the Measurement record is related to another record in the database,this field
+          is the primary key of the linked record.
+        data_type: integer
+      - name: meas_event_field_concept_id
+        description: If the Measurement record is related to another record in the database,this field
+          is the CONCEPT_ID that identifies which table the primary keyof the linked record came from.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id

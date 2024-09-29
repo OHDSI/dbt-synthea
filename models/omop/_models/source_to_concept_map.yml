@@ -1,0 +1,64 @@
+models:
+  - name: source_to_concept_map
+    description: The source to concept map table is recommended for use in ETL processes to maintain local
+      source codes which are not available as Concepts in the Standardized Vocabularies, and to establish
+      mappings for each source code into a Standard Concept as target_concept_ids that can be used to
+      populate the Common Data Model tables. The SOURCE_TO_CONCEPT_MAP table is no longer populated with
+      content within the Standardized Vocabularies published to the OMOP community. There are OHDSI tools
+      to help you populate this table; Usagi and Perseus. You can read more about OMOP vocabulary mapping
+      in The Book of OHDSI Chapter 6.3.
+    columns:
+      - name: source_code
+        description: The source code being translated into a Standard Concept.
+        data_type: varchar(50)
+        tests:
+          - not_null
+      - name: source_concept_id
+        description: A foreign key to the Source Concept that is being translated into aStandard Concept.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: source_vocabulary_id
+        description: A foreign key to the VOCABULARY table defining the vocabulary of thesource code that
+          is being translated to a Standard Concept.
+        data_type: varchar(20)
+        tests:
+          - not_null
+      - name: source_code_description
+        description: An optional description for the source code. This is included as aconvenience to
+          compare the description of the source code to the name ofthe concept.
+        data_type: varchar(255)
+      - name: target_concept_id
+        description: The target Concept to which the source code is being mapped.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: target_vocabulary_id
+        description: The Vocabulary of the target Concept.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - relationships:
+              to: ref('vocabulary')
+              field: vocabulary_id
+      - name: valid_start_date
+        description: The date when the mapping instance was first recorded.
+        data_type: date
+        tests:
+          - not_null
+      - name: valid_end_date
+        description: The date when the mapping instance became invalid because it was deletedor superseded
+          (updated) by a new relationship. Default value is31-Dec-2099.
+        data_type: date
+        tests:
+          - not_null
+      - name: invalid_reason
+        description: Reason the mapping instance was invalidated. Possible values are D(deleted), U (replaced
+          with an update) or NULL when valid_end_date hasthe default value.
+        data_type: varchar(1)

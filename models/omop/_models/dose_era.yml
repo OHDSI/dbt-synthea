@@ -1,0 +1,55 @@
+models:
+  - name: dose_era
+    description: A Dose Era is defined as a span of time when the Person is assumed to be exposed to a
+      constant dose of a specific active ingredient.
+    columns:
+      - name: dose_era_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: drug_concept_id
+        description: The Concept Id representing the specific drug ingredient.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_concept_id <> 0
+              to_condition: domain_id = 'Drug'
+      - name: unit_concept_id
+        description: The Concept Id representing the unit of the specific drug ingredient.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: unit_concept_id <> 0
+              to_condition: domain_id = 'Unit'
+      - name: dose_value
+        description: The numeric value of the dosage of the drug_ingredient.
+        data_type: float
+        tests:
+          - not_null
+      - name: dose_era_start_date
+        description: The date the Person started on the specific dosage, with at least 31days since any
+          prior exposure.
+        data_type: date
+        tests:
+          - not_null
+      - name: dose_era_end_date
+        description: ''
+        data_type: date
+        tests:
+          - not_null

@@ -1,0 +1,44 @@
+models:
+  - name: observation_period
+    description: 'This table contains records which define spans of time during which two conditions are
+      expected to hold: (i) Clinical Events that happened to the Person are recorded in the Event tables,
+      and (ii) absence of records indicate such Events did not occur during this span of time.'
+    columns:
+      - name: observation_period_id
+        description: A Person can have multiple discrete Observation Periods which areidentified by the
+          Observation_Period_Id.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: The Person ID of the PERSON record for which the Observation Period isrecorded.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: observation_period_start_date
+        description: Use this date to determine the start date of the Observation Period.
+        data_type: date
+        tests:
+          - not_null
+      - name: observation_period_end_date
+        description: Use this date to determine the end date of the period for which we canassume that
+          all events for a Person are recorded.
+        data_type: date
+        tests:
+          - not_null
+      - name: period_type_concept_id
+        description: This field can be used to determine the provenance of the ObservationPeriod as in
+          whether the period was determined from an insuranceenrollment file, EHR healthcare encounters,
+          or other sources.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: period_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'

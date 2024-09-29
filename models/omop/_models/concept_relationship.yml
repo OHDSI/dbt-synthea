@@ -1,0 +1,47 @@
+models:
+  - name: concept_relationship
+    description: The CONCEPT_RELATIONSHIP table contains records that define relationships between any
+      two Concepts and the nature or type of the relationship. This table captures various types of relationships,
+      including hierarchical, associative, and other semantic connections, enabling comprehensive analysis
+      and interpretation of clinical concepts. Every kind of relationship is defined in the RELATIONSHIP
+      table.
+    columns:
+      - name: concept_id_1
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: concept_id_2
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: relationship_id
+        description: The relationship between CONCEPT_ID_1 and CONCEPT_ID_2. Please see theVocabularyConventions.
+          for more information.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - relationships:
+              to: ref('relationship')
+              field: relationship_id
+      - name: valid_start_date
+        description: The date when the relationship is first recorded.
+        data_type: date
+        tests:
+          - not_null
+      - name: valid_end_date
+        description: The date when the relationship is invalidated.
+        data_type: date
+        tests:
+          - not_null
+      - name: invalid_reason
+        description: Reason the relationship was invalidated. Possible values are ‘D’(deleted), ‘U’ (updated)
+          or NULL.
+        data_type: varchar(1)

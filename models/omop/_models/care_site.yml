@@ -1,0 +1,39 @@
+models:
+  - name: care_site
+    description: The CARE_SITE table contains a list of uniquely identified institutional (physical or
+      organizational) units where healthcare delivery is practiced (offices, wards, hospitals, clinics,
+      etc.).
+    columns:
+      - name: care_site_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: care_site_name
+        description: The name of the care_site as it appears in the source data
+        data_type: varchar(255)
+      - name: place_of_service_concept_id
+        description: This is a high-level way of characterizing a Care Site. Typically,however, Care Sites
+          can provide care in multiple settings (inpatient,outpatient, etc.) and this granularity should
+          be reflected in the visit.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: location_id
+        description: The location_id from the LOCATION table representing the physicallocation of the
+          care_site.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('location')
+              field: location_id
+      - name: care_site_source_value
+        description: The identifier of the care_site as it appears in the source data. Thiscould be an
+          identifier separate from the name of the care_site.
+        data_type: varchar(50)
+      - name: place_of_service_source_value
+        description: ''
+        data_type: varchar(50)

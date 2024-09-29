@@ -1,0 +1,68 @@
+models:
+  - name: note_nlp
+    description: The NOTE_NLP table encodes all output of NLP on clinical notes. Each row represents a
+      single extracted term from a note.
+    columns:
+      - name: note_nlp_id
+        description: A unique identifier for the NLP record.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: note_id
+        description: This is the NOTE_ID for the NOTE record the NLP record is associated to.
+        data_type: integer
+        tests:
+          - not_null
+      - name: section_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: snippet
+        description: A small window of text surrounding the term
+        data_type: varchar(250)
+      - name: “offset”
+        description: Character offset of the extracted term in the input note
+        data_type: varchar(50)
+      - name: lexical_variant
+        description: Raw text extracted from the NLP tool.
+        data_type: varchar(250)
+        tests:
+          - not_null
+      - name: note_nlp_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: note_nlp_source_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: nlp_system
+        description: ''
+        data_type: varchar(250)
+      - name: nlp_date
+        description: The date of the note processing.
+        data_type: date
+        tests:
+          - not_null
+      - name: nlp_datetime
+        description: The date and time of the note processing.
+        data_type: datetime
+      - name: term_exists
+        description: ''
+        data_type: varchar(1)
+      - name: term_temporal
+        description: ''
+        data_type: varchar(50)
+      - name: term_modifiers
+        description: ''
+        data_type: varchar(2000)

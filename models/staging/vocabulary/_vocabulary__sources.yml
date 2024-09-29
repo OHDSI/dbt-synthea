@@ -2,15 +2,25 @@ version: 2
 
 sources:
   - name: vocabulary
-    schema: "{% if var('seed_source') %}{{ target.schema ~ '_vocab_seeds' }}{% else %}{{ target.schema }}{% endif %}"
+    schema: "{% if var('seed_source', false) %}{{ target.schema }}_vocab_seeds{% else %}{{ target.schema }}{% endif %}"
     tables:
       - name: concept
+        identifier: "{% if var('seed_source', false) %}concept_seed{% else %}concept{% endif %}"
       - name: concept_ancestor
+        identifier: "{% if var('seed_source', false) %}concept_ancestor_seed{% else %}concept_ancestor{% endif %}"
       - name: concept_class
+        identifier: "{% if var('seed_source', false) %}concept_class_seed{% else %}concept_class{% endif %}"
       - name: concept_relationship
+        identifier: "{% if var('seed_source', false) %}concept_relationship_seed{% else %}concept_relationship{% endif %}"
       - name: concept_synonym
+        identifier: "{% if var('seed_source', false) %}concept_synonym_seed{% else %}concept_synonym{% endif %}"
       - name: domain
+        identifier: "{% if var('seed_source', false) %}domain_seed{% else %}domain{% endif %}"
       - name: drug_strength
+        identifier: "{% if var('seed_source', false) %}drug_strength_seed{% else %}drug_strength{% endif %}"
       - name: relationship
+        identifier: "{% if var('seed_source', false) %}relationship_seed{% else %}relationship{% endif %}"
       - name: vocabulary
+        identifier: "{% if var('seed_source', false) %}vocabulary_seed{% else %}vocabulary{% endif %}"
       - name: source_to_concept_map
+        identifier: "{% if var('seed_source', false) %}source_to_concept_map_seed{% else %}source_to_concept_map{% endif %}"

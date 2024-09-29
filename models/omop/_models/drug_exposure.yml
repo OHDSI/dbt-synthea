@@ -1,0 +1,147 @@
+models:
+  - name: drug_exposure
+    description: This table captures records about the exposure to a Drug ingested or otherwise introduced
+      into the body. A Drug is a biochemical substance formulated in such a way that when administered
+      to a Person it will exert a certain biochemical effect on the metabolism. Drugs include prescription
+      and over-the-counter medicines, vaccines, and large-molecule biologic therapies. Radiological devices
+      ingested or applied locally do not count as Drugs.
+    columns:
+      - name: drug_exposure_id
+        description: The unique key given to records of drug dispensings or administrationsfor a person.
+          Refer to the ETL for how duplicate drugs during the samevisit were handled.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: The PERSON_ID of the PERSON for whom the drug dispensing oradministration is recorded.
+          This may be a system generated code.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: drug_concept_id
+        description: The DRUG_CONCEPT_ID field is recommended for primary use in analyses,and must be
+          used for network studies. This is the standard conceptmapped from the source concept id which
+          represents a drug product ormolecule otherwise introduced to the body. The drug concepts can
+          have avarying degree of information about drug strength and dose. Thisinformation is relevant
+          in the context of quantity and administrationinformation in the subsequent fields plus strength
+          information from theDRUG_STRENGTH table, provided as part of the standard vocabularydownload.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_concept_id <> 0
+              to_condition: domain_id = 'Drug'
+      - name: drug_exposure_start_date
+        description: Use this date to determine the start date of the drug record.
+        data_type: date
+        tests:
+          - not_null
+      - name: drug_exposure_start_datetime
+        description: ''
+        data_type: datetime
+      - name: drug_exposure_end_date
+        description: The DRUG_EXPOSURE_END_DATE denotes the day the drug exposure ended forthe patient.
+        data_type: date
+        tests:
+          - not_null
+      - name: drug_exposure_end_datetime
+        description: ''
+        data_type: datetime
+      - name: verbatim_end_date
+        description: This is the end date of the drug exposure as it appears in the sourcedata, if it
+          is given
+        data_type: date
+      - name: drug_type_concept_id
+        description: You can use the TYPE_CONCEPT_ID to delineate between prescriptionswritten vs. prescriptions
+          dispensed vs. medication historyvs. patient-reported exposure, etc.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: stop_reason
+        description: The reason a person stopped a medication as it is represented in thesource. Reasons
+          include regimen completed, changed, removed, etc. Thisfield will be retired in v6.0.
+        data_type: varchar(20)
+      - name: refills
+        description: This is only filled in when the record is coming from a prescriptionwritten this
+          field is meant to represent intended refills at time of theprescription.
+        data_type: integer
+      - name: quantity
+        description: ''
+        data_type: float
+      - name: days_supply
+        description: ''
+        data_type: integer
+      - name: sig
+        description: This is the verbatim instruction for the drug as written by theprovider.
+        data_type: varchar(MAX)
+      - name: route_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: route_concept_id <> 0
+              to_condition: domain_id = 'Route'
+      - name: lot_number
+        description: ''
+        data_type: varchar(50)
+      - name: provider_id
+        description: The Provider associated with drug record, e.g. the provider who wrotethe prescription
+          or the provider who administered the drug.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('provider')
+              field: provider_id
+      - name: visit_occurrence_id
+        description: The Visit during which the drug was prescribed, administered ordispensed.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_occurrence')
+              field: visit_occurrence_id
+      - name: visit_detail_id
+        description: The VISIT_DETAIL record during which the drug exposure occurred. Forexample, if the
+          person was in the ICU at the time of the drugadministration the VISIT_OCCURRENCE record would
+          reflect the overallhospital stay and the VISIT_DETAIL record would reflect the ICU stayduring
+          the hospital visit.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_detail')
+              field: visit_detail_id
+      - name: drug_source_value
+        description: This field houses the verbatim value from the source data representingthe drug exposure
+          that occurred. For example, this could be an NDC orGemscript code.
+        data_type: varchar(50)
+      - name: drug_source_concept_id
+        description: This is the concept representing the drug source value and may notnecessarily be
+          standard. This field is discouraged from use in analysisbecause it is not required to contain
+          Standard Concepts that are usedacross the OHDSI community, and should only be used when StandardConcepts
+          do not adequately represent the source detail for the Drugnecessary for a given analytic use
+          case. Consider using DRUG_CONCEPT_IDinstead to enable standardized analytics that can be consistent
+          acrossthe network.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: route_source_value
+        description: This field houses the verbatim value from the source data representingthe drug route.
+        data_type: varchar(50)
+      - name: dose_unit_source_value
+        description: This field houses the verbatim value from the source data representingthe dose unit
+          of the drug given.
+        data_type: varchar(50)

@@ -1,0 +1,118 @@
+models:
+  - name: person
+    description: This table serves as the central identity management for all Persons in the database.
+      It contains records that uniquely identify each person or patient, and some demographic information.
+    columns:
+      - name: person_id
+        description: It is assumed that every person with a different unique identifier is infact a different
+          person and should be treated independently.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: gender_concept_id
+        description: This field is meant to capture the biological sex at birth of thePerson. This field
+          should not be used to study gender identity issues.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: gender_concept_id <> 0
+              to_condition: domain_id = 'Gender'
+      - name: year_of_birth
+        description: Compute age using year_of_birth.
+        data_type: integer
+        tests:
+          - not_null
+      - name: month_of_birth
+        description: ''
+        data_type: integer
+      - name: day_of_birth
+        description: ''
+        data_type: integer
+      - name: birth_datetime
+        description: ''
+        data_type: datetime
+      - name: race_concept_id
+        description: This field captures race or ethnic background of the person.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: race_concept_id <> 0
+              to_condition: domain_id = 'Race'
+      - name: ethnicity_concept_id
+        description: 'This field captures Ethnicity as defined by the Office of Management andBudget (OMB)
+          of the US Government: it distinguishes only between“Hispanic” and “Not Hispanic”. Races and
+          ethnic backgrounds are notstored here.'
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: ethnicity_concept_id <> 0
+              to_condition: domain_id = 'Ethnicity'
+      - name: location_id
+        description: The location refers to the physical address of the person. This fieldshould capture
+          the last known location of the person.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('location')
+              field: location_id
+      - name: provider_id
+        description: The Provider refers to the last known primary care provider (GeneralPractitioner).
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('provider')
+              field: provider_id
+      - name: care_site_id
+        description: The Care Site refers to where the Provider typically provides theprimary care.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('care_site')
+              field: care_site_id
+      - name: person_source_value
+        description: Use this field to link back to persons in the source data. This istypically used
+          for error checking of ETL logic.
+        data_type: varchar(50)
+      - name: gender_source_value
+        description: This field is used to store the biological sex of the person from thesource data.
+          It is not intended for use in standard analytics but forreference only.
+        data_type: varchar(50)
+      - name: gender_source_concept_id
+        description: Due to the small number of options, this tends to be zero.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: race_source_value
+        description: This field is used to store the race of the person from the source data.It is not
+          intended for use in standard analytics but for reference only.
+        data_type: varchar(50)
+      - name: race_source_concept_id
+        description: Due to the small number of options, this tends to be zero.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: ethnicity_source_value
+        description: This field is used to store the ethnicity of the person from the sourcedata. It is
+          not intended for use in standard analytics but for referenceonly.
+        data_type: varchar(50)
+      - name: ethnicity_source_concept_id
+        description: Due to the small number of options, this tends to be zero.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id

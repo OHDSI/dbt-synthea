@@ -1,0 +1,151 @@
+models:
+  - name: visit_detail
+    description: The VISIT_DETAIL table is an optional table used to represents details of each record
+      in the parent VISIT_OCCURRENCE table. A good example of this would be the movement between units
+      in a hospital during an inpatient stay or claim lines associated with a one insurance claim. For
+      every record in the VISIT_OCCURRENCE table there may be 0 or more records in the VISIT_DETAIL table
+      with a 1:n relationship where n may be 0. The VISIT_DETAIL table is structurally very similar to
+      VISIT_OCCURRENCE table and belongs to the visit domain.
+    columns:
+      - name: visit_detail_id
+        description: Use this to identify unique interactions between a person and the healthcare system.
+          This identifier links across the other CDM event tables toassociate events with a visit detail.
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: visit_detail_concept_id
+        description: This field contains a concept id representing the kind of visit detail,like inpatient
+          or outpatient. All concepts in this field should bestandard and belong to the Visit domain.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_detail_concept_id <> 0
+              to_condition: domain_id = 'Visit'
+      - name: visit_detail_start_date
+        description: This is the date of the start of the encounter. This may or may not beequal to the
+          date of the Visit the Visit Detail is associated with.
+        data_type: date
+        tests:
+          - not_null
+      - name: visit_detail_start_datetime
+        description: ''
+        data_type: datetime
+      - name: visit_detail_end_date
+        description: This the end date of the patient-provider interaction. If a Person isstill an inpatient
+          in the hospital at the time of the data extract anddoes not have a visit_end_date, then set
+          the visit_end_date to the dateof the data pull.
+        data_type: date
+        tests:
+          - not_null
+      - name: visit_detail_end_datetime
+        description: If a Person is still an inpatient in the hospital at the time of thedata extract
+          and does not have a visit_end_datetime, then set thevisit_end_datetime to the datetime of the
+          data pull.
+        data_type: datetime
+      - name: visit_detail_type_concept_id
+        description: Use this field to understand the provenance of the visit detail record,or where the
+          record comes from.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_detail_type_concept_id <> 0
+              to_condition: domain_id = 'Type Concept'
+      - name: provider_id
+        description: There will only be one provider per visit record andthe ETL document should clearly
+          state how they were chosen (attending,admitting, etc.). This is a typical reason for leveraging
+          theVISIT_DETAIL table as even though each VISIT_DETAIL record can only haveone provider, there
+          is no limit to the number of VISIT_DETAIL recordsthat can be associated to a VISIT_OCCURRENCE
+          record.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('provider')
+              field: provider_id
+      - name: care_site_id
+        description: This field provides information about the Care Site where the VisitDetail took place.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('care_site')
+              field: care_site_id
+      - name: visit_detail_source_value
+        description: This field houses the verbatim value from the source data representingthe kind of
+          visit detail that took place (inpatient, outpatient,emergency, etc.)
+        data_type: varchar(50)
+      - name: visit_detail_source_concept_id
+        description: ''
+        data_type: Integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: admitted_from_concept_id
+        description: Use this field to determine where the patient was admitted from. Thisconcept is part
+          of the visit domain and can indicate if a patient wasadmitted to the hospital from a long-term
+          care facility, for example.
+        data_type: Integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: admitted_from_concept_id <> 0
+              to_condition: domain_id = 'Visit'
+      - name: admitted_from_source_value
+        description: ''
+        data_type: varchar(50)
+      - name: discharged_to_source_value
+        description: ''
+        data_type: varchar(50)
+      - name: discharged_to_concept_id
+        description: Use this field to determine where the patient was discharged to after avisit. This
+          concept is part of the visit domain and can indicate if apatient was transferred to another
+          hospital or sent to a long-term carefacility, for example. It is assumed that a person is discharged
+          to hometherefore there is not a standard concept id for “home”. Use concept id= 0 when a person
+          is discharged to home.
+        data_type: integer
+        tests:
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: discharged_to_concept_id <> 0
+              to_condition: domain_id = 'Visit'
+      - name: preceding_visit_detail_id
+        description: Use this field to find the visit detail that occurred for the personprior to the
+          given visit detail record. There could be a few days or afew years in between.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_detail')
+              field: visit_detail_id
+      - name: parent_visit_detail_id
+        description: Use this field to find the visit detail that subsumes the given visitdetail record.
+          This is used in the case that a visit detail record needsto be nested beyond the VISIT_OCCURRENCE/VISIT_DETAIL
+          relationship.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('visit_detail')
+              field: visit_detail_id
+      - name: visit_occurrence_id
+        description: Use this field to link the VISIT_DETAIL record to its VISIT_OCCURRENCE.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('visit_occurrence')
+              field: visit_occurrence_id

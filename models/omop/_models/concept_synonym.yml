@@ -1,0 +1,25 @@
+models:
+  - name: concept_synonym
+    description: The CONCEPT_SYNONYM table is used to store alternate names and descriptions for Concepts.
+    columns:
+      - name: concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: concept_synonym_name
+        description: ''
+        data_type: varchar(1000)
+        tests:
+          - not_null
+      - name: language_concept_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id

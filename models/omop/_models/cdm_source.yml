@@ -1,0 +1,56 @@
+models:
+  - name: cdm_source
+    description: The CDM_SOURCE table contains detail about the source database and the process used to
+      transform the data into the OMOP Common Data Model.
+    columns:
+      - name: cdm_source_name
+        description: The name of the CDM instance.
+        data_type: varchar(255)
+        tests:
+          - not_null
+      - name: cdm_source_abbreviation
+        description: The abbreviation of the CDM instance.
+        data_type: varchar(25)
+        tests:
+          - not_null
+      - name: cdm_holder
+        description: The holder of the CDM instance.
+        data_type: varchar(255)
+        tests:
+          - not_null
+      - name: source_description
+        description: The description of the CDM instance.
+        data_type: varchar(MAX)
+      - name: source_documentation_reference
+        description: ''
+        data_type: varchar(255)
+      - name: cdm_etl_reference
+        description: ''
+        data_type: varchar(255)
+      - name: source_release_date
+        description: The date the data was extracted from the source system. In some systemsthat is the
+          same as the date the ETL was run. Typically the latest evendate in the source is on the source_release_date.
+        data_type: date
+        tests:
+          - not_null
+      - name: cdm_release_date
+        description: The date the ETL script was completed. Typically this is after thesource_release_date.
+        data_type: date
+        tests:
+          - not_null
+      - name: cdm_version
+        description: Version of the OMOP CDM used as string. e.g. v5.4
+        data_type: varchar(10)
+      - name: cdm_version_concept_id
+        description: The Concept Id representing the version of the CDM.
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: vocabulary_version
+        description: Version of the OMOP standardised vocabularies loaded
+        data_type: varchar(20)
+        tests:
+          - not_null

@@ -1,0 +1,47 @@
+models:
+  - name: condition_era
+    description: 'A Condition Era is defined as a span of time when the Person is assumed to have a given
+      condition. Similar to Drug Eras, Condition Eras are chronological periods of Condition Occurrence
+      and every Condition Occurrence record should be part of a Condition Era. Combining individual Condition
+      Occurrences into a single Condition Era serves two purposes:'
+    columns:
+      - name: condition_era_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - unique
+      - name: person_id
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('person')
+              field: person_id
+      - name: condition_concept_id
+        description: The Concept Id representing the Condition.
+        data_type: integer
+        tests:
+          - not_null
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: condition_concept_id <> 0
+              to_condition: domain_id = 'Condition'
+      - name: condition_era_start_date
+        description: The start date for the Condition Era constructed from the individualinstances of
+          Condition Occurrences. It is the start date of the veryfirst chronologically recorded instance
+          of the condition with at least31 days since any prior record of the same Condition.
+        data_type: date
+        tests:
+          - not_null
+      - name: condition_era_end_date
+        description: The end date for the Condition Era constructed from the individualinstances of Condition
+          Occurrences. It is the end date of the finalcontinuously recorded instance of the Condition.
+        data_type: date
+        tests:
+          - not_null
+      - name: condition_occurrence_count
+        description: The number of individual Condition Occurrences used to construct thecondition era.
+        data_type: integer
