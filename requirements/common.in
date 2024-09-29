@@ -1,0 +1,4 @@
+pre-commit==3.8
+black==24.8
+sqlfluff==3.2
+sqlfluff-templater-dbt==3.2
