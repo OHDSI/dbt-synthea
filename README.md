@@ -36,7 +36,9 @@ dbt-env\Scripts\activate            # activate the environment for Windows
 ```
  4. In your virtual environment, install dbt and other required dependencies as follows:
 ```bash
-pip3 install -r requirements.txt
+# choose requirements depending on which database you're targeting
+pip3 install -r requirements/duckdb.txt
+pip3 install -r requirements/postgres.txt
 pre-commit install
 ```
    - This will install dbt-core, the dbt duckdb and postgres adapters, SQLFluff (a SQL linter),  pre-commit (in order to run SQLFluff on all newly-committed code in this repo), duckdb (to support bootstrapping scripts), and various dependencies for the listed packages
