@@ -1,0 +1,124 @@
+name: Run and test DBT Project
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - macros/**
+      - models/**
+      - seeds/**
+      - snapshots/**
+      - tests/**
+      - dbt_project.yml
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+                cache: 'pip'
+                cache-dependency-path: 'requirements/duckdb.txt'
+
+            - name: Install dependencies
+              run: |
+                pip install -r requirements/duckdb.txt
+
+            - name: Setup profile
+              run: |
+                cat << EOF > profiles.yml
+                synthea_omop_etl:
+                  outputs:
+                    dev:
+                      type: duckdb
+                      path: synthea_omop_etl.duckdb
+                      schema: dbt_synthea_dev
+                  target: dev
+                EOF
+            
+            - name: Sqlfluff Lint
+              run: |
+                diff-quality --violations sqlfluff
+
+    duckdb:
+        needs: lint
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+                cache: 'pip'
+                cache-dependency-path: 'requirements/duckdb.txt'
+
+            - name: Install dependencies
+              run: |
+                pip install -r requirements/duckdb.txt
+
+            - name: Setup profile
+              run: |
+                cat << EOF > profiles.yml
+                synthea_omop_etl:
+                  outputs:
+                    dev:
+                      type: duckdb
+                      path: synthea_omop_etl.duckdb
+                      schema: dbt_synthea_dev
+                  target: dev
+                EOF
+            - run: dbt deps
+            - run: dbt seed
+            - run: dbt run
+            - run: dbt test
+    
+    postgres:
+        needs: lint
+        runs-on: ubuntu-latest
+        services:
+            postgres:
+              image: postgres:16
+              env:
+                POSTGRES_USER: postgres
+                POSTGRES_PASSWORD: postgres
+              options: >-
+                --health-cmd pg_isready
+                --health-interval 10s
+                --health-timeout 5s
+                --health-retries 5
+              ports:
+                - 5432:5432
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+                cache: 'pip'
+                cache-dependency-path: 'requirements/postgres.txt'
+            - name: Install dependencies
+              run: |
+                pip install -r requirements/postgres.txt
+            - name: Setup profiles.yml
+              run: |
+                cat << EOF > profiles.yml
+                synthea_omop_etl:
+                  target: dev
+                  outputs:
+                    dev:
+                      type: postgres
+                      host: localhost
+                      user: postgres
+                      pass: postgres
+                      port: 5432
+                      dbname: postgres
+                      schema: dbt_synthea_dev
+                      threads: 4                     
+                EOF
+            - run: dbt deps
+            - run: dbt seed
+            - run: dbt run
+            - run: dbt test

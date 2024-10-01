@@ -1,0 +1,72 @@
+name: Update DBT Docs
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - macros/**
+      - models/**
+      - seeds/**
+      - snapshots/**
+      - tests/**
+      - dbt_project.yml
+
+jobs:
+    update-docs:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.12'
+                cache: 'pip'
+                cache-dependency-path: 'requirements/duckdb.txt'
+            - name: Install dependencies
+              run: |
+                pip install -r requirements/duckdb.txt
+            - name: Setup profile
+              run: |
+                cat << EOF > profiles.yml
+                synthea_omop_etl:
+                  outputs:
+                    dev:
+                      type: duckdb
+                      path: synthea_omop_etl.duckdb
+                      schema: dbt_synthea_dev
+                  target: dev
+                target: dev
+                EOF
+            - name: Build Docs
+              run: |
+                dbt deps
+                dbt docs generate
+
+            - name: Generate Docs
+              run: |
+                  dbt docs generate
+                  mkdir ./payload
+                  mv ./target/index.html ./payload
+                  mv ./target/manifest.json ./payload
+                  mv ./target/catalog.json ./payload
+          
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                path: ./payload
+
+    deploy:
+        needs: update-docs
+        permissions:
+            pages: write      # to deploy to Pages
+            id-token: write 
+
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
