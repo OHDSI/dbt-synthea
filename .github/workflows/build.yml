@@ -22,11 +22,9 @@ jobs:
                 python-version: '3.12'
                 cache: 'pip'
                 cache-dependency-path: 'requirements/duckdb.txt'
-
             - name: Install dependencies
               run: |
                 pip install -r requirements/duckdb.txt
-
             - name: Setup profile
               run: |
                 cat << EOF > profiles.yml
@@ -38,7 +36,6 @@ jobs:
                       schema: dbt_synthea_dev
                   target: dev
                 EOF
-            
             - name: Sqlfluff Lint
               run: |
                 diff-quality --violations sqlfluff
@@ -54,11 +51,9 @@ jobs:
                 python-version: '3.12'
                 cache: 'pip'
                 cache-dependency-path: 'requirements/duckdb.txt'
-
             - name: Install dependencies
               run: |
                 pip install -r requirements/duckdb.txt
-
             - name: Setup profile
               run: |
                 cat << EOF > profiles.yml
