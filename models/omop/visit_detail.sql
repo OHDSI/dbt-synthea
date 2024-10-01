@@ -21,7 +21,7 @@ SELECT
     , av.visit_end_date AS visit_detail_end_datetime
     , 32827 AS visit_detail_type_concept_id
     , pr.provider_id
-    , cast(NULL AS INTEGER) AS care_site_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , 0 AS admitted_from_concept_id
     , 0 AS discharged_to_concept_id
     , lag(av.visit_occurrence_id)
@@ -34,7 +34,7 @@ SELECT
     , 0 AS visit_detail_source_concept_id
     , NULL AS admitted_from_source_value
     , NULL AS discharged_to_source_value
-    , cast(NULL AS INTEGER) AS parent_visit_detail_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS parent_visit_detail_id
     , av.visit_occurrence_id
 FROM {{ ref( 'int__all_visits') }} AS av
 INNER JOIN {{ ref( 'person') }} AS p

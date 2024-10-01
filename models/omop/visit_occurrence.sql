@@ -16,7 +16,7 @@ SELECT
     , av.visit_end_date AS visit_end_datetime
     , 32827 AS visit_type_concept_id
     , pr.provider_id
-    , cast(NULL AS INTEGER) AS care_site_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , av.encounter_id AS visit_source_value
     , 0 AS visit_source_concept_id
     , 0 AS admitted_from_concept_id
