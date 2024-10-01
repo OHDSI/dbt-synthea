@@ -8,10 +8,10 @@ FROM (
     SELECT
         p.person_id
         , min(
-            {{ dbt.safe_cast("e.encounter_start_datetime", api.Column.translate_type("date")) }}
+            {{ dbt.cast("e.encounter_start_datetime", api.Column.translate_type("date")) }}
         ) AS start_date
         , max(
-            {{ dbt.safe_cast("e.encounter_stop_datetime", api.Column.translate_type("date")) }}
+            {{ dbt.cast("e.encounter_stop_datetime", api.Column.translate_type("date")) }}
         ) AS end_date
     FROM {{ ref ('person') }} AS p
     INNER JOIN {{ ref ('stg_synthea__encounters') }} AS e

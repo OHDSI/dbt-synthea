@@ -2,9 +2,9 @@ SELECT
     row_number() OVER (ORDER BY person_id) AS device_exposure_id
     , p.person_id
     , srctostdvm.target_concept_id AS device_concept_id
-    , {{ dbt.safe_cast("d.device_start_datetime", api.Column.translate_type("date")) }} AS device_exposure_start_date
+    , {{ dbt.cast("d.device_start_datetime", api.Column.translate_type("date")) }} AS device_exposure_start_date
     , d.device_start_datetime AS device_exposure_start_datetime
-    , {{ dbt.safe_cast("d.device_stop_datetime", api.Column.translate_type("date")) }} AS device_exposure_end_date
+    , {{ dbt.cast("d.device_stop_datetime", api.Column.translate_type("date")) }} AS device_exposure_end_date
     , d.device_stop_datetime AS device_exposure_end_datetime
     , 32827 AS device_type_concept_id
     , d.udi AS unique_device_id

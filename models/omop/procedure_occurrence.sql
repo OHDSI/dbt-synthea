@@ -2,9 +2,9 @@ SELECT
     row_number() OVER (ORDER BY p.person_id) AS procedure_occurrence_id
     , p.person_id
     , srctostdvm.target_concept_id AS procedure_concept_id
-    , {{ dbt.safe_cast("pr.procedure_start_datetime", api.Column.translate_type("date")) }} AS procedure_date
+    , {{ dbt.cast("pr.procedure_start_datetime", api.Column.translate_type("date")) }} AS procedure_date
     , pr.procedure_start_datetime AS procedure_datetime
-    , {{ dbt.safe_cast("pr.procedure_stop_datetime", api.Column.translate_type("date")) }} AS procedure_end_date
+    , {{ dbt.cast("pr.procedure_stop_datetime", api.Column.translate_type("date")) }} AS procedure_end_date
     , pr.procedure_stop_datetime AS procedure_end_datetime
     , 32827 AS procedure_type_concept_id
     , 0 AS modifier_concept_id
