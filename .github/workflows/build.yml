@@ -38,7 +38,7 @@ jobs:
                 EOF
             - name: Sqlfluff Lint
               run: |
-                diff-quality --violations sqlfluff
+                diff-quality --violations sqlfluff --compare-branch upstream
 
     duckdb:
         needs: lint
