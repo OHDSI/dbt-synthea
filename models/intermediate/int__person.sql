@@ -19,9 +19,9 @@ SELECT
         WHEN upper(p.ethnicity) = 'NONHISPANIC' THEN 38003564
         ELSE 0
     END AS ethnicity_concept_id
-    , NULL AS location_id
-    , NULL AS provider_id
-    , NULL AS care_site_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS location_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS provider_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , p.patient_id AS person_source_value
     , p.patient_gender AS gender_source_value
     , 0 AS gender_source_concept_id

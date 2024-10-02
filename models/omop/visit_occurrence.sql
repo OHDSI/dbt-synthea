@@ -16,13 +16,13 @@ SELECT
     , av.visit_end_date AS visit_end_datetime
     , 32827 AS visit_type_concept_id
     , pr.provider_id
-    , null AS care_site_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , av.encounter_id AS visit_source_value
     , 0 AS visit_source_concept_id
     , 0 AS admitted_from_concept_id
-    , null AS admitted_from_source_value
+    , NULL AS admitted_from_source_value
     , 0 AS discharged_to_concept_id
-    , null AS discharged_to_source_value
+    , NULL AS discharged_to_source_value
     , lag(av.visit_occurrence_id)
         OVER (
             PARTITION BY p.person_id
