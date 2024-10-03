@@ -34,17 +34,9 @@ Users are welcomed, however, to utilize their own Synthea and/or OMOP vocabulary
 source dbt-env/bin/activate         # activate the environment for Mac and Linux OR
 dbt-env\Scripts\activate            # activate the environment for Windows
 ```
- 4. In your virtual environment, install dbt and other required dependencies as follows:
-```bash
-# choose requirements depending on which database you're targeting
-pip3 install -r requirements/duckdb.txt
-pip3 install -r requirements/postgres.txt
-pre-commit install
-```
-   - This will install dbt-core, the dbt duckdb and postgres adapters, SQLFluff (a SQL linter),  pre-commit (in order to run SQLFluff on all newly-committed code in this repo), duckdb (to support bootstrapping scripts), and various dependencies for the listed packages
 
 ### DuckDB Setup
- 1. Install requirements for duckdb (see [here for contents](./requirements/duckdb.in))
+ 1. In your virtual environment install requirements for duckdb (see [here for contents](./requirements/duckdb.in))
 ```bash
 pip3 install -r requirements/duckdb.txt
 pre-commit install
@@ -99,7 +91,7 @@ dbt build
 ```
 
 ### Postgres Setup
- 1. Install requirements for Postgres (see [here for contents](./requirements/postgres.in))
+ 1. In your virtual environment install requirements for Postgres (see [here for contents](./requirements/postgres.in))
 ```bash
 pip3 install -r requirements/postgres.txt
 pre-commit install
