@@ -1,0 +1,34 @@
+seeds:
+  - name: concept_synonym_seed
+    config:
+      column_types:
+        concept_id: integer
+        concept_synonym_name: varchar(1000)
+        language_concept_id: integer
+  - name: source_to_concept_map_seed
+    config:
+      column_types:
+        source_code: varchar(50)
+        source_concept_id: integer
+        source_vocabulary_id: varchar(20)
+        source_code_description: varchar(255)
+        target_concept_id: integer
+        target_vocabulary_id: varchar(20)
+        valid_start_date: date
+        valid_end_date: date
+        invalid_reason: varchar(1)
+  - name: drug_strength_seed
+    config:
+      column_types:
+        drug_concept_id: integer
+        ingredient_concept_id: integer
+        amount_value: numeric
+        amount_unit_concept_id: integer
+        numerator_value: numeric
+        numerator_unit_concept_id: integer
+        denominator_value: numeric
+        denominator_unit_concept_id: integer
+        box_size: integer
+        valid_start_date: date
+        valid_end_date: date
+        invalid_reason: varchar
