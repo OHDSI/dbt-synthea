@@ -1,0 +1,3 @@
+-r common.in
+
+dbt-postgres==1.8
