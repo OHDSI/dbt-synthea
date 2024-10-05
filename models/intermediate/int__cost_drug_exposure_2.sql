@@ -3,21 +3,19 @@ SELECT DISTINCT
     , 'Drug' AS cost_domain_id
     , 32814 AS cost_type_concept_id
     , 44818668 AS currency_concept_id
-    , {{ dbt.cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }} + {{ dbt.cast("m.medication_base_cost", api.Column.translate_type("decimal")) }} AS total_charge
-    , {{ dbt.cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }} + {{ dbt.cast("m.medication_base_cost", api.Column.translate_type("decimal")) }} AS total_cost
-    , {{ dbt.cast("e.encounter_payer_coverage", api.Column.translate_type("decimal")) }} + {{ dbt.cast("m.medication_base_cost", api.Column.translate_type("decimal")) }} AS total_paid
+    , e.total_encounter_cost + m.medication_base_cost AS total_charge
+    , e.total_encounter_cost + m.medication_base_cost AS total_cost
+    , e.encounter_payer_coverage + m.medication_base_cost AS total_paid
     , e.encounter_payer_coverage AS paid_by_payer
-    , {{ dbt.cast("e.total_encounter_cost", api.Column.translate_type("decimal")) }}
-    + {{ dbt.cast("m.medication_base_cost", api.Column.translate_type("decimal")) }}
-    - {{ dbt.cast("e.encounter_payer_coverage", api.Column.translate_type("decimal")) }} AS paid_by_patient
-    , cast(null AS numeric) AS paid_patient_copay
-    , cast(null AS numeric) AS paid_patient_coinsurance
-    , cast(null AS numeric) AS paid_patient_deductible
-    , cast(null AS numeric) AS paid_by_primary
-    , cast(null AS numeric) AS paid_ingredient_cost
-    , cast(null AS numeric) AS paid_dispensing_fee
+    , e.total_encounter_cost + m.medication_base_cost - e.encounter_payer_coverage AS paid_by_patient
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_copay
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_coinsurance
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_deductible
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_by_primary
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_ingredient_cost
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_dispensing_fee
     , ppp.payer_plan_period_id
-    , cast(null AS numeric) AS amount_allowed
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS amount_allowed
     , 0 AS revenue_code_concept_id
     , 'UNKNOWN / UNKNOWN' AS revenue_code_source_value
     , 0 AS drg_concept_id

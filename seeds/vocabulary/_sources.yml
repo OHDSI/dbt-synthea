@@ -32,3 +32,4 @@ seeds:
         valid_start_date: date
         valid_end_date: date
         invalid_reason: varchar
+        

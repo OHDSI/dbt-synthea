@@ -1,11 +1,11 @@
 SELECT
     row_number() OVER (ORDER BY (SELECT null)) AS provider_id
     , provider_name
-    , cast(null AS varchar(20)) AS npi
-    , cast(null AS varchar(20)) AS dea
+    , {{ dbt.cast("null", api.Column.translate_type("varchar(20)")) }} AS npi
+    , {{ dbt.cast("null", api.Column.translate_type("varchar(20)")) }} AS dea
     , 38004446 AS specialty_concept_id
-    , cast(null AS integer) AS care_site_id
-    , cast(null AS integer) AS year_of_birth
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS care_site_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS year_of_birth
     , CASE upper(provider_gender)
         WHEN 'M' THEN 8507
         WHEN 'F' THEN 8532

@@ -15,10 +15,10 @@ SELECT
         ELSE 0
     END AS visit_detail_concept_id
 
-    , {{ dbt.cast("av.visit_start_date", api.Column.translate_type("date")) }} AS visit_detail_start_date
-    , av.visit_start_date AS visit_detail_start_datetime
-    , {{ dbt.cast("av.visit_end_date", api.Column.translate_type("date")) }} AS visit_detail_end_date
-    , av.visit_end_date AS visit_detail_end_datetime
+    , {{ dbt.cast("av.visit_start_datetime", api.Column.translate_type("date")) }} AS visit_detail_start_date
+    , av.visit_start_datetime AS visit_detail_start_datetime
+    , {{ dbt.cast("av.visit_end_datetime", api.Column.translate_type("date")) }} AS visit_detail_end_date
+    , av.visit_end_datetime AS visit_detail_end_datetime
     , 32827 AS visit_detail_type_concept_id
     , pr.provider_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
@@ -27,7 +27,7 @@ SELECT
     , lag(av.visit_occurrence_id)
         OVER (
             PARTITION BY p.person_id
-            ORDER BY av.visit_start_date
+            ORDER BY av.visit_start_datetime
         )
     + 1000000 AS preceding_visit_detail_id
     , av.encounter_id AS visit_detail_source_value

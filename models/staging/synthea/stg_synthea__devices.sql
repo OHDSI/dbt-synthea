@@ -14,7 +14,9 @@ WITH cte_devices_lower AS (
 
     SELECT
         "start" AS device_start_datetime
+        , {{ dbt.cast("\"start\"", api.Column.translate_type("date")) }} AS device_start_date
         , "stop" AS device_stop_datetime
+        , {{ dbt.cast("\"stop\"", api.Column.translate_type("date")) }} AS device_stop_date
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS device_code

@@ -3,8 +3,8 @@ SELECT
         OVER (ORDER BY pat.patient_id, pt.coverage_start_datetime)
     AS payer_plan_period_id
     , per.person_id
-    , {{ dbt.cast("pt.coverage_start_datetime", api.Column.translate_type("date")) }} AS payer_plan_period_start_date
-    , {{ dbt.cast("pt.coverage_end_datetime", api.Column.translate_type("date")) }} AS payer_plan_period_end_date
+    , pt.coverage_start_date AS payer_plan_period_start_date
+    , pt.coverage_end_date AS payer_plan_period_end_date
     , 0 AS payer_concept_id
     , pt.payer_id AS payer_source_value
     , 0 AS payer_source_concept_id
@@ -12,11 +12,11 @@ SELECT
     , pay.payer_name AS plan_source_value
     , 0 AS plan_source_concept_id
     , 0 AS sponsor_concept_id
-    , cast(NULL AS varchar) AS sponsor_source_value
+    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS sponsor_source_value
     , 0 AS sponsor_source_concept_id
-    , cast(NULL AS varchar) AS family_source_value
+    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS family_source_value
     , 0 AS stop_reason_concept_id
-    , cast(NULL AS varchar) AS stop_reason_source_value
+    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS stop_reason_source_value
     , 0 AS stop_reason_source_concept_id
 FROM {{ ref ('stg_synthea__payers') }} AS pay
 INNER JOIN {{ ref ('stg_synthea__payer_transitions') }} AS pt

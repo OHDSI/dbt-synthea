@@ -1,9 +1,9 @@
 SELECT
-    CAST(NULL AS INTEGER) AS dose_era_id
-    , CAST(NULL AS INTEGER) AS person_id
-    , CAST(NULL AS INTEGER) AS drug_concept_id
-    , CAST(NULL AS INTEGER) AS unit_concept_id
-    , CAST(NULL AS FLOAT) AS dose_value
-    , CAST(NULL AS DATE) AS dose_era_start_date
-    , CAST(NULL AS DATE) AS dose_era_end_date
+    {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS dose_era_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS person_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS drug_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS unit_concept_id
+    , {{ dbt.cast('null', api.Column.translate_type("decimal")) }} AS dose_value
+    , {{ dbt.cast('null', api.Column.translate_type("date")) }} AS dose_era_start_date
+    , {{ dbt.cast('null', api.Column.translate_type("date")) }} AS dose_era_end_date
 WHERE 1 = 0

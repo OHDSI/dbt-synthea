@@ -2,7 +2,7 @@ SELECT
     o.patient_id
     , o.encounter_id
     , srctostdvm.target_concept_id AS observation_concept_id
-    , o.observation_datetime AS observation_date
+    , o.observation_date
     , o.observation_datetime
     , 38000280 AS observation_type_concept_id
     , o.observation_code AS observation_source_value

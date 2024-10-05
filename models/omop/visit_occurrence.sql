@@ -10,10 +10,10 @@ SELECT
         WHEN 'outpatient' THEN 9202
         ELSE 0
     END AS visit_concept_id
-    , {{ dbt.cast("av.visit_start_date", api.Column.translate_type("date")) }} AS visit_start_date
-    , av.visit_start_date AS visit_start_datetime
-    , {{ dbt.cast("av.visit_end_date", api.Column.translate_type("date")) }} AS visit_end_date
-    , av.visit_end_date AS visit_end_datetime
+    , {{ dbt.cast("av.visit_start_datetime", api.Column.translate_type("date")) }} AS visit_start_date
+    , av.visit_start_datetime
+    , {{ dbt.cast("av.visit_end_datetime", api.Column.translate_type("date")) }} AS visit_end_date
+    , av.visit_end_datetime
     , 32827 AS visit_type_concept_id
     , pr.provider_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
@@ -26,7 +26,7 @@ SELECT
     , lag(av.visit_occurrence_id)
         OVER (
             PARTITION BY p.person_id
-            ORDER BY av.visit_start_date
+            ORDER BY av.visit_start_datetime
         )
     AS preceding_visit_occurrence_id
 FROM {{ ref( 'int__all_visits') }} AS av

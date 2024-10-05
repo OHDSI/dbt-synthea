@@ -5,22 +5,22 @@ SELECT
     t2.encounter_id
     , t2.patient_id
     , t2.encounter_class
-    , t2.visit_start_date
-    , t2.visit_end_date
+    , t2.visit_start_datetime
+    , t2.visit_end_datetime
 FROM (
     SELECT
         min(encounter_id) AS encounter_id
         , patient_id
         , encounter_class
-        , visit_start_date
-        , max(visit_end_date) AS visit_end_date
+        , visit_start_datetime
+        , max(visit_end_datetime) AS visit_end_datetime
     FROM (
         SELECT
             cl1.encounter_id
             , cl1.patient_id
             , cl1.encounter_class
-            , cl1.encounter_start_datetime AS visit_start_date
-            , cl2.encounter_stop_datetime AS visit_end_date
+            , cl1.encounter_start_datetime AS visit_start_datetime
+            , cl2.encounter_stop_datetime AS visit_end_datetime
         FROM {{ ref( 'stg_synthea__encounters') }} AS cl1
         INNER JOIN {{ ref( 'stg_synthea__encounters') }} AS cl2
             ON
@@ -29,5 +29,5 @@ FROM (
                 AND cl1.encounter_class = cl2.encounter_class
         WHERE cl1.encounter_class IN ('emergency', 'urgent')
     ) AS t1
-    GROUP BY patient_id, encounter_class, visit_start_date
+    GROUP BY patient_id, encounter_class, visit_start_datetime
 ) AS t2

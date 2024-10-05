@@ -18,7 +18,7 @@ WITH cte_claims_transactions_lower AS (
         , chargeid AS charge_id
         , patientid AS patient_id
         , "type" AS transaction_type
-        , amount AS transaction_amount
+        , {{ dbt.cast("amount", api.Column.translate_type("decimal")) }} AS transaction_amount
         , method AS transaction_method
         , fromdate AS transaction_from_date
         , todate AS transaction_to_date

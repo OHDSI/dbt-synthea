@@ -10,7 +10,7 @@
 
 SELECT
     p.person_id
-    , {{ dbt.cast("e.encounter_start_datetime", api.Column.translate_type("date")) }} AS death_date
+    , e.encounter_start_date AS death_date
     , e.encounter_start_datetime AS death_datetime
     , 32817 AS death_type_concept_id
     , srctostdvm.target_concept_id AS cause_concept_id

@@ -8,11 +8,11 @@ SELECT
     row_number() OVER (ORDER BY p.person_id) AS drug_exposure_id
     , p.person_id
     , drug_concept_id
-    , {{ dbt.cast("drug_exposure_start_date", api.Column.translate_type("date")) }} AS drug_exposure_start_date
+    , drug_exposure_start_date
     , drug_exposure_start_datetime
-    , {{ dbt.cast("drug_exposure_end_date", api.Column.translate_type("date")) }} AS drug_exposure_end_date
+    , drug_exposure_end_date
     , drug_exposure_end_datetime
-    , {{ dbt.cast("verbatim_end_date", api.Column.translate_type("date")) }} AS verbatim_end_date
+    , verbatim_end_date
     , drug_type_concept_id
     , stop_reason
     , refills

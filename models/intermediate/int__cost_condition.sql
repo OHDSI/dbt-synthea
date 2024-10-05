@@ -3,12 +3,12 @@ WITH cte AS (
         co.condition_occurrence_id
         , ppp.payer_plan_period_id
         , coalesce(
-            sum(CASE WHEN ct.transfer_type = '1' THEN {{ dbt.cast("ct.transaction_amount", api.Column.translate_type("decimal")) }} END)
+            sum(CASE WHEN ct.transfer_type = '1' THEN ct.transaction_amount END)
             , 0
         )
         AS payer_paid
         , coalesce(
-            sum(CASE WHEN ct.transfer_type = 'p' THEN {{ dbt.cast("ct.transaction_amount", api.Column.translate_type("decimal")) }} END)
+            sum(CASE WHEN ct.transfer_type = 'p' THEN ct.transaction_amount END)
             , 0
         )
         AS patient_paid
@@ -41,7 +41,7 @@ WITH cte AS (
             AND e.encounter_id = ca.encounter_id
             AND e.provider_id = ca.provider_id
             AND e.payer_id = ca.primary_patient_insurance_id
-            AND e.encounter_start_datetime = ca.service_date
+            AND e.encounter_start_datetime = ca.service_datetime
     INNER JOIN {{ ref ('stg_synthea__claims_transactions') }} AS ct
         ON
             ca.claim_id = ct.claim_id
@@ -62,14 +62,14 @@ SELECT
     , {{ dbt.cast("payer_paid ", api.Column.translate_type("decimal")) }} + {{ dbt.cast("patient_paid", api.Column.translate_type("decimal")) }} AS total_paid
     , payer_paid AS paid_by_payer
     , patient_paid AS paid_by_patient
-    , cast(null AS numeric) AS paid_patient_copay
-    , cast(null AS numeric) AS paid_patient_coinsurance
-    , cast(null AS numeric) AS paid_patient_deductible
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_copay
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_coinsurance
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_deductible
     , payer_paid AS paid_by_primary
-    , cast(null AS numeric) AS paid_ingredient_cost
-    , cast(null AS numeric) AS paid_dispensing_fee
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_ingredient_cost
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_dispensing_fee
     , payer_plan_period_id
-    , cast(null AS numeric) AS amount_allowed
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS amount_allowed
     , 0 AS revenue_code_concept_id
     , 'unknown / unknown' AS revenue_code_source_value
     , 0 AS drg_concept_id

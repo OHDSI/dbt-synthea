@@ -14,8 +14,10 @@ WITH cte_encounters_lower AS (
 
     SELECT
         id AS encounter_id
-        , start AS encounter_start_datetime
-        , stop AS encounter_stop_datetime
+        , "start" AS encounter_start_datetime
+        , {{ dbt.cast("\"start\"", api.Column.translate_type("date")) }} AS encounter_start_date
+        , "stop" AS encounter_stop_datetime
+        , {{ dbt.cast("\"stop\"", api.Column.translate_type("date")) }} AS encounter_stop_date
         , patient AS patient_id
         , organization AS organization_id
         , provider AS provider_id
@@ -24,8 +26,8 @@ WITH cte_encounters_lower AS (
         , code AS encounter_code
         , description AS encounter_description
         , base_encounter_cost
-        , total_claim_cost AS total_encounter_cost
-        , payer_coverage AS encounter_payer_coverage
+        , {{ dbt.cast("total_claim_cost", api.Column.translate_type("decimal")) }} AS total_encounter_cost
+        , {{ dbt.cast("payer_coverage", api.Column.translate_type("decimal")) }} AS encounter_payer_coverage
         , reasoncode AS encounter_reason_code
         , reasondescription AS encounter_reason_description
     FROM cte_encounters_lower

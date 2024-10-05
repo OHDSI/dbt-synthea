@@ -37,7 +37,7 @@ WITH cte_claims_lower AS (
         , referringproviderid AS referring_provider_id
         , appointmentid AS encounter_id
         , currentillnessdate AS current_illness_date
-        , servicedate AS service_date
+        , servicedate AS service_datetime
         , supervisingproviderid AS supervising_provider_id
         , status1 AS claim_status_1
         , status2 AS claim_status_2
