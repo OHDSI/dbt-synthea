@@ -182,7 +182,7 @@
             CREATE TABLE {{schema}}.providers (
                 id VARCHAR(1000),
                 organization VARCHAR(1000),
-                "name" VARCHAR(100),
+                name VARCHAR(100),
                 gender VARCHAR(100),
                 speciality VARCHAR(100),
                 address VARCHAR(255),
@@ -285,14 +285,14 @@
                 end_year         TIMESTAMP,
                 payer            VARCHAR(1000),
                 secondary_payer  VARCHAR(1000),
-                "ownership"        VARCHAR(1000),
+                ownership        VARCHAR(1000),
                 ownername       VARCHAR(1000)
             );
         {% endif %}
         {% if not check_if_exists(database, schema, "payers") %}
             CREATE TABLE {{schema}}.payers (
                 id                       VARCHAR(1000),
-                "name"                     VARCHAR(1000),
+                name                     VARCHAR(1000),
                 address                  VARCHAR(1000),
                 city                     VARCHAR(1000),
                 state_headquartered      VARCHAR(1000),
