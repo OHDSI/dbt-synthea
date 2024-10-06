@@ -11,7 +11,7 @@
                 encounter    VARCHAR(1000),
                 code         VARCHAR(100),
                 "system"       VARCHAR(255),
-                "description"  VARCHAR(255),
+                description  VARCHAR(255),
                 "type"       VARCHAR(255),
                 category     VARCHAR(255),
                 reaction1    VARCHAR(255),
@@ -30,7 +30,7 @@
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 reasoncode    VARCHAR(255),
                 reasondescription   VARCHAR(255)
             );
@@ -56,7 +56,7 @@
                 payer           VARCHAR(1000),
                 encounterclass  VARCHAR(1000),
                 code            VARCHAR(100),
-                "description"     VARCHAR(255),
+                description     VARCHAR(255),
                 base_encounter_cost NUMERIC,
                 total_claim_cost    NUMERIC,
                 payer_coverage  NUMERIC,
@@ -70,7 +70,7 @@
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 base_cost     NUMERIC
             );
         {% endif %}
@@ -99,7 +99,7 @@
                 payer         VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(1000),
+                description   VARCHAR(1000),
                 base_cost     NUMERIC,
                 payer_coverage    NUMERIC,
                 dispenses     INT,
@@ -115,7 +115,7 @@
                 encounter     VARCHAR(1000),
                 category      VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 "value"         VARCHAR(1000),
                 units         VARCHAR(100),
                 "type"        VARCHAR(100)
@@ -172,7 +172,7 @@
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 base_cost     NUMERIC,
                 reasoncode    VARCHAR(1000),
                 reasondescription VARCHAR(1000)
@@ -201,7 +201,7 @@
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 udi           VARCHAR(255)
             );
         {% endif %}
@@ -320,7 +320,7 @@
                 patient      VARCHAR(1000),
                 encounter    VARCHAR(1000),
                 code         VARCHAR(1000),
-                "description"  VARCHAR(1000),
+                description  VARCHAR(1000),
                 quantity     NUMERIC
             );
         {% endif %}
