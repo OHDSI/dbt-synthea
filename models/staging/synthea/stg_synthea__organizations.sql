@@ -14,7 +14,7 @@ WITH cte_organizations_lower AS (
 
     SELECT
         id AS organization_id
-        , name AS organization_name
+        , "name" AS organization_name
         , address AS organization_address
         , city AS organization_city
         , state AS organization_state
