@@ -20,7 +20,7 @@ WITH cte_providers_lower AS (
         , speciality AS provider_specialty
         , address AS provider_address
         , city AS provider_city
-        , "state" AS provider_state
+        , state AS provider_state
         , zip AS provider_zip
         , lat AS provider_latitude
         , lon AS provider_longitude

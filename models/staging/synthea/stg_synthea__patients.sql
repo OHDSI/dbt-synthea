@@ -31,7 +31,7 @@ WITH cte_patients_lower AS (
         , birthplace
         , address AS patient_address
         , city AS patient_city
-        , "state" AS patient_state
+        , state AS patient_state
         , county AS patient_county
         , zip AS patient_zip
         , lat AS patient_latitude
