@@ -13,7 +13,7 @@ WITH cte_imaging_studies_lower AS (
 , cte_imaging_studies_rename AS (
 
     SELECT
-        "id" AS imaging_id
+        id AS imaging_id
         , "date" AS imaging_datetime
         , patient AS patient_id
         , encounter AS encounter_id
