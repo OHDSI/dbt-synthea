@@ -18,7 +18,7 @@ WITH cte_providers_lower AS (
         , "name" AS provider_name
         , gender AS provider_gender
         , speciality AS provider_specialty
-        , "address" AS provider_address
+        , address AS provider_address
         , city AS provider_city
         , "state" AS provider_state
         , zip AS provider_zip

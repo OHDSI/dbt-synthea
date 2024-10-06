@@ -29,7 +29,7 @@ WITH cte_patients_lower AS (
         , ethnicity
         , gender AS patient_gender
         , birthplace
-        , "address" AS patient_address
+        , address AS patient_address
         , city AS patient_city
         , "state" AS patient_state
         , county AS patient_county
