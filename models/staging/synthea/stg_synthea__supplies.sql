@@ -17,7 +17,7 @@ WITH cte_supplies_lower AS (
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS supply_code
-        , "description" AS supply_description
+        , description AS supply_description
         , quantity AS supply_quantity
     FROM cte_supplies_lower
 

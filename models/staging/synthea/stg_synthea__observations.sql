@@ -19,7 +19,7 @@ WITH cte_observations_lower AS (
         , encounter AS encounter_id
         , category AS observation_category
         , code AS observation_code
-        , "description" AS observation_description
+        , description AS observation_description
         , "value" AS observation_value
         , units AS observation_units
         , "type" AS observation_value_type

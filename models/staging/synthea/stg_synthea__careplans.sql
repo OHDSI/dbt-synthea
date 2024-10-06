@@ -19,7 +19,7 @@ WITH cte_careplans_lower AS (
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS careplan_code
-        , "description" AS careplan_description
+        , description AS careplan_description
         , reasoncode AS careplan_reason_code
         , reasondescription AS careplan_reason_description
     FROM cte_careplans_lower
