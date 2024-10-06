@@ -122,9 +122,7 @@ WITH ctePreDrugTarget AS (
         , drug_sub_exposure_start_date
         , drug_sub_exposure_end_date
         , drug_exposure_count
-        , EXTRACT(
-            DAY FROM drug_sub_exposure_end_date - drug_sub_exposure_start_date
-        ) AS days_exposed
+        , {{ dbt.datediff("drug_sub_exposure_start_date", "drug_sub_exposure_end_date", "day") }} AS days_exposed
     FROM cteSubExposures
 )
 
