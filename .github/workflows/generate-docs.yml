@@ -38,6 +38,9 @@ jobs:
                 target: dev
                 EOF
             - run: dbt deps
+            - run: dbt seed
+            - run: dbt run
+            - run: dbt test
             - name: Generate Docs and prepare for upload
               run: |
                   dbt docs generate
