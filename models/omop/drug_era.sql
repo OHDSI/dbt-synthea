@@ -12,10 +12,10 @@ WITH ctePreDrugTarget AS (
         , COALESCE(
             NULLIF(drug_exposure_end_date, NULL)
             , NULLIF(
-                drug_exposure_start_date + days_supply * INTERVAL '1 day'
+                {{ dbt.dateadd("day", "days_supply", "drug_exposure_start_date") }}
                 , drug_exposure_start_date
             )
-            , drug_exposure_start_date + INTERVAL '1 day'
+            , {{ dbt.dateadd("day", 1, "drug_exposure_start_date") }}
         ) AS drug_exposure_end_date
     FROM {{ ref ('drug_exposure') }} AS d
     INNER JOIN {{ ref ('stg_vocabulary__concept_ancestor') }} AS ca
@@ -122,9 +122,7 @@ WITH ctePreDrugTarget AS (
         , drug_sub_exposure_start_date
         , drug_sub_exposure_end_date
         , drug_exposure_count
-        , EXTRACT(
-            DAY FROM drug_sub_exposure_end_date - drug_sub_exposure_start_date
-        ) AS days_exposed
+        , {{ dbt.datediff("drug_sub_exposure_start_date", "drug_sub_exposure_end_date", "day") }} AS days_exposed
     FROM cteSubExposures
 )
 
