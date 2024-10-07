@@ -11,7 +11,7 @@
                 encounter    VARCHAR(1000),
                 code         VARCHAR(100),
                 "system"       VARCHAR(255),
-                "description"  VARCHAR(255),
+                description  VARCHAR(255),
                 "type"       VARCHAR(255),
                 category     VARCHAR(255),
                 reaction1    VARCHAR(255),
@@ -30,7 +30,7 @@
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 reasoncode    VARCHAR(255),
                 reasondescription   VARCHAR(255)
             );
@@ -56,7 +56,7 @@
                 payer           VARCHAR(1000),
                 encounterclass  VARCHAR(1000),
                 code            VARCHAR(100),
-                "description"     VARCHAR(255),
+                description     VARCHAR(255),
                 base_encounter_cost NUMERIC,
                 total_claim_cost    NUMERIC,
                 payer_coverage  NUMERIC,
@@ -70,7 +70,7 @@
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 base_cost     NUMERIC
             );
         {% endif %}
@@ -99,7 +99,7 @@
                 payer         VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(1000),
+                description   VARCHAR(1000),
                 base_cost     NUMERIC,
                 payer_coverage    NUMERIC,
                 dispenses     INT,
@@ -115,7 +115,7 @@
                 encounter     VARCHAR(1000),
                 category      VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 "value"         VARCHAR(1000),
                 units         VARCHAR(100),
                 "type"        VARCHAR(100)
@@ -125,9 +125,9 @@
             CREATE TABLE {{schema}}.organizations (
                 id              VARCHAR(1000),
                 "name"          VARCHAR(1000),
-                "address"         VARCHAR(1000),
+                address         VARCHAR(1000),
                 city            VARCHAR(100),
-                "state"           VARCHAR(100),
+                state           VARCHAR(100),
                 zip             VARCHAR(100),
                 lat             NUMERIC,
                 lon             NUMERIC,
@@ -154,9 +154,9 @@
                 ethnicity       VARCHAR(100),
                 gender          VARCHAR(100),
                 birthplace      VARCHAR(100),
-                "address"         VARCHAR(100),
+                address         VARCHAR(100),
                 city            VARCHAR(100),
-                "state"           VARCHAR(100),
+                state           VARCHAR(100),
                 county          VARCHAR(100),
                 zip             VARCHAR(100),
                 lat             NUMERIC,
@@ -172,7 +172,7 @@
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 base_cost     NUMERIC,
                 reasoncode    VARCHAR(1000),
                 reasondescription VARCHAR(1000)
@@ -182,12 +182,12 @@
             CREATE TABLE {{schema}}.providers (
                 id VARCHAR(1000),
                 organization VARCHAR(1000),
-                "name" VARCHAR(100),
+                name VARCHAR(100),
                 gender VARCHAR(100),
                 speciality VARCHAR(100),
-                "address" VARCHAR(255),
+                address VARCHAR(255),
                 city VARCHAR(100),
-                "state" VARCHAR(100),
+                state VARCHAR(100),
                 zip VARCHAR(100),
                 lat NUMERIC,
                 lon NUMERIC,
@@ -201,7 +201,7 @@
                 patient       VARCHAR(1000),
                 encounter     VARCHAR(1000),
                 code          VARCHAR(100),
-                "description"   VARCHAR(255),
+                description   VARCHAR(255),
                 udi           VARCHAR(255)
             );
         {% endif %}
@@ -285,15 +285,15 @@
                 end_year         TIMESTAMP,
                 payer            VARCHAR(1000),
                 secondary_payer  VARCHAR(1000),
-                "ownership"        VARCHAR(1000),
+                ownership        VARCHAR(1000),
                 ownername       VARCHAR(1000)
             );
         {% endif %}
         {% if not check_if_exists(database, schema, "payers") %}
             CREATE TABLE {{schema}}.payers (
                 id                       VARCHAR(1000),
-                "name"                     VARCHAR(1000),
-                "address"                  VARCHAR(1000),
+                name                     VARCHAR(1000),
+                address                  VARCHAR(1000),
                 city                     VARCHAR(1000),
                 state_headquartered      VARCHAR(1000),
                 zip                      VARCHAR(1000),
@@ -320,7 +320,7 @@
                 patient      VARCHAR(1000),
                 encounter    VARCHAR(1000),
                 code         VARCHAR(1000),
-                "description"  VARCHAR(1000),
+                description  VARCHAR(1000),
                 quantity     NUMERIC
             );
         {% endif %}

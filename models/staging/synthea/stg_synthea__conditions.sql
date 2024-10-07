@@ -18,7 +18,7 @@ WITH cte_conditions_lower AS (
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS condition_code
-        , "description" AS condition_description
+        , description AS condition_description
     FROM cte_conditions_lower
 
 )

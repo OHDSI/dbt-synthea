@@ -20,7 +20,7 @@ WITH cte_devices_lower AS (
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS device_code
-        , "description" AS device_description
+        , description AS device_description
         , udi
     FROM cte_devices_lower
 

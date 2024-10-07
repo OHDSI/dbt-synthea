@@ -21,7 +21,7 @@ WITH cte_medications_lower AS (
         , payer AS payer_id
         , encounter AS encounter_id
         , code AS medication_code
-        , "description" AS medication_description
+        , description AS medication_description
         , {{ dbt.cast("base_cost", api.Column.translate_type("decimal")) }} AS medication_base_cost
         , payer_coverage AS medication_payer_coverage
         , dispenses

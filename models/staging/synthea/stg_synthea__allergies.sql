@@ -19,7 +19,7 @@ WITH cte_allergies_lower AS (
         , encounter AS encounter_id
         , code AS allergy_code
         , "system" AS allergy_code_system
-        , "description" AS allergy_description
+        , description AS allergy_description
         , "type" AS allergy_type
         , category AS allergy_category
         , reaction1 AS reaction_1_code
