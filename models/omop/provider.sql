@@ -1,5 +1,5 @@
 SELECT
-    row_number() OVER (ORDER BY (SELECT null)) AS provider_id
+    row_number() OVER (ORDER BY provider_state, provider_city, provider_zip, provider_id) AS provider_id
     , provider_name
     , {{ dbt.cast("null", api.Column.translate_type("varchar(20)")) }} AS npi
     , {{ dbt.cast("null", api.Column.translate_type("varchar(20)")) }} AS dea
