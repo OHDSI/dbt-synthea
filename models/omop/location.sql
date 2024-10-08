@@ -1,5 +1,5 @@
 SELECT
-    ROW_NUMBER() OVER () AS location_id
+    ROW_NUMBER() OVER (ORDER BY state_abbreviation, patient_city, patient_zip, p.patient_id) AS location_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS address_1
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS address_2
     , p.patient_city AS city
