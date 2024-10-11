@@ -19,7 +19,7 @@ SELECT
         WHEN upper(p.ethnicity) = 'NONHISPANIC' THEN 38003564
         ELSE 0
     END AS ethnicity_concept_id
-    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS location_id
+    , loc.location_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS provider_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , p.patient_id AS person_source_value
@@ -30,4 +30,8 @@ SELECT
     , p.ethnicity AS ethnicity_source_value
     , 0 AS ethnicity_source_concept_id
 FROM {{ ref('stg_synthea__patients') }} AS p
+LEFT JOIN {{ ref('location') }} loc
+    -- Address and city provides enough entropy to join on safely
+    ON (p.patient_address = loc.address_1 AND p.patient_city = loc.city)
+
 WHERE p.patient_gender IS NOT NULL
