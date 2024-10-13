@@ -1,3 +1,11 @@
+{% set address_columns = [
+    "p.patient_address",
+    "p.patient_city",
+    "s.state_abbreviation",
+    "p.patient_zip",
+    "p.patient_county"
+] %}
+
 SELECT
     row_number() OVER (ORDER BY p.patient_id) AS person_id
     , CASE upper(p.patient_gender)
@@ -33,12 +41,6 @@ FROM {{ ref('stg_synthea__patients') }} AS p
 LEFT JOIN {{ ref('stg_map__states') }} AS s ON p.patient_state = s.state_name
 LEFT JOIN {{ ref('location') }} AS loc
     -- Address and city provides enough entropy to join on safely
-    ON loc.location_source_value = md5(
-        coalesce(p.patient_address, '')
-        || coalesce(p.patient_city, '')
-        || coalesce(s.state_abbreviation, '')
-        || coalesce(p.patient_zip, '')
-        || coalesce(p.patient_county, '')
-    )
+    ON loc.location_source_value = {{ safe_hash(address_columns) }}
 
 WHERE p.patient_gender IS NOT NULL

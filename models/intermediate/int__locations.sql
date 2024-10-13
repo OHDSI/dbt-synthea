@@ -5,8 +5,7 @@
     "state",
     "zip",
     "county"
-    ]
-%}
+] %}
 
 WITH unioned_location_sources AS (
     SELECT DISTINCT
@@ -47,11 +46,7 @@ SELECT
     , state
     , zip
     , county
-    , md5(
-        {%- for col in address_columns -%}
-        coalesce({{col}}, '') {{ "|| " if not loop.last }}
-        {%- endfor -%}
-    ) AS location_source_value
+    , {{ safe_hash(address_columns) }} AS location_source_value
     , country_concept_id
     , country_source_value
     , latitude

@@ -1,0 +1,7 @@
+macros:
+  - name: safe_hash
+    description: This macro allows concatenation and hashing of fields that may contain `NULL` elements. For example, fields in an address.
+    arguments:
+      - name: columns
+        type: list[str]
+        description: A list of column names

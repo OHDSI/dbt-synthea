@@ -1,3 +1,10 @@
+{% set address_columns = [
+    "organization_address",
+    "organization_city",
+    "organization_state",
+    "organization_zip",
+] %}
+
 SELECT
     ROW_NUMBER() OVER (ORDER BY organization_id) AS care_site_id
     , organization_name AS care_site_name
@@ -8,9 +15,4 @@ SELECT
 FROM {{ ref('stg_synthea__organizations') }}
 LEFT JOIN {{ ref('location') }} AS loc
     ON
-        loc.location_source_value = MD5(
-            COALESCE(organization_address, '')
-            || COALESCE(organization_city, '')
-            || COALESCE(organization_state, '')
-            || COALESCE(organization_zip, '')
-        )
+        loc.location_source_value = {{ safe_hash(address_columns) }}
