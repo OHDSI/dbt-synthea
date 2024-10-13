@@ -5,9 +5,12 @@ SELECT
     , loc.location_id
     , organization_id AS care_site_source_value
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS place_of_service_source_value
-FROM {{ ref('stg_synthea__organizations') }} org
-LEFT JOIN {{ ref('location') }} loc
+FROM {{ ref('stg_synthea__organizations') }}
+LEFT JOIN {{ ref('location') }} AS loc
     ON
-        org.organization_name = loc.address_1
-        AND org.organization_address = loc.address_2
-        AND org.organization_city = loc.city
+        loc.location_source_value = MD5(
+            COALESCE(organization_address, '')
+            || COALESCE(organization_city, '')
+            || COALESCE(organization_state, '')
+            || COALESCE(organization_zip, '')
+        )

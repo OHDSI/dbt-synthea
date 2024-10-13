@@ -30,8 +30,15 @@ SELECT
     , p.ethnicity AS ethnicity_source_value
     , 0 AS ethnicity_source_concept_id
 FROM {{ ref('stg_synthea__patients') }} AS p
-LEFT JOIN {{ ref('location') }} loc
+LEFT JOIN {{ ref('stg_map__states') }} AS s ON p.patient_state = s.state_name
+LEFT JOIN {{ ref('location') }} AS loc
     -- Address and city provides enough entropy to join on safely
-    ON (p.patient_address = loc.address_1 AND p.patient_city = loc.city)
+    ON loc.location_source_value = md5(
+        coalesce(p.patient_address, '')
+        || coalesce(p.patient_city, '')
+        || coalesce(s.state_abbreviation, '')
+        || coalesce(p.patient_zip, '')
+        || coalesce(p.patient_county, '')
+    )
 
 WHERE p.patient_gender IS NOT NULL
