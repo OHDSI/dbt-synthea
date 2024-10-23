@@ -1,5 +1,5 @@
 SELECT
-    row_number() OVER (ORDER BY state, city, address_1) AS location_id
+    row_number() OVER (ORDER BY state, city, address_1, location_source_value) AS location_id
     , address_1
     , address_2
     , city

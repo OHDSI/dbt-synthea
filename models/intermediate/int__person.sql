@@ -40,7 +40,5 @@ SELECT
 FROM {{ ref('stg_synthea__patients') }} AS p
 LEFT JOIN {{ ref('stg_map__states') }} AS s ON p.patient_state = s.state_name
 LEFT JOIN {{ ref('location') }} AS loc
-    -- Address and city provides enough entropy to join on safely
     ON loc.location_source_value = {{ safe_hash(address_columns) }}
-
 WHERE p.patient_gender IS NOT NULL
