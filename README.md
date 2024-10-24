@@ -45,8 +45,8 @@ pre-commit install
 ```
 
  2. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
-   - Create a directory `.dbt` in your root directory if one doesn't exist already, then create a `profiles.yml` file in `.dbt` 
-   - Add the following block to the file:
+   - Create a directory `.dbt` in your root directory if one doesn't exist already (in Linux or OSX, this would mean creating the folder as follows: `mkdir -p ~/.dbt/`), then create an empty `profiles.yml` file in the newly created `.dbt` folder.
+   - Add the following block to the `profiles.yml` file:
 ```yaml
 synthea_omop_etl:
   outputs:
