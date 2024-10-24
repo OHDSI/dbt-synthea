@@ -23,6 +23,7 @@ Users are welcomed, however, to utilize their own Synthea and/or OMOP vocabulary
 - See the top of [this page](https://docs.getdbt.com/docs/core/pip-install) for OS & Python requirements.  (Do NOT install dbt yet - see below for project installation and setup.)
 - It is recommended to use [VS Code](https://code.visualstudio.com/) as your IDE for developing this project.  Install the `dbt Power User` extension in VS Code to enjoy a plethora of useful features that make dbt development easier
 - This project currently only supports **Synthea v3.0.0**
+- Python **3.12.0** is the suggested version of Python for this project.
 
 ### Repo Setup
  1. Clone this repository to your machine
