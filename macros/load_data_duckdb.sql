@@ -10,7 +10,7 @@
 
     {% for n, p in file_dict.items() %}
         {% do run_query("DROP TABLE IF EXISTS " ~ target_schema ~ "." ~ n.lower() ~ ";") %}
-        {% do run_query("CREATE TABLE IF NOT EXISTS " ~ target_schema ~ "." ~ n.lower() ~ " AS SELECT * FROM read_csv('" ~ p ~ "');") %}
+        {% do run_query("CREATE TABLE IF NOT EXISTS " ~ target_schema ~ "." ~ n.lower() ~ " AS SELECT * FROM read_csv('" ~ p ~ "', quote = '');") %}
     {% endfor %}
 
     {% if vocab_tables %}
