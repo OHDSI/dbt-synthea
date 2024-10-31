@@ -1,3 +1,11 @@
+{% set address_columns = [
+    "p.patient_address",
+    "p.patient_city",
+    "s.state_abbreviation",
+    "p.patient_zip",
+    "p.patient_county"
+] %}
+
 SELECT
     row_number() OVER (ORDER BY p.patient_id) AS person_id
     , CASE upper(p.patient_gender)
@@ -19,7 +27,7 @@ SELECT
         WHEN upper(p.ethnicity) = 'NONHISPANIC' THEN 38003564
         ELSE 0
     END AS ethnicity_concept_id
-    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS location_id
+    , loc.location_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS provider_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , p.patient_id AS person_source_value
@@ -30,4 +38,7 @@ SELECT
     , p.ethnicity AS ethnicity_source_value
     , 0 AS ethnicity_source_concept_id
 FROM {{ ref('stg_synthea__patients') }} AS p
+LEFT JOIN {{ ref('stg_map__states') }} AS s ON p.patient_state = s.state_name
+LEFT JOIN {{ ref('location') }} AS loc
+    ON loc.location_source_value = {{ safe_hash(address_columns) }}
 WHERE p.patient_gender IS NOT NULL
