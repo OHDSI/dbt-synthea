@@ -55,9 +55,9 @@ seeds:
         STATUS1: varchar
         STATUS2: varchar
         STATUSP: varchar
-        OUTSTANDING1: integer
-        OUTSTANDING2: integer
-        OUTSTANDINGP: integer
+        OUTSTANDING1: float
+        OUTSTANDING2: float
+        OUTSTANDINGP: float
         LASTBILLEDDATE1: timestamp
         LASTBILLEDDATE2: timestamp
         LASTBILLEDDATEP: timestamp
@@ -71,7 +71,7 @@ seeds:
         CHARGEID: integer
         PATIENTID: varchar
         TYPE: varchar
-        AMOUNT: numeric
+        AMOUNT: float
         METHOD: varchar
         FROMDATE: timestamp
         TODATE: timestamp
@@ -79,20 +79,20 @@ seeds:
         PROCEDURECODE: varchar
         MODIFIER1: varchar
         MODIFIER2: varchar
-        DIAGNOSISREF1: varchar
-        DIAGNOSISREF2: varchar
-        DIAGNOSISREF3: varchar
-        DIAGNOSISREF4: varchar
+        DIAGNOSISREF1: integer
+        DIAGNOSISREF2: integer
+        DIAGNOSISREF3: integer
+        DIAGNOSISREF4: integer
         UNITS: integer
         DEPARTMENTID: integer
         NOTES: varchar
-        UNITAMOUNT: numeric
+        UNITAMOUNT: float
         TRANSFEROUTID: integer
         TRANSFERTYPE: varchar
-        PAYMENTS: numeric
-        ADJUSTMENTS: varchar
-        TRANSFERS: numeric
-        OUTSTANDING: numeric
+        PAYMENTS: float
+        ADJUSTMENTS: float
+        TRANSFERS: float
+        OUTSTANDING: float
         APPOINTMENTID: varchar
         LINENOTE: varchar
         PATIENTINSURANCEID: varchar
@@ -228,8 +228,8 @@ seeds:
         ZIP: varchar
         LAT: float
         LON: float
-        HEALTHCARE_EXPENSES: varchar
-        HEALTHCARE_COVERAGE: varchar
+        HEALTHCARE_EXPENSES: float
+        HEALTHCARE_COVERAGE: float
   - name: payer_transitions
     config:
       column_types:
