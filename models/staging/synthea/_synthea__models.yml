@@ -333,11 +333,11 @@ models:
           - relationships:
               to: ref('stg_synthea__encounters')
               field: encounter_id
-      - name: current_ilness_date
+      - name: current_illness_date
         data_type: date
         description: "The date the patient experienced symptoms."
-      - name: service_date
-        data_type: date
+      - name: service_datetime
+        data_type: datetime
         description: "The date of the services on the claim."
       - name: supervising_provider_id
         data_type: text
@@ -406,12 +406,16 @@ models:
   - name: stg_synthea__devices
     description: Synthea devices table
     columns:
-      - name: device_start_date
+      - name: device_start_datetime
         data_type: datetime
         description: "The date and time the device was associated to the patient."
+      - name: device_start_date
+        data_type: date
       - name: device_stop_datetime
         data_type: datetime
         description: "The date and time the device was removed, if applicable."
+      - name: device_stop_date
+        data_type: date
       - name: patient_id
         data_type: text
         tests:
@@ -441,8 +445,12 @@ models:
           - unique
       - name: encounter_start_datetime
         data_type: datetime
+      - name: encounter_start_date
+        data_type: date
       - name: encounter_stop_datetime
         data_type: datetime
+      - name: encounter_stop_date
+        data_type: date
       - name: patient_id
         data_type: text
         tests:
@@ -561,8 +569,12 @@ models:
     columns:
       - name: medication_start_datetime
         data_type: datetime
+      - name: medication_start_date
+        data_type: date
       - name: medication_stop_datetime
         data_type: datetime
+      - name: medication_stop_date
+        data_type: date
       - name: patient_id
         data_type: text
         tests:
@@ -608,6 +620,8 @@ models:
     columns:
       - name: observation_datetime
         data_type: datetime
+      - name: observation_date
+        data_type: date
       - name: patient_id
         data_type: text
         tests:
@@ -677,8 +691,12 @@ models:
         data_type: text
       - name: coverage_start_datetime
         data_type: datetime
+      - name: coverage_start_date
+        data_type: date
       - name: coverage_end_datetime
         data_type: datetime
+      - name: coverage_end_date
+        data_type: date
       - name: payer_id
         data_type: text
         tests:
@@ -763,8 +781,12 @@ models:
     columns:
       - name: procedure_start_datetime
         data_type: datetime
+      - name: procedure_start_date
+        data_type: date
       - name: procedure_stop_datetime
         data_type: datetime
+      - name: procedure_stop_date
+        data_type: date
       - name: patient_id
         data_type: text
         tests:
