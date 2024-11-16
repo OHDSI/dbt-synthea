@@ -333,11 +333,11 @@ models:
           - relationships:
               to: ref('stg_synthea__encounters')
               field: encounter_id
-      - name: current_ilness_date
+      - name: current_illness_date
         data_type: date
         description: "The date the patient experienced symptoms."
-      - name: service_date
-        data_type: date
+      - name: service_datetime
+        data_type: datetime
         description: "The date of the services on the claim."
       - name: supervising_provider_id
         data_type: text
