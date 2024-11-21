@@ -763,6 +763,12 @@ models:
       - name: unique_customers
         data_type: integer
         description: "The number of unique patients enrolled with this Payer during the entire simulation."
+      - name: qols_avg
+        data_type: double precision
+        description: "The average Quality of Life Scores (QOLS) for all patients enrolled with this Payer during the entire simulation."
+      - name: payer_member_months
+        data_type: integer
+        description: "The total number of months that patients were enrolled with this Payer during the simulation and paid monthly premiums (if any)."
 
   - name: stg_synthea__procedures
     description: Synthea procedures table
