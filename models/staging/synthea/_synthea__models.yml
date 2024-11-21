@@ -26,6 +26,8 @@ models:
       - name: patient_suffix
         data_type: text
         description: "Name suffix, such as PhD, MD, JD, etc."
+      - name: maiden_name
+        data_type: text
       - name: marital_status
         description: "Marital Status. M is married, S is single. Currently no support for divorce (D) or widowing (W)."
         data_type: text
