@@ -1,5 +1,5 @@
 SELECT
-    {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS source_code
+    {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS source_code
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS source_vocabulary_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS source_code_description
