@@ -107,6 +107,7 @@ seeds:
         PATIENT: varchar
         ENCOUNTER: varchar
         CODE: varchar
+        DESCRIPTION: varchar
   - name: devices
     config:
       column_types:
