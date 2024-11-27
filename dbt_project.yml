@@ -4,6 +4,8 @@ config-version: 2
 
 profile: 'synthea_omop_etl'
 
+asset-paths: ["assets"]
+docs-paths: ["docs"]
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
