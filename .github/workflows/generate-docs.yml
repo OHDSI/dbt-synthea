@@ -44,10 +44,12 @@ jobs:
             - name: Generate Docs and prepare for upload
               run: |
                   dbt docs generate
+                  sed -i "s#<img style=\"width: 100px; height: 40px\" class=\"logo\" ng-src=\"{{ logo }}\" />#<img style=\"width: 140px\" src=\"assets/OHDSI-logo-with-text-horizontal-colored-white-background.png\" />#g" ./target/index.html
                   mkdir ./payload
                   mv ./target/index.html ./payload
                   mv ./target/manifest.json ./payload
                   mv ./target/catalog.json ./payload
+                  mv ./target/assets ./payload
           
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
