@@ -2,7 +2,7 @@
 
 ## dbt-sythnea
 
-dbt-synthea is a project to demonstrate the power of dbt for building OMOP ETLs. Using [Synthea](https://synthetichealth.github.io/synthea/), it is possible to generate a synthetic patient data which can be transformed into the OMOP standard.
+dbt-synthea is a project to demonstrate the power of dbt for building OMOP ETLs. Using [Synthea](https://synthetichealth.github.io/synthea/), it is possible to generate a synthetic patient dataset which can be transformed into the OMOP standard.
 
 ### Project Structure
 
@@ -13,11 +13,25 @@ The models have been setup with three distinct stages:
  - **Intermediate**: SQL queries used to perform the bulk of the joining and transformation needed to move from source tables into the OMOP CDM, with a focus on joins and transformations which may be reused several times in the final models; for example, source-to-standard concept mappings or modeling of different visit types.
  - **Mart**: SQL queries that are 1:1 with the final OMOP tables.
 
-### Exploring the Project
+The data originates from either [seed files](https://github.com/OHDSI/dbt-synthea/tree/main/seeds) or with data loaded into a database system of choice: the [developer setup instructions](https://github.com/OHDSI/dbt-synthea?tab=readme-ov-file#developer-setup) provide more information.
 
-The Project and Database tab on the left can be used to explore the models and the structure of the project.
+## Navigation
+You can use the Project and Database navigation tabs on the left side of the window to explore the models in your project.
 
-The graph or lineage of the project can be explored by clicking on the blue button on the bottom right of the screen. The `--select` or `--exclude` options can be used to filter the models that are currently in view. For example, try filtering on `--select` with the query `+omop`.
+### Project Tab
+The Project tab mirrors the directory structure of your dbt project. In this tab, you can see all of the models defined in your dbt project, as well as models imported from dbt packages.
+
+### Database Tab
+The Database tab also exposes your models, but in a format that looks more like a database explorer. This view shows relations (tables and views) grouped into database schemas. Note that ephemeral models are not shown in this interface, as they do not exist in the database.
+
+### Graph Exploration
+You can click the blue icon on the bottom-right corner of the page to view the lineage graph of your models.
+
+On model pages, you'll see the immediate parents and children of the model you're exploring. By clicking the Expand button at the top-right of this lineage pane, you'll be able to see all of the models that are used to build, or are built from, the model you're exploring.
+
+Once expanded, you'll be able to use the --select and --exclude model selection syntax to filter the models in the graph. For more information on model selection, check out the dbt docs.
+
+Note that you can also right-click on models to interactively filter and explore the graph.
 
 ## More Information
 
