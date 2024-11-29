@@ -1,6 +1,6 @@
 {% docs __overview__ %}
 
-## dbt-sythnea
+## dbt-synthea
 
 dbt-synthea is a project to demonstrate the power of dbt for building OMOP ETLs. Using [Synthea](https://synthetichealth.github.io/synthea/), it is possible to generate a synthetic patient dataset which can be transformed into the OMOP standard.
 
