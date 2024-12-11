@@ -1,8 +1,8 @@
-name: 'synthea_omop_etl'
-version: '0.1.0'
+name: "synthea_omop_etl"
+version: "0.1.0"
 config-version: 2
 
-profile: 'synthea_omop_etl'
+profile: "synthea_omop_etl"
 
 asset-paths: ["assets"]
 docs-paths: ["docs"]
@@ -13,7 +13,7 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-clean-targets:         # directories to be removed by `dbt clean`
+clean-targets: # directories to be removed by `dbt clean`
   - "target"
 
 vars:
@@ -34,3 +34,4 @@ seeds:
     synthea:
       +enabled: true
       +schema: synthea_seeds
+    +quote_columns: true
