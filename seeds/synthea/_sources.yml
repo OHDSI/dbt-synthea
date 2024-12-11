@@ -20,7 +20,7 @@ seeds:
   - name: careplans
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         START: date
         STOP: date
         PATIENT: varchar
@@ -32,7 +32,7 @@ seeds:
   - name: claims
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         PATIENTID: varchar
         PROVIDERID: varchar
         PRIMARYPATIENTINSURANCEID: varchar
@@ -66,7 +66,7 @@ seeds:
   - name: claims_transactions
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         CLAIMID: varchar
         CHARGEID: integer
         PATIENTID: varchar
@@ -121,7 +121,7 @@ seeds:
   - name: encounters
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         START: timestamp
         STOP: timestamp
         PATIENT: varchar
@@ -139,7 +139,7 @@ seeds:
   - name: imaging_studies
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         DATE: timestamp
         PATIENT: varchar
         ENCOUNTER: varchar
@@ -192,7 +192,7 @@ seeds:
   - name: organizations
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         NAME: varchar
         ADDRESS: varchar
         CITY: varchar
@@ -206,7 +206,7 @@ seeds:
   - name: patients
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         BIRTHDATE: date
         DEATHDATE: date
         SSN: varchar
@@ -245,7 +245,7 @@ seeds:
   - name: payers
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         NAME: varchar
         ADDRESS: varchar
         CITY: varchar
@@ -281,7 +281,7 @@ seeds:
   - name: providers
     config:
       column_types:
-        ID: varchar
+        Id: varchar
         ORGANIZATION: varchar
         NAME: varchar
         GENDER: varchar
