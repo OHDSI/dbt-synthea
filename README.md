@@ -37,6 +37,10 @@ Users are welcomed, however, to utilize their own Synthea and/or OMOP vocabulary
 source dbt-env/bin/activate         # activate the environment for Mac and Linux OR
 dbt-env\Scripts\activate            # activate the environment for Windows
 ```
+3. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml).  You can either:
+   - Create a file in the `~/.dbt/` directory named `profiles.yml` (if you've already got this directory and file, you can skip this step and add profile block(s) for this project to that file)
+   - Create a `profiles.yml` file in the root of the `dbt-synthea` repo folder
+   - Create the file wherever you wish, following the guidance [here](https://docs.getdbt.com/docs/core/connect-data-platform/connection-profiles#advanced-customizing-a-profile-directory)
 
 ### DuckDB Setup
  1. In your virtual environment install requirements for duckdb (see [here for contents](./requirements/duckdb.in))
@@ -45,9 +49,7 @@ pip3 install -r requirements/duckdb.txt
 pre-commit install
 ```
 
- 2. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
-   - Create a directory `.dbt` in your root directory if one doesn't exist already, then create a `profiles.yml` file in `.dbt` 
-   - Add the following block to the file:
+ 2. Add the following block to your `profiles.yml` file:
 ```yaml
 synthea_omop_etl:
   outputs:
@@ -101,9 +103,7 @@ pre-commit install
 ```
  2. Set up a local Postgres database with a dedicated schema for developing this project (e.g. `dbt_synthea_dev`)
 
- 3. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml):
-   - Create a directory `.dbt` in your root directory if one doesn't exist already, then create a `profiles.yml` file in `.dbt` 
-   - Add the following block to the file:
+ 3. Add the following block to your `profiles.yml` file:
 ```yaml
 synthea_omop_etl:
   outputs:
