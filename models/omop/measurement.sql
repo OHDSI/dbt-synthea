@@ -57,7 +57,7 @@ WITH snomed_measurements AS (
         , 32827 AS measurement_type_concept_id
         , 0 AS operator_concept_id
         , CASE
-            WHEN o.observation_value ~ '^[-+]?[0-9]+\.?[0-9]*$'
+            WHEN {{ regexp_like("o.observation_value", "^[-+]?[0-9]+\.?[0-9]*$") }}
                 THEN {{ dbt.cast("o.observation_value", api.Column.translate_type("decimal")) }}
             ELSE {{ dbt.cast("null", api.Column.translate_type("decimal")) }}
         END AS value_as_number
