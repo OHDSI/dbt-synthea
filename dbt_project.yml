@@ -44,6 +44,7 @@ models:
           node_color: '#336B91'
 
 seeds:
+  +quote_columns: true
   synthea_omop_etl:
     map:
       +enabled: true
@@ -57,10 +58,6 @@ seeds:
         node_color: '#69AED5'
     synthea:
       +enabled: true
-      +schema: synthea_seeds
-<<<<<<< HEAD
-    +quote_columns: true
-=======
+      +schema: synthea_seeds    
       +docs:
         node_color: '#69AED5'
->>>>>>> 22226d0 (refactors for perf/simplicity; small doc updates)
