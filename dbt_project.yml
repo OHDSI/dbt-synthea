@@ -21,17 +21,43 @@ vars:
 
 models:
   synthea_omop_etl:
-    +materialized: table
+    intermediate:
+      +materialized: table
+      +docs:
+        node_color: '#FBC511'
+    omop:
+      +materialized: table
+      +docs:
+        node_color: '#EB6622'
+    staging:
+      synthea:
+        +materialized: view
+        +docs:
+          node_color: '#336B91'
+      vocabulary:
+        +materialized: view
+        +docs:
+          node_color: '#336B91'
+      map:
+        +materialized: view
+        +docs:
+          node_color: '#336B91'
 
 seeds:
+  +quote_columns: true
   synthea_omop_etl:
     map:
       +enabled: true
       +schema: map_seeds
+      +docs:
+        node_color: '#69AED5'
     vocabulary:
       +enabled: true
       +schema: vocab_seeds
+      +docs:
+        node_color: '#69AED5'
     synthea:
       +enabled: true
-      +schema: synthea_seeds
-    +quote_columns: true
+      +schema: synthea_seeds    
+      +docs:
+        node_color: '#69AED5'

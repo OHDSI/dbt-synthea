@@ -1,5 +1,5 @@
 SELECT
-    row_number() OVER (ORDER BY person_id) AS device_exposure_id
+    row_number() OVER (ORDER BY epr.person_id) AS device_exposure_id
     , p.person_id
     , srctostdvm.target_concept_id AS device_concept_id
     , d.device_start_date AS device_exposure_start_date
@@ -10,9 +10,9 @@ SELECT
     , d.udi AS unique_device_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS production_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS quantity
-    , pr.provider_id
-    , fv.visit_occurrence_id_new AS visit_occurrence_id
-    , fv.visit_occurrence_id_new + 1000000 AS visit_detail_id
+    , epr.provider_id
+    , epr.visit_occurrence_id
+    , epr.visit_occurrence_id + 1000000 AS visit_detail_id
     , d.device_code AS device_source_value
     , srctosrcvm.source_concept_id AS device_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS unit_concept_id
@@ -31,13 +31,7 @@ INNER JOIN {{ ref ('int__source_to_source_vocab_map') }} AS srctosrcvm
     ON
         d.device_code = srctosrcvm.source_code
         AND srctosrcvm.source_vocabulary_id = 'SNOMED'
-LEFT JOIN {{ ref ('int__final_visit_ids') }} AS fv
-    ON d.encounter_id = fv.encounter_id
-LEFT JOIN {{ ref('stg_synthea__encounters') }} AS e
-    ON
-        d.encounter_id = e.encounter_id
-        AND d.patient_id = e.patient_id
-LEFT JOIN {{ ref ('provider') }} AS pr
-    ON e.provider_id = pr.provider_source_value
-INNER JOIN {{ ref ('person') }} AS p
+INNER JOIN {{ ref ('int__person') }} AS p
     ON d.patient_id = p.person_source_value
+LEFT JOIN {{ ref ('int__encounter_provider') }} AS epr
+    ON d.encounter_id = epr.encounter_id

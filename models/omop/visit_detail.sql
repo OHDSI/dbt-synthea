@@ -3,7 +3,7 @@
 
 SELECT
     av.visit_occurrence_id + 1000000 AS visit_detail_id
-    , p.person_id
+    , epr.person_id
 
     , CASE lower(av.encounter_class)
         WHEN 'ambulatory' THEN 9202
@@ -20,13 +20,13 @@ SELECT
     , {{ dbt.cast("av.visit_end_datetime", api.Column.translate_type("date")) }} AS visit_detail_end_date
     , av.visit_end_datetime AS visit_detail_end_datetime
     , 32827 AS visit_detail_type_concept_id
-    , pr.provider_id
+    , epr.provider_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , 0 AS admitted_from_concept_id
     , 0 AS discharged_to_concept_id
     , lag(av.visit_occurrence_id)
         OVER (
-            PARTITION BY p.person_id
+            PARTITION BY epr.person_id
             ORDER BY av.visit_start_datetime
         )
     + 1000000 AS preceding_visit_detail_id
@@ -37,15 +37,5 @@ SELECT
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS parent_visit_detail_id
     , av.visit_occurrence_id
 FROM {{ ref( 'int__all_visits') }} AS av
-INNER JOIN {{ ref( 'person') }} AS p
-    ON av.patient_id = p.person_source_value
-INNER JOIN {{ ref ('stg_synthea__encounters') }} AS e
-    ON
-        av.encounter_id = e.encounter_id
-        AND av.patient_id = e.patient_id
-INNER JOIN {{ ref( 'provider') }} AS pr
-    ON e.provider_id = pr.provider_source_value
-WHERE av.visit_occurrence_id IN (
-    SELECT DISTINCT visit_occurrence_id_new
-    FROM {{ ref( 'int__final_visit_ids') }}
-)
+INNER JOIN {{ ref ('int__encounter_provider') }} AS epr
+    ON av.encounter_id = epr.encounter_id
