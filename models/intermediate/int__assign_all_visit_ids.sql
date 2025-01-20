@@ -1,3 +1,5 @@
+/* match encounters to visit_occurrence_ids */
+
 SELECT
     e.encounter_id
     , e.patient_id AS person_source_value

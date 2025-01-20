@@ -1,13 +1,13 @@
 SELECT
     av.visit_occurrence_id
     , epr.person_id
-    , CASE lower(av.encounter_class)
-        WHEN 'ambulatory' THEN 9202
-        WHEN 'emergency' THEN 9203
-        WHEN 'inpatient' THEN 9201
-        WHEN 'wellness' THEN 9202
-        WHEN 'urgentcare' THEN 9203
-        WHEN 'outpatient' THEN 9202
+    , CASE
+        WHEN lower(av.encounter_class) = 'ambulatory' THEN 9202
+        WHEN lower(av.encounter_class) = 'emergency' THEN 9203
+        WHEN lower(av.encounter_class) = 'inpatient' THEN 9201
+        WHEN lower(av.encounter_class) = 'wellness' THEN 9202
+        WHEN lower(av.encounter_class) = 'urgentcare' THEN 9203
+        WHEN lower(av.encounter_class) = 'outpatient' THEN 9202
         ELSE 0
     END AS visit_concept_id
     , {{ dbt.cast("av.visit_start_datetime", api.Column.translate_type("date")) }} AS visit_start_date

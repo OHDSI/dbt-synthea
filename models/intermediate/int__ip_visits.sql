@@ -47,7 +47,7 @@ WITH cte_end_dates AS (
             WHERE encounter_class = 'inpatient'
         ) AS rawdata
     ) AS e
-    WHERE (2 * e.start_ordinal - e.overall_ord = 0)
+    WHERE (2 * start_ordinal - overall_ord = 0)
 )
 
 , cte_visit_ends AS (

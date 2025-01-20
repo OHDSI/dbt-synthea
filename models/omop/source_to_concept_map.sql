@@ -8,4 +8,4 @@ SELECT
     , {{ dbt.cast("null", api.Column.translate_type("date")) }} AS valid_start_date
     , {{ dbt.cast("null", api.Column.translate_type("date")) }} AS valid_end_date
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS invalid_reason
-WHERE false
+WHERE 1 = 0

@@ -8,18 +8,18 @@
 
 SELECT
     row_number() OVER (ORDER BY p.patient_id) AS person_id
-    , CASE upper(p.patient_gender)
-        WHEN 'M' THEN 8507
-        WHEN 'F' THEN 8532
+    , CASE
+        WHEN upper(p.patient_gender) = 'M' THEN 8507
+        WHEN upper(p.patient_gender) = 'F' THEN 8532
     END AS gender_concept_id
     , extract(YEAR FROM p.birth_date) AS year_of_birth
     , extract(MONTH FROM p.birth_date) AS month_of_birth
     , extract(DAY FROM p.birth_date) AS day_of_birth
     , {{ dbt.cast("NULL", api.Column.translate_type("timestamp")) }} AS birth_datetime
-    , CASE upper(p.race)
-        WHEN 'WHITE' THEN 8527
-        WHEN 'BLACK' THEN 8516
-        WHEN 'ASIAN' THEN 8515
+    , CASE
+        WHEN upper(p.race) = 'WHITE' THEN 8527
+        WHEN upper(p.race) = 'BLACK' THEN 8516
+        WHEN upper(p.race) = 'ASIAN' THEN 8515
         ELSE 0
     END AS race_concept_id
     , CASE
