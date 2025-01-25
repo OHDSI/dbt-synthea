@@ -1,3 +1,7 @@
+/*
+for IP visits, we rolled up many encounters into a single visit and assigned it an visit_id. the original IDs of the rolled-up encounters are stored in the encounter_id column. for OP/ER visits, the visit_id is the same as the encounter_id as no roll-up occurred. in this model we assign an integer ID based on the rolled-up visit_id, to use as the visit_occurrence_id.
+*/
+
 WITH all_visits AS (
     SELECT
         visit_id
