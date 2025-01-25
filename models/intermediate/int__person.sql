@@ -11,6 +11,7 @@ SELECT
     , CASE
         WHEN upper(p.patient_gender) = 'M' THEN 8507
         WHEN upper(p.patient_gender) = 'F' THEN 8532
+        ELSE 0
     END AS gender_concept_id
     , extract(YEAR FROM p.birth_date) AS year_of_birth
     , extract(MONTH FROM p.birth_date) AS month_of_birth
@@ -39,6 +40,5 @@ SELECT
     , 0 AS ethnicity_source_concept_id
 FROM {{ ref('stg_synthea__patients') }} AS p
 LEFT JOIN {{ ref('stg_map__states') }} AS s ON p.patient_state = s.state_name
-LEFT JOIN {{ ref('location') }} AS loc
+LEFT JOIN {{ ref('int__location') }} AS loc
     ON loc.location_source_value = {{ safe_hash(address_columns) }}
-WHERE p.patient_gender IS NOT NULL

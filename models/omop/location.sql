@@ -1,14 +1,14 @@
 SELECT
-    row_number() OVER (ORDER BY state, city, address_1, location_source_value) AS location_id
+    location_id
     , address_1
-    , address_2
+    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS address_2
     , city
     , state
     , zip
     , county
     , location_source_value
-    , country_concept_id
-    , country_source_value
-    , latitude
-    , longitude
-FROM {{ ref('int__locations') }}
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS country_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS country_source_value
+    , {{ dbt.cast("null", api.Column.translate_type("decimal")) }} AS latitude
+    , {{ dbt.cast("null", api.Column.translate_type("decimal")) }} AS longitude
+FROM {{ ref('int__location') }}
