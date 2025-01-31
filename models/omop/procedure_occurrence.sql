@@ -17,4 +17,4 @@ SELECT
     , po.modifier_source_value
 FROM {{ ref( 'int__procedure_occurrence') }} AS po
 LEFT JOIN {{ ref( 'int__visit_detail') }} AS vd
-    ON po.encounter_id = vd.visit_detail_source_value
+    ON po.encounter_id = vd.encounter_id

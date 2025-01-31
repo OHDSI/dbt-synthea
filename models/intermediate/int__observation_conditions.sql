@@ -27,4 +27,4 @@ INNER JOIN {{ ref ('int__source_to_source_vocab_map') }} AS srctosrcvm
 INNER JOIN {{ ref ('int__person') }} AS p
     ON c.patient_id = p.person_source_value
 LEFT JOIN {{ ref ('int__visit_detail') }} AS vd
-    ON c.encounter_id = vd.visit_detail_source_value
+    ON c.encounter_id = vd.encounter_id

@@ -1,5 +1,6 @@
 SELECT
     row_number() OVER (ORDER BY p.person_id) AS visit_detail_id
+    , e.encounter_id
     , p.person_id
     , CASE
         WHEN lower(e.encounter_class) IN ('ambulatory', 'wellness', 'outpatient') THEN 9202
