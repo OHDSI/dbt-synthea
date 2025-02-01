@@ -502,8 +502,6 @@ models:
     columns:
       - name: imaging_id
         data_type: text
-        tests:
-          - unique
       - name: imaging_datetime
         data_type: datetime
       - name: patient_id
