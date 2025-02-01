@@ -15,9 +15,9 @@ SELECT
     , coalesce(srcmap1.target_concept_id, 0) AS unit_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("decimal")) }} AS range_low
     , {{ dbt.cast("null", api.Column.translate_type("decimal")) }} AS range_high
-    , epr.provider_id
-    , epr.visit_occurrence_id
-    , epr.visit_occurrence_id + 1000000 AS visit_detail_id
+    , vd.provider_id
+    , vd.visit_occurrence_id
+    , vd.visit_detail_id
     , o.observation_code AS measurement_source_value
     , coalesce(
         srctosrcvm.source_concept_id, 0
@@ -54,5 +54,5 @@ LEFT JOIN {{ ref ('int__source_to_source_vocab_map') }} AS srctosrcvm
         AND srctosrcvm.source_vocabulary_id = 'LOINC'
 INNER JOIN {{ ref ('int__person') }} AS p
     ON o.patient_id = p.person_source_value
-LEFT JOIN {{ ref ('int__encounter_provider') }} AS epr
-    ON o.encounter_id = epr.encounter_id
+LEFT JOIN {{ ref ('int__visit_detail') }} AS vd
+    ON o.encounter_id = vd.encounter_id

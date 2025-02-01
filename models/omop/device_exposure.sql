@@ -1,5 +1,5 @@
 SELECT
-    row_number() OVER (ORDER BY epr.person_id) AS device_exposure_id
+    row_number() OVER (ORDER BY p.person_id) AS device_exposure_id
     , p.person_id
     , srctostdvm.target_concept_id AS device_concept_id
     , d.device_start_date AS device_exposure_start_date
@@ -10,9 +10,9 @@ SELECT
     , d.udi AS unique_device_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS production_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS quantity
-    , epr.provider_id
-    , epr.visit_occurrence_id
-    , epr.visit_occurrence_id + 1000000 AS visit_detail_id
+    , vd.provider_id
+    , vd.visit_occurrence_id
+    , vd.visit_detail_id
     , d.device_code AS device_source_value
     , srctosrcvm.source_concept_id AS device_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS unit_concept_id
@@ -33,5 +33,5 @@ INNER JOIN {{ ref ('int__source_to_source_vocab_map') }} AS srctosrcvm
         AND srctosrcvm.source_vocabulary_id = 'SNOMED'
 INNER JOIN {{ ref ('int__person') }} AS p
     ON d.patient_id = p.person_source_value
-LEFT JOIN {{ ref ('int__encounter_provider') }} AS epr
-    ON d.encounter_id = epr.encounter_id
+LEFT JOIN {{ ref ('int__visit_detail') }} AS vd
+    ON d.encounter_id = vd.encounter_id

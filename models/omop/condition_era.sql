@@ -60,7 +60,7 @@ WITH cteConditionTarget AS (
                     FROM cteConditionTarget
                 ) AS RAWDATA
         ) AS e
-    WHERE (2 * e.start_ordinal) - e.overall_ord = 0
+    WHERE (2 * start_ordinal) - overall_ord = 0
 )
 
 , cteConditionEnds AS (

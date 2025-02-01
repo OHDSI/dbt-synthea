@@ -1,21 +1,15 @@
 SELECT
-    row_number() OVER (ORDER BY provider_state, provider_city, provider_zip, provider_id) AS provider_id
+    provider_id
     , provider_name
-    , {{ dbt.cast("null", api.Column.translate_type("varchar(20)")) }} AS npi
-    , {{ dbt.cast("null", api.Column.translate_type("varchar(20)")) }} AS dea
-    , 38004446 AS specialty_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS care_site_id
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS year_of_birth
-    , CASE upper(provider_gender)
-        WHEN 'M' THEN 8507
-        WHEN 'F' THEN 8532
-    END AS gender_concept_id
-    , provider_id AS provider_source_value
-    , provider_specialty AS specialty_source_value
-    , 38004446 AS specialty_source_concept_id
-    , provider_gender AS gender_source_value
-    , CASE upper(provider_gender)
-        WHEN 'M' THEN 8507
-        WHEN 'F' THEN 8532
-    END AS gender_source_concept_id
-FROM {{ ref( 'stg_synthea__providers') }}
+    , npi
+    , dea
+    , specialty_concept_id
+    , care_site_id
+    , year_of_birth
+    , gender_concept_id
+    , provider_source_value
+    , specialty_source_value
+    , specialty_source_concept_id
+    , gender_source_value
+    , gender_source_concept_id
+FROM {{ ref( 'int__provider') }}

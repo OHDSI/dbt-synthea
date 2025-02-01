@@ -2,9 +2,9 @@ SELECT
     p.person_id
     , i.patient_id
     , i.encounter_id
-    , epr.provider_id
-    , epr.visit_occurrence_id
-    , epr.visit_occurrence_id + 1000000 AS visit_detail_id
+    , vd.provider_id
+    , vd.visit_occurrence_id
+    , vd.visit_detail_id
     , srctostdvm.target_concept_id AS drug_concept_id
     , {{ dbt.cast("i.immunization_date", api.Column.translate_type("date")) }} AS drug_exposure_start_date
     , i.immunization_date AS drug_exposure_start_datetime
@@ -23,6 +23,8 @@ SELECT
     , srctosrcvm.source_concept_id AS drug_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS route_source_value
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS dose_unit_source_value
+    , i.immunization_base_cost AS drug_base_cost
+    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS drug_paid_by_payer
 FROM {{ ref ('stg_synthea__immunizations') }} AS i
 INNER JOIN {{ ref ('int__source_to_standard_vocab_map') }} AS srctostdvm
     ON
@@ -37,5 +39,5 @@ INNER JOIN {{ ref ('int__source_to_source_vocab_map') }} AS srctosrcvm
         AND srctosrcvm.source_vocabulary_id = 'CVX'
 INNER JOIN {{ ref ('int__person') }} AS p
     ON i.patient_id = p.person_source_value
-LEFT JOIN {{ ref ('int__encounter_provider') }} AS epr
-    ON i.encounter_id = epr.encounter_id
+LEFT JOIN {{ ref ('int__visit_detail') }} AS vd
+    ON i.encounter_id = vd.encounter_id

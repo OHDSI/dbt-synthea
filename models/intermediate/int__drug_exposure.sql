@@ -1,5 +1,13 @@
+WITH all_drugs AS (
+    SELECT * FROM {{ ref('int__drug_medications') }}
+    UNION ALL
+    SELECT * FROM {{ ref('int__drug_immunisations') }}
+)
+
 SELECT
-    drug_exposure_id
+    row_number() OVER (ORDER BY person_id, drug_concept_id, drug_exposure_start_datetime) AS drug_exposure_id
+    , drug_base_cost
+    , drug_paid_by_payer
     , person_id
     , drug_concept_id
     , drug_exposure_start_date
@@ -22,4 +30,5 @@ SELECT
     , drug_source_concept_id
     , route_source_value
     , dose_unit_source_value
-FROM {{ ref('int__drug_exposure') }}
+FROM
+    all_drugs

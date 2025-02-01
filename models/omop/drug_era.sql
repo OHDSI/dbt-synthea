@@ -10,10 +10,10 @@ WITH ctePreDrugTarget AS (
         , d.drug_exposure_start_date
         , d.days_supply
         , COALESCE(
-            NULLIF(drug_exposure_end_date, NULL)
+            NULLIF(d.drug_exposure_end_date, NULL)
             , NULLIF(
                 {{ dbt.dateadd("day", "days_supply", "drug_exposure_start_date") }}
-                , drug_exposure_start_date
+                , d.drug_exposure_start_date
             )
             , {{ dbt.dateadd("day", 1, "drug_exposure_start_date") }}
         ) AS drug_exposure_end_date
@@ -72,7 +72,7 @@ WITH ctePreDrugTarget AS (
                 FROM ctePreDrugTarget
             ) AS RAWDATA
         ) AS e
-    WHERE (2 * e.start_ordinal) - e.overall_ord = 0
+    WHERE (2 * start_ordinal) - overall_ord = 0
 )
 
 , cteDrugExposureEnds AS (
@@ -169,7 +169,7 @@ WITH ctePreDrugTarget AS (
                 FROM cteFinalTarget
             ) AS RAWDATA
         ) AS e
-    WHERE (2 * e.start_ordinal) - e.overall_ord = 0
+    WHERE (2 * start_ordinal) - overall_ord = 0
 )
 
 , cteDrugEraEnds AS (
@@ -178,8 +178,8 @@ WITH ctePreDrugTarget AS (
         , ft.ingredient_concept_id AS drug_concept_id
         , ft.drug_sub_exposure_start_date
         , MIN(e.end_date) AS drug_era_end_date
-        , drug_exposure_count
-        , days_exposed
+        , ft.drug_exposure_count
+        , ft.days_exposed
     FROM cteFinalTarget AS ft
     INNER JOIN cteEndDates AS e
         ON
@@ -190,8 +190,8 @@ WITH ctePreDrugTarget AS (
         ft.person_id
         , ft.ingredient_concept_id
         , ft.drug_sub_exposure_start_date
-        , drug_exposure_count
-        , days_exposed
+        , ft.drug_exposure_count
+        , ft.days_exposed
 )
 
 , cteDrugEra AS (
