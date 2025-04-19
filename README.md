@@ -84,9 +84,9 @@ file_dict=$(python3 scripts/python/get_csv_filepaths.py path/to/vocab/csvs)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: true}"
 ```
 
- 8. Seed the location mapper and currently unused empty OMOP tables:
+ 8. Seed the location mapper:
 ```bash
-dbt seed --select states omop
+dbt seed --select states
 ```
 
  9. Build the OMOP tables:
@@ -144,9 +144,9 @@ dbt run-operation create_synthea_tables
 
  9. **[BYO DATA ONLY]** Use the technology/package of your choice to load the OMOP vocabulary and raw Synthea files into these newly-created tables. **NOTE only Synthea v3.0.0 is supported at this time.**
 
- 10. Seed the location mapper and currently unused empty OMOP tables:
+ 10. Seed the location mapper:
 ```bash
-dbt seed --select states omop
+dbt seed --select states
 ```
 
  11. Build the OMOP tables:
