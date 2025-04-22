@@ -16,8 +16,9 @@ WITH cte_encounters_lower AS (
         id AS encounter_id
         , "start" AS encounter_start_datetime
         , {{ dbt.cast("\"start\"", api.Column.translate_type("date")) }} AS encounter_start_date
-        , "stop" AS encounter_stop_datetime
-        , {{ dbt.cast("\"stop\"", api.Column.translate_type("date")) }} AS encounter_stop_date
+        -- default to start date if stop date is null
+        , COALESCE("stop", encounter_start_datetime) AS encounter_stop_datetime
+        , COALESCE({{ dbt.cast("\"stop\"", api.Column.translate_type("date")) }}, encounter_start_date) AS encounter_stop_date
         , patient AS patient_id
         , organization AS organization_id
         , provider AS provider_id

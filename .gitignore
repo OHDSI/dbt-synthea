@@ -11,3 +11,4 @@ data/
 *.duckdb
 .dbt/
 profiles.yml
+.vscode/mcp.json

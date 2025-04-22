@@ -1,7 +1,7 @@
 SELECT
-    row_number() OVER (ORDER BY p.person_id) AS visit_detail_id
+    row_number() OVER (ORDER BY e.encounter_id) AS visit_detail_id
     , e.encounter_id
-    , p.person_id
+    , e.person_id
     , CASE
         WHEN lower(e.encounter_class) IN ('ambulatory', 'wellness', 'outpatient') THEN 9202
         WHEN lower(e.encounter_class) IN ('emergency', 'urgentcare') THEN 9203
@@ -13,7 +13,7 @@ SELECT
     , e.encounter_stop_date AS visit_detail_end_date
     , e.encounter_stop_datetime AS visit_detail_stop_datetime
     , 32827 AS visit_detail_type_concept_id
-    , pr.provider_id
+    , e.provider_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , 0 AS admitted_from_concept_id
     , 0 AS discharged_to_concept_id
@@ -29,9 +29,5 @@ SELECT
 FROM {{ ref( 'int__visits_encounters') }} AS ve
 INNER JOIN {{ ref ('int__visits') }} AS v
     ON ve.visit_id = v.visit_id
-INNER JOIN {{ ref ('stg_synthea__encounters') }} AS e
+INNER JOIN {{ ref ('int__encounters') }} AS e
     ON ve.encounter_id = e.encounter_id
-INNER JOIN {{ ref ('int__person') }} AS p
-    ON e.patient_id = p.person_source_value
-LEFT JOIN {{ ref ('int__provider') }} AS pr
-    ON e.provider_id = pr.provider_source_value
