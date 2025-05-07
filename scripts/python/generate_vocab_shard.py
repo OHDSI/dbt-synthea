@@ -1,3 +1,9 @@
+#!/usr/bin/env  -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [ duckdb ]
+# ///
+
 # used to generate seed vocabulary subset
 # this script filters the OMOP vocabulary tables to only include concepts found in a CDM
 # taken from https://github.com/OHDSI/Tutorial-Hades/blob/main/extras/FilterVocabulary.R

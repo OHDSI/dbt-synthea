@@ -1,3 +1,9 @@
+#!/usr/bin/env  -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [ duckdb ]
+# ///
+
 # used to generate seed vocabulary subset
 # this script saves vocabulary subset tables from a duckdb as csvs
 
@@ -32,4 +38,3 @@ for table_name, csv_path in tables_names_and_paths:
         f"COPY {source_schema}.{table_name} TO '{csv_path}' (HEADER, DELIMITER ',');"
     )
     print(f"Table '{table_name}' exported to {csv_path}")
-

@@ -38,6 +38,8 @@ default_source_url = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/re
 
 @dataclass
 class OmopDocumentationContainer:
+    """Object to store how the CDM docs express each column"""
+
     cdm_field: str
     user_guide: str
     etl_conventions: str
@@ -104,12 +106,15 @@ def parse_cli_arguments() -> tuple[Path, Path]:
     # Store paths in CLIArgs data class.
     args: CliArgs = parser.parse_args(namespace=CliArgs())
 
-    if not args.output_dir.exists():
-        parser.exit(1, f"Directory {args.output_dir} does not exist")
+    if args.output_dir.resolve().exists():
+        if not args.output_dir.is_dir():
+            parser.exit(1, f"{args.output_dir} is not a directory.")
+    else:
+        args.output_dir.mkdir(parents=True, exist_ok=True)
 
     if is_url(args.source):
         try:
-            source_path = download_url_to_temp_file(args.source, args.output_dir)
+            source_path: Path = download_url_to_temp_file(args.source, args.output_dir)
         except Exception as e:
             parser.exit(1, f"Failed to download from {args.source}: {e}")
     else:
@@ -121,9 +126,7 @@ def parse_cli_arguments() -> tuple[Path, Path]:
 
 
 def table_handler(table: Tag) -> list[OmopDocumentationContainer]:
-    """
-    Takes a table and returns a list of objects that represent the tables in the table.
-    """
+    """Take a table and returns a list of objects that represent the tables in the table."""
     rows: list[Tag] = [_ensure_tag(div) for div in table.find_all("tr")]
 
     return [row_handler(row) for row in rows]
@@ -131,6 +134,8 @@ def table_handler(table: Tag) -> list[OmopDocumentationContainer]:
 
 def row_handler(row: Tag) -> OmopDocumentationContainer:
     """
+    Parses a row from a CDM documentation table into an OmopDocumentationContainer instance.
+
     Take each row from a table and handle it, resulting in a object that can neatly
     store how the CDM docs express each column.
     """
@@ -168,6 +173,7 @@ def row_handler(row: Tag) -> OmopDocumentationContainer:
 
 
 def sentinel_to_bool(text: str) -> bool:
+    """Convert sentinel strings to boolean"""
     if text == "Yes":
         return True
     else:
@@ -182,6 +188,7 @@ def create_table_dict(
     str,
     list[dict[str, str | list[dict[str, str | list[str | dict[str, dict[str, str]]]]]]],
 ]:
+    """Create a table dictionary to mimic the dbt yaml format"""
     table_dict: dict[
         str,
         list[
@@ -205,6 +212,7 @@ def create_table_dict(
 
 
 def extract_table_description(table_handle: Tag) -> str:
+    """Get the table description"""
     sibling_element: _AtMostOneElement = _ensure_tag(
         table_handle.find("p", string="Table Description")
     ).next_sibling
@@ -220,6 +228,8 @@ def omop_docs_to_dbt_config(
     doc_container: OmopDocumentationContainer,
 ) -> dict[str, str | list[str | dict[str, dict[str, str]]]]:
     """
+    Parse an OmopDocumentationContainer object ito dbt-config yaml format.
+
     With an OMOP documentation object, we can use some simple string parsing/heuristic
     to create dbt test configs.
     """
@@ -269,7 +279,8 @@ def omop_docs_to_dbt_config(
 
 def _ensure_tag(element: _AtMostOneElement) -> Tag:
     """
-    Ensures that the given element is a BeautifulSoup Tag.
+    Ensure that the given element is a BeautifulSoup Tag.
+
     If the element is not a Tag, raises a ValueError.
     """
     if isinstance(element, Tag):
@@ -281,7 +292,8 @@ def _ensure_tag(element: _AtMostOneElement) -> Tag:
 
 def _ensure_navigable_string(element: _AtMostOneElement) -> NavigableString:
     """
-    Ensures that the given element is a BeautifulSoup NavigableString.
+    Ensure that the given element is a BeautifulSoup NavigableString.
+
     If the element is not a NavigableString, raises a ValueError.
     """
     if isinstance(element, NavigableString):
@@ -292,9 +304,7 @@ def _ensure_navigable_string(element: _AtMostOneElement) -> NavigableString:
 
 
 def extract_omop_table_names(soup_obj: BeautifulSoup) -> list[str]:
-    """
-    Dynamically extract table names from the OMOP CDM documentation
-    """
+    """Dynamically extract table names from the OMOP CDM documentation"""
     headers: list[Tag] = [
         _ensure_tag(div)
         for div in soup_obj.find_all(
@@ -319,9 +329,7 @@ def main(
     source_path: Path,
     output_dir: Path,
 ) -> None:
-    """
-    Main loop to generate dbt YAML files from the OMOP CDM documentation
-    """
+    """Main loop to generate dbt YAML files from the OMOP CDM documentation"""
     with open(source_path) as file_handle:
         file: str = file_handle.read()
 
