@@ -55,8 +55,9 @@ class OmopDocumentationContainer:
 class CliArgs:
     """A dataclass to ensure correct typing of command line arguments"""
 
-    source: str = default_source_url
     output_dir: Path = Path()
+    source: str = default_source_url
+    overwrite: bool = False
 
 
 def is_url(value: str) -> bool:
@@ -91,27 +92,45 @@ def parse_cli_arguments() -> tuple[Path, Path]:
         """
     )
 
-    # Common data model url.
-    _ = parser.add_argument(
-        "--source",
-        type=str,
-        help='Path or url to source html. If none provided defaults to:\n"{default_source}"',
-    )
-
     # Output Directory.
     _ = parser.add_argument(
         "output_dir", type=Path, help="Path to the output directory"
     )
 
+    # Common data model url.
+    _ = parser.add_argument(
+        "--source",
+        "-s",
+        type=str,
+        help=f'Path or url to source html. If none provided defaults to:\n"{default_source_url}"',
+    )
+
+    _ = parser.add_argument(
+        "--overwrite",
+        "-o",
+        action="store_true",
+        help="""Pass --overwrite or -o to overwrite yaml files in the target directory.
+        If not passed then the script will abort if the output directory contains ANY yaml files.""",
+    )
+
     # Store paths in CLIArgs data class.
     args: CliArgs = parser.parse_args(namespace=CliArgs())
+    output_dir: Path = args.output_dir.resolve()
 
-    if args.output_dir.resolve().exists():
-        if not args.output_dir.is_dir():
-            parser.exit(1, f"{args.output_dir} is not a directory.")
+    # Check/create output dir. Also includes overwrite check.
+    if output_dir.exists():
+        if not output_dir.is_dir():
+            parser.exit(1, f"{args.output_dir} exists but is not a directory.")
+        if not args.overwrite and any(output_dir.glob("*.yaml")):
+            parser.exit(
+                1,
+                f"""Exiting because {args.output_dir} contains .yaml files.
+    To overwrite them, pass the --overwrite or -o flag at runtime.""",
+            )
     else:
-        args.output_dir.mkdir(parents=True, exist_ok=True)
+        output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Check on url.
     if is_url(args.source):
         try:
             source_path: Path = download_url_to_temp_file(args.source, args.output_dir)
@@ -122,7 +141,7 @@ def parse_cli_arguments() -> tuple[Path, Path]:
         if not source_path.exists():
             parser.exit(1, f"Source file does not exist: {source_path}")
 
-    return source_path, args.output_dir
+    return source_path, output_dir
 
 
 def table_handler(table: Tag) -> list[OmopDocumentationContainer]:
