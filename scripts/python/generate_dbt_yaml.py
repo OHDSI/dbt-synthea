@@ -121,7 +121,9 @@ def parse_cli_arguments() -> tuple[Path, Path]:
     if output_dir.exists():
         if not output_dir.is_dir():
             parser.exit(1, f"{args.output_dir} exists but is not a directory.")
-        if not args.overwrite and any(output_dir.glob("*.yaml")):
+        if not args.overwrite and (
+            any(output_dir.glob("*.yaml")) or any(output_dir.glob("*.yml"))
+        ):
             parser.exit(
                 1,
                 f"""Exiting because {args.output_dir} contains .yaml files.
