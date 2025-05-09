@@ -1,4 +1,4 @@
-#!/usr/bin/env  -S uv run --script
+#!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [ duckdb ]
@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import cast
 
 import duckdb
-from duckdb import DuckDBPyConnection
+from duckdb import DuckDBPyConnection, DuckDBPyRelation
 from dataclasses import dataclass
 import argparse
 
@@ -64,7 +64,7 @@ non_vocab_tables: list[str] = [
 def parse_cli_arguments() -> CliArgs:
     """Parse command line arguments."""
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
-        description="""Create a vocab tables for synthea/OMOP database filtered to only the needed codes."""
+        description="""Create a vocab tables for OMOP database filtered to only the needed codes."""
     )
 
     _ = parser.add_argument(
@@ -78,7 +78,7 @@ def parse_cli_arguments() -> CliArgs:
         help="Source schema. Example: dbt_synthea_dev_full",
     )
     _ = parser.add_argument(
-        "target_schema", "-t", type=str, help="Target schema. Example: vocab_shard"
+        "target_schema", type=str, help="Target schema. Example: vocab_shard"
     )
 
     # Store paths in CLIArgs data class.
@@ -107,7 +107,7 @@ def collate_concept_ids(conn: DuckDBPyConnection, args: CliArgs) -> None:
         non_vocab_fields: list[str] = [field for (field,) in field_tuples]
         for field in non_vocab_fields:
             print(f"Searching field {field}")
-            concept_ids = conn.sql(
+            concept_ids: DuckDBPyRelation = conn.sql(
                 f"SELECT DISTINCT {field} FROM {args.source_schema}.{table};"
             )
             concept_ids.insert_into("cids")
@@ -119,7 +119,7 @@ def expand_concept_ids_with_parents(conn: DuckDBPyConnection, args: CliArgs) -> 
     FROM {args.source_schema}.concept_ancestor 
     INNER JOIN cids
     ON descendant_concept_id = concept_id;"""
-    expanded_ids = conn.sql(sql_ancestor)
+    expanded_ids: DuckDBPyRelation = conn.sql(sql_ancestor)
     expanded_ids.insert_into("cids")
 
 
