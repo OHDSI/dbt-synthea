@@ -1,19 +1,25 @@
+#!/usr/bin/env  -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+
 # get a list of all csv files in a directory and return a json object with the file names as keys and the file paths as values
 
-import os
 import json
 import sys
+from pathlib import Path
 
-directory = sys.argv[1]
+# Create a resolved path from passed in directory argument.
+directory: Path = Path(sys.argv[1]).resolve()
 
-files = os.listdir(directory)
-csv_files = [file for file in files if file.endswith('.csv')]
-file_names = [os.path.splitext(file)[0] for file in csv_files]
+# Create a list of csv file paths.
+csv_file_paths: list[Path] = [
+    path for path in directory.iterdir() if path.suffix == ".csv"
+]
 
-file_dict = {}
-for file in csv_files:
-    file_path = os.path.join(directory, file)
-    file_name = os.path.splitext(file)[0]
-    file_dict[file_name] = file_path
+# Create a dictionary of filename: path_string and print in JSON format.
+csv_file_dict: dict[str, str] = {path.stem: str(path) for path in csv_file_paths}
 
-print(json.dumps(file_dict))
+# Print dictionary as JSON.
+print(json.dumps(csv_file_dict))
