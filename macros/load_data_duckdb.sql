@@ -1,31 +1,37 @@
 {% macro load_data_duckdb(file_dict, vocab_tables) %}
+{% if vocab_tables %}
+    {% set target_schema = target.schema %}
+  {% else %}
+{% set target_schema = target.schema ~ '_synthea' %}
+{% endif %}
 
-    {% if vocab_tables %}
-        {% set target_schema = target.schema %}
-    {% else %}
-        {% set target_schema = target.schema ~ '_synthea' %}
+{% set first_key, first_val = (file_dict | dictsort | first) %}
+{% set parquet = first_val.endswith(".parquet") %}
+{% set csv = first_val.endswith(".csv") %}
+
+{% do run_query("CREATE SCHEMA IF NOT EXISTS " ~ target_schema ~ ";") %}
+
+{% for n, p in file_dict.items() %}
+    {% set table = n.lower() %}
+    {% if parquet %}
+        {% do run_query("DROP VIEW IF EXISTS " ~ target_schema ~ "." ~ table ~ ";") %}
+        {% do run_query("CREATE VIEW IF NOT EXISTS " ~ target_schema ~ "." ~ table ~ " AS SELECT * FROM read_parquet('" ~ p ~ "');") %}
+    {% elif csv %}
+        {% do run_query("DROP TABLE IF EXISTS " ~ target_schema ~ "." ~ table ~ ";") %}
+        {% do run_query("CREATE TABLE IF NOT EXISTS " ~ target_schema ~ "." ~ table ~ " AS SELECT * FROM read_csv('" ~ p ~ "', quote = '');") %}
     {% endif %}
+{% endfor %}
 
-    {% do run_query("CREATE SCHEMA IF NOT EXISTS " ~ target_schema ~ ";") %}
-
-    {% for n, p in file_dict.items() %}
-        {% do run_query("DROP TABLE IF EXISTS " ~ target_schema ~ "." ~ n.lower() ~ ";") %}
-        {% do run_query("CREATE TABLE IF NOT EXISTS " ~ target_schema ~ "." ~ n.lower() ~ " AS SELECT * FROM read_csv('" ~ p ~ "', quote = '');") %}
-    {% endfor %}
-
+{% if csv %}
     {% if vocab_tables %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".concept ALTER valid_start_date TYPE DATE USING strptime(CAST(valid_start_date AS VARCHAR), '%Y%m%d');") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".concept ALTER valid_end_date TYPE DATE USING strptime(CAST(valid_end_date AS VARCHAR), '%Y%m%d');") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".concept_relationship ALTER valid_start_date TYPE DATE USING strptime(CAST(valid_start_date AS VARCHAR), '%Y%m%d');") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".concept_relationship ALTER valid_end_date TYPE DATE USING strptime(CAST(valid_end_date AS VARCHAR), '%Y%m%d');") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".drug_strength ALTER valid_start_date TYPE DATE USING strptime(CAST(valid_start_date AS VARCHAR), '%Y%m%d');") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".drug_strength ALTER valid_end_date TYPE DATE USING strptime(CAST(valid_end_date AS VARCHAR), '%Y%m%d');") %}
+        {% for table in ['concept', 'concept_relationship', 'drug_strength'] %}
+            {% do run_query("ALTER TABLE " ~ target_schema ~ "." ~ table ~ " ALTER valid_start_date TYPE DATE USING strptime(CAST(valid_start_date AS VARCHAR), '%Y%m%d');") %}
+            {% do run_query("ALTER TABLE " ~ target_schema ~ "." ~ table ~ " ALTER valid_end_date TYPE DATE USING strptime(CAST(valid_end_date AS VARCHAR), '%Y%m%d');") %}
+        {% endfor %}
     {% else %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".medications ALTER CODE TYPE VARCHAR;") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".allergies ALTER CODE TYPE VARCHAR;") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".conditions ALTER CODE TYPE VARCHAR;") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".devices ALTER CODE TYPE VARCHAR;") %}
-        {% do run_query("ALTER TABLE " ~ target_schema ~ ".procedures ALTER CODE TYPE VARCHAR;") %}
+        {% for table in ['medications', 'allergies', 'conditions', 'devices', 'procedures'] %}
+            {% do run_query("ALTER TABLE " ~ target_schema ~ "." ~ table ~ " ALTER CODE TYPE VARCHAR;") %}
+        {% endfor %}
     {% endif %}
-
+{% endif %}
 {% endmacro %}
