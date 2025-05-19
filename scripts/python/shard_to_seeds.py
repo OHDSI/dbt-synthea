@@ -20,20 +20,20 @@ class CliArgs:
 
     db_file: Path = Path()
     output_dir: Path = Path()
-    source_schema: str = "vocab_shard"
+    source_schema: str = str()
     overwrite: bool = False
 
-def parse_cli_arguments() -> tuple[Path, Path]:
+def parse_cli_arguments() -> tuple[Path, Path, str]:
     """
     Parse command line arguments.
 
     Returns:
-         CLIArgs DataClass containing cdm_html: str and output_dir: Path().
+         CLIArgs DataClass containing db_file: Path() output_dir: Path() and source_schema: str.
     """
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
         description="""
         Export vocabulary shard tables to csvs to use as dbt seeds.
-        For example: python shard_to_seeds.py synthea_omop_etl.duckdb ./data
+        For example: python shard_to_seeds.py synthea_omop_etl.duckdb ./data vocab_shard
         """
     )
 
@@ -49,7 +49,7 @@ def parse_cli_arguments() -> tuple[Path, Path]:
 
     # Source schema.
     _ = parser.add_argument(
-        "source_schema", type=str, help="Name of schema to export from."
+        "source_schema", type=str, help="Name of schema to export from"
     )
 
     _ = parser.add_argument(
@@ -81,7 +81,7 @@ def parse_cli_arguments() -> tuple[Path, Path]:
     else:
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Check on url.
+    # Check on db file.
     db_file = Path(args.db_file)
     if not db_file.exists():
         parser.exit(1, f"Source database does not exist: {db_file}")   
