@@ -112,7 +112,7 @@ def main(
 
     # Iterate over each table and export to CSV.
     for table_name, csv_path in tables_names_and_paths:
-        result = conn.execute(
+        _ = conn.execute(
             f"COPY {source_schema}.{table_name} TO '{csv_path}' (HEADER, DELIMITER ',');"
         )
         print(f"Table '{table_name}' exported to {csv_path}")
