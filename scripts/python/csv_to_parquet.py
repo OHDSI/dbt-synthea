@@ -38,8 +38,8 @@ class BaseInfo:
     """Base class for Info dataclasses."""
 
     output_dir_name: str
-    tables_cast_list: list[str]
-    columns_cast_list: list[str]
+    table_cast_list: list[str]
+    column_cast_list: list[str]
     new_type: str
     date_format: str
 
@@ -49,14 +49,14 @@ class VocabInfo(BaseInfo):
     """Dataclass to store info for Vocab -> parquet conversion."""
 
     output_dir_name: str = "vocab_parquet"
-    tables_cast_list: list[str] = field(
+    table_cast_list: list[str] = field(
         default_factory=lambda: [
             "concept",
             "concept_relationship",
             "drug_strength",
         ]
     )
-    columns_cast_list: list[str] = field(
+    column_cast_list: list[str] = field(
         default_factory=lambda: ["valid_start_date", "valid_end_date"]
     )
     new_type: str = "DATE"
@@ -68,7 +68,7 @@ class SyntheaInfo(BaseInfo):
     """Dataclass to store info for Synthea -> parquet conversion."""
 
     output_dir_name: str = "synthea_parquet"
-    tables_cast_list: list[str] = field(
+    table_cast_list: list[str] = field(
         default_factory=lambda: [
             "medications",
             "allergies",
@@ -77,7 +77,7 @@ class SyntheaInfo(BaseInfo):
             "procedures",
         ]
     )
-    columns_cast_list: list[str] = field(default_factory=lambda: ["CODE"])
+    column_cast_list: list[str] = field(default_factory=lambda: ["CODE"])
     new_type: str = "VARCHAR"
     date_format: str = "%Y-%m-%d"
 
@@ -90,7 +90,7 @@ def parse_cli_arguments() -> CliArgs:
          CLIArgs DataClass containing input_directory: Path() vocab: bool and output_dir: Path | None.
     """
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
-        description="""Convert csv files from Synthea or Athena to parquet files, ready to be used with dbt-synthea."""
+        description="""Convert Synthea or Athena-Vocab csv files to parquet files, ready to be used with dbt-synthea."""
     )
 
     _ = parser.add_argument(
@@ -152,7 +152,7 @@ def create_relation(
     file_path: Path,
     date_format: str,
 ) -> DuckDBPyRelation:
-    """Create a DuckDBPyRelation of the target csv file using using the date format %Y%m%d"""
+    """Create a DuckDBPyRelation of the target csv file using using the specified date format."""
     relation: DuckDBPyRelation = conn.read_csv(
         str(file_path), columns=table_dict, date_format=date_format
     )
@@ -188,17 +188,21 @@ def convert_to_parquet(
     output_directory.mkdir(exist_ok=True, parents=True)
 
     # Process tables that need to be altered.
-    for table in info.tables_cast_list:
+    for table in info.table_cast_list:
         # Initialize file path and output path.
-        file_path = file_dict.pop(table)
-        output_path = output_directory / file_path.with_suffix(".parquet").name.lower()
+        file_path: Path = file_dict.pop(table)
+        output_path: Path = (
+            output_directory / file_path.with_suffix(".parquet").name.lower()
+        )
 
         # Create the file column dictionary and alter the specified columns.
-        column_type_dict = get_column_type_dict(conn, file_path)
-        alter_type_dict(column_type_dict, info.columns_cast_list, info.new_type)
+        column_type_dict: dict[str, str] = get_column_type_dict(conn, file_path)
+        alter_type_dict(column_type_dict, info.column_cast_list, info.new_type)
 
         # Create relation and convert to parquet.
-        rel = create_relation(conn, column_type_dict, file_path, info.date_format)
+        rel: DuckDBPyRelation = create_relation(
+            conn, column_type_dict, file_path, info.date_format
+        )
         _ = rel.to_parquet(str(output_path))
 
     # Process the remaining files.
@@ -208,5 +212,5 @@ def convert_to_parquet(
 
 
 if __name__ == "__main__":
-    args = parse_cli_arguments()
+    args: CliArgs = parse_cli_arguments()
     convert_to_parquet(args.input_directory, args.vocab, args.output_dir)
