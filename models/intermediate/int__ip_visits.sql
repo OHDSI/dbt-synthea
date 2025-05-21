@@ -119,7 +119,7 @@ all_ip_encounters AS (
 )
 
 SELECT
-    v.visit_id
+    {{ dbt.cast("v.visit_id", api.Column.translate_type("varchar")) }} AS visit_id
     -- bring back the original encounter ID so we can keep track of all encounters that were rolled up into each IP visit
     , ve.encounter_id
     , v.person_id
