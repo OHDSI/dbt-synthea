@@ -14,7 +14,7 @@ WITH cte_observations_lower AS (
 
     SELECT
         "date" AS observation_datetime
-        , {{ dbt.cast("\"date\"", api.Column.translate_type("date")) }} AS observation_date
+        , {{ dbt.cast(adapter.quote("date"), api.Column.translate_type("date")) }} AS observation_date
         , patient AS patient_id
         , encounter AS encounter_id
         , category AS observation_category
