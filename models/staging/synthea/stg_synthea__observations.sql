@@ -13,16 +13,16 @@ WITH cte_observations_lower AS (
 , cte_observations_rename AS (
 
     SELECT
-        "date" AS observation_datetime
+        {{ adapter.quote("date") }} AS observation_datetime
         , {{ dbt.cast(adapter.quote("date"), api.Column.translate_type("date")) }} AS observation_date
         , patient AS patient_id
         , encounter AS encounter_id
         , category AS observation_category
         , code AS observation_code
         , description AS observation_description
-        , "value" AS observation_value
+        , {{ adapter.quote("value") }} AS observation_value
         , units AS observation_units
-        , "type" AS observation_value_type
+        , {{ adapter.quote("type") }} AS observation_value_type
     FROM cte_observations_lower
 
 )

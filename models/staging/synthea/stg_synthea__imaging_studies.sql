@@ -14,7 +14,7 @@ WITH cte_imaging_studies_lower AS (
 
     SELECT
         id AS imaging_id
-        , "date" AS imaging_datetime
+        , {{ adapter.quote("date") }} AS imaging_datetime
         , patient AS patient_id
         , encounter AS encounter_id
         , series_uid

@@ -14,7 +14,7 @@ WITH cte_encounters_lower AS (
 
     SELECT
         id AS encounter_id
-        , "start" AS encounter_start_datetime
+        , {{ adapter.quote("start") }} AS encounter_start_datetime
         , {{ dbt.cast(adapter.quote("start"), api.Column.translate_type("date")) }} AS encounter_start_date
         -- default to start date if stop date is null
         , COALESCE("stop", "start") AS encounter_stop_datetime

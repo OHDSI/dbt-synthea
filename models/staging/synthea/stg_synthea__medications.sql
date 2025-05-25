@@ -13,9 +13,9 @@ WITH cte_medications_lower AS (
 , cte_medications_rename AS (
 
     SELECT
-        "start" AS medication_start_datetime
+        {{ adapter.quote("start") }} AS medication_start_datetime
         , {{ dbt.cast(adapter.quote("start"), api.Column.translate_type("date")) }} AS medication_start_date
-        , "stop" AS medication_stop_datetime
+        , {{ adapter.quote("stop") }} AS medication_stop_datetime
         , {{ dbt.cast(adapter.quote("stop"), api.Column.translate_type("date")) }} AS medication_stop_date
         , patient AS patient_id
         , payer AS payer_id

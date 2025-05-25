@@ -20,8 +20,8 @@ WITH cte_patients_lower AS (
         , drivers AS drivers_license_number
         , passport AS passport_number
         , prefix AS patient_prefix
-        , "first" AS patient_first_name
-        , "last" AS patient_last_name
+        , {{ adapter.quote("first") }} AS patient_first_name
+        , {{ adapter.quote("last") }} AS patient_last_name
         , suffix AS patient_suffix
         , maiden AS maiden_name
         , marital AS marital_status

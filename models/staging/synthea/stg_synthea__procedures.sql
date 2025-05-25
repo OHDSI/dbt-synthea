@@ -13,9 +13,9 @@ WITH cte_procedures_lower AS (
 , cte_procedures_rename AS (
 
     SELECT
-        "start" AS procedure_start_datetime
+        {{ adapter.quote("start") }} AS procedure_start_datetime
         , {{ dbt.cast(adapter.quote("start"), api.Column.translate_type("date")) }} AS procedure_start_date
-        , "stop" AS procedure_stop_datetime
+        , {{ adapter.quote("stop") }} AS procedure_stop_datetime
         , {{ dbt.cast(adapter.quote("stop"), api.Column.translate_type("date")) }} AS procedure_stop_date
         , patient AS patient_id
         , encounter AS encounter_id
