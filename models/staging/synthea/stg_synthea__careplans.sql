@@ -14,8 +14,8 @@ WITH cte_careplans_lower AS (
 
     SELECT
         id AS careplan_id
-        , "start" AS careplan_start_date
-        , "stop" AS careplan_stop_date
+        , {{ adapter.quote("start") }} AS careplan_start_date
+        , {{ adapter.quote("stop") }} AS careplan_stop_date
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS careplan_code

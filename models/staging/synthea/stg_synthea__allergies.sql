@@ -13,14 +13,14 @@ WITH cte_allergies_lower AS (
 , cte_allergies_rename AS (
 
     SELECT
-        "start" AS allergy_start_date
-        , "stop" AS allergy_stop_date
+        {{ adapter.quote("start") }} AS allergy_start_date
+        , {{ adapter.quote("stop") }} AS allergy_stop_date
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS allergy_code
-        , "system" AS allergy_code_system
+        , {{ adapter.quote("system") }} AS allergy_code_system
         , description AS allergy_description
-        , "type" AS allergy_type
+        , {{ adapter.quote("type") }} AS allergy_type
         , category AS allergy_category
         , reaction1 AS reaction_1_code
         , description1 AS reaction_1_description

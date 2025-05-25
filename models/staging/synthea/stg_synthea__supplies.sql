@@ -13,7 +13,7 @@ WITH cte_supplies_lower AS (
 , cte_supplies_rename AS (
 
     SELECT
-        "date" AS supply_date
+        {{ adapter.quote("date") }} AS supply_date
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS supply_code

@@ -3,7 +3,7 @@ SELECT
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS note_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS section_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS snippet
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS "offset"
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS {{ adapter.quote("offset") }}
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS lexical_variant
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS note_nlp_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS note_nlp_source_concept_id

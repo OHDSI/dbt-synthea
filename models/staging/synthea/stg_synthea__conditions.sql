@@ -13,8 +13,8 @@ WITH cte_conditions_lower AS (
 , cte_conditions_rename AS (
 
     SELECT
-        "start" AS condition_start_date
-        , "stop" AS condition_stop_date
+        {{ adapter.quote("start") }} AS condition_start_date
+        , {{ adapter.quote("stop") }} AS condition_stop_date
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS condition_code
