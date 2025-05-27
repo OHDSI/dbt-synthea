@@ -13,7 +13,7 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: person_id
         description: The Person ID of the PERSON record for which the Observation Period isrecorded.
         data_type: integer
@@ -24,15 +24,15 @@ models:
               field: person_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: observation_period_start_date
         description: Use this date to determine the start date of the Observation Period.
         data_type: date
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('date') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: observation_period_end_date
         description: Use this date to determine the end date of the period for which we canassume that
           all events for a Person are recorded.
@@ -40,8 +40,8 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('date') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: period_type_concept_id
         description: This field can be used to determine the provenance of the ObservationPeriod as in
           whether the period was determined from an insuranceenrollment file, EHR healthcare encounters,
@@ -56,4 +56,4 @@ models:
               to_condition: domain_id = 'Type Concept'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]

@@ -21,7 +21,7 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: descendant_concept_id
         description: The Concept Id for the lower-level concept that forms the descendant inthe relationship.
         data_type: integer
@@ -32,7 +32,7 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: min_levels_of_separation
         description: The minimum separation in number of levels of hierarchy between ancestorand descendant
           concepts. This is an attribute that is used to simplifyhierarchic analysis.
@@ -41,7 +41,7 @@ models:
           - not_null
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: max_levels_of_separation
         description: The maximum separation in number of levels of hierarchy between ancestorand descendant
           concepts. This is an attribute that is used to simplifyhierarchic analysis.
@@ -50,4 +50,4 @@ models:
           - not_null
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]

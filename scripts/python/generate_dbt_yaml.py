@@ -297,25 +297,28 @@ def omop_docs_to_dbt_config(
     if doc_container.datatype.lower() == "integer":
         tests.append({
             "dbt_expectations.expect_column_values_to_be_in_type_list": {
-                "column_type_list": "{{ get_type_variants(['bigint', 'integer']) }}"
+                "column_type_list": [
+                    "{{ api.Column.translate_type('integer') }}",
+                    "{{ api.Column.translate_type('bigint') }}"
+                ]
             }
         })
     elif doc_container.datatype.lower() in {"date", "float"}:
         tests.append({
-            "dbt_expectations.expect_column_values_to_be_in_type_list": {
-                "column_type_list": f"{{{{ get_equivalent_types('{doc_container.datatype.lower()}') }}}}"
+            "dbt_expectations.expect_column_values_to_be_of_type": {
+                "column_type": f"{{{{ api.Column.translate_type('{doc_container.datatype.lower()}') }}}}"
             }
         })
     elif doc_container.datatype.lower() == "datetime":
         tests.append({
-            "dbt_expectations.expect_column_values_to_be_in_type_list": {
-                "column_type_list": "{{ get_equivalent_types('timestamp') }}"
+            "dbt_expectations.expect_column_values_to_be_of_type": {
+                "column_type": "{{ api.Column.translate_type('timestamp') }}"
             }
         })
     elif doc_container.datatype.lower().startswith("varchar"):
         tests.append({
-            "dbt_expectations.expect_column_values_to_be_in_type_list": {
-                "column_type_list": "{{ get_equivalent_types('varchar') }}"
+            "dbt_expectations.expect_column_values_to_be_of_type": {
+                "column_type": "{{ api.Column.translate_type('varchar') }}"
             }
         })
 

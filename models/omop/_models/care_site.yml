@@ -12,14 +12,14 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: care_site_name
         description: The name of the care_site as it appears in the source data
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: place_of_service_concept_id
         description: This is a high-level way of characterizing a Care Site. Typically,however, Care Sites
           can provide care in multiple settings (inpatient,outpatient, etc.) and this granularity should
@@ -31,7 +31,7 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: location_id
         description: The location_id from the LOCATION table representing the physicallocation of the
           care_site.
@@ -42,19 +42,19 @@ models:
               field: location_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: care_site_source_value
         description: The identifier of the care_site as it appears in the source data. Thiscould be an
           identifier separate from the name of the care_site.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: place_of_service_source_value
         description: ''
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"

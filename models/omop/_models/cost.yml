@@ -12,7 +12,7 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: cost_event_id
         description: ''
         data_type: integer
@@ -20,7 +20,7 @@ models:
           - not_null
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: cost_domain_id
         description: ''
         data_type: varchar(20)
@@ -30,8 +30,8 @@ models:
               to: ref('domain')
               field: domain_id
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: cost_type_concept_id
         description: ''
         data_type: integer
@@ -42,7 +42,7 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: currency_concept_id
         description: ''
         data_type: integer
@@ -52,98 +52,98 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: total_charge
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: total_cost
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: total_paid
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: paid_by_payer
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: paid_by_patient
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: paid_patient_copay
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: paid_patient_coinsurance
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: paid_patient_deductible
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: paid_by_primary
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: paid_ingredient_cost
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: paid_dispensing_fee
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: payer_plan_period_id
         description: ''
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: amount_allowed
         description: ''
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('float') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: revenue_code_concept_id
         description: ''
         data_type: integer
@@ -153,15 +153,15 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: revenue_code_source_value
         description: Revenue codes are a method to charge for a class of procedures andconditions in the
           U.S. hospital system.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: drg_concept_id
         description: ''
         data_type: integer
@@ -171,12 +171,12 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: drg_source_value
         description: Diagnosis Related Groups are US codes used to classify hospital casesinto one of
           approximately 500 groups.
         data_type: varchar(3)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
