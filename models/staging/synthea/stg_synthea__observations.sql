@@ -13,7 +13,7 @@ WITH cte_observations_lower AS (
 , cte_observations_rename AS (
 
     SELECT
-        "date" AS observation_datetime
+        {{ timestamptz_to_naive("\"date\"") }} AS observation_datetime
         , {{ dbt.cast("\"date\"", api.Column.translate_type("date")) }} AS observation_date
         , patient AS patient_id
         , encounter AS encounter_id
@@ -27,5 +27,22 @@ WITH cte_observations_lower AS (
 
 )
 
+, cte_observation_date_columns AS (
+
+    SELECT
+        observation_datetime
+        , {{ dbt.cast("observation_datetime", api.Column.translate_type("date")) }} AS observation_date
+        , patient_id
+        , encounter_id
+        , observation_category
+        , observation_code
+        , observation_description
+        , observation_value
+        , observation_units
+        , observation_value_type
+    FROM cte_observations_rename
+
+)
+
 SELECT *
-FROM cte_observations_rename
+FROM cte_observation_date_columns

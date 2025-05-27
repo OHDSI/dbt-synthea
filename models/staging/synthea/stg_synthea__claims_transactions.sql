@@ -20,8 +20,8 @@ WITH cte_claims_transactions_lower AS (
         , "type" AS transaction_type
         , {{ dbt.cast("amount", api.Column.translate_type("decimal")) }} AS transaction_amount
         , method AS transaction_method
-        , fromdate AS transaction_from_date
-        , todate AS transaction_to_date
+        , {{ timestamptz_to_naive("fromdate") }} AS transaction_from_date
+        , {{ timestamptz_to_naive("todate") }} AS transaction_to_date
         , placeofservice AS place_of_service
         , procedurecode AS procedure_code
         , modifier1 AS procedure_code_modifier_1

@@ -13,9 +13,9 @@ WITH cte_procedures_lower AS (
 , cte_procedures_rename AS (
 
     SELECT
-        "start" AS procedure_start_datetime
+        {{ timestamptz_to_naive("\"start\"") }} AS procedure_start_datetime
         , {{ dbt.cast("\"start\"", api.Column.translate_type("date")) }} AS procedure_start_date
-        , "stop" AS procedure_stop_datetime
+        , {{ timestamptz_to_naive("\"stop\"") }} AS procedure_stop_datetime
         , {{ dbt.cast("\"stop\"", api.Column.translate_type("date")) }} AS procedure_stop_date
         , patient AS patient_id
         , encounter AS encounter_id
@@ -28,5 +28,23 @@ WITH cte_procedures_lower AS (
 
 )
 
+, cte_procedures_date_columns AS (
+
+    SELECT
+        procedure_start_datetime
+        , {{ dbt.cast("procedure_start_datetime", api.Column.translate_type("date")) }} AS procedure_start_date
+        , procedure_stop_datetime
+        , {{ dbt.cast("procedure_stop_datetime", api.Column.translate_type("date")) }} AS procedure_stop_date
+        , patient_id
+        , encounter_id
+        , procedure_code
+        , procedure_description
+        , procedure_base_cost
+        , procedure_reason_code
+        , procedure_reason_description
+    FROM cte_procedures_rename
+
+)
+
 SELECT *
-FROM cte_procedures_rename
+FROM cte_procedures_date_columns
