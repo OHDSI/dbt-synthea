@@ -9,27 +9,58 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: address_1
         description: This is the first line of the address.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: address_2
         description: This is the second line of the address
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: city
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: state
         description: ''
         data_type: varchar(2)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: zip
         description: ''
         data_type: varchar(9)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: county
         description: ''
         data_type: varchar(20)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: location_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: country_concept_id
         description: The Concept Id representing the country. Values should conform to the Geographydomain.
         data_type: integer
@@ -37,12 +68,27 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: country_source_value
         description: The name of the country.
         data_type: varchar(80)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: latitude
         description: ''
         data_type: float
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: longitude
         description: ''
         data_type: float
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"

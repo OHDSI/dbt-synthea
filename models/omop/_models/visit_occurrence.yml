@@ -14,6 +14,9 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: person_id
         description: ''
         data_type: integer
@@ -22,6 +25,9 @@ models:
           - relationships:
               to: ref('person')
               field: person_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: visit_concept_id
         description: This field contains a concept id representing the kind of visit, likeinpatient or
           outpatient. All concepts in this field should be standardand belong to the Visit domain.
@@ -33,15 +39,25 @@ models:
               field: concept_id
               from_condition: visit_concept_id <> 0
               to_condition: domain_id = 'Visit'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: visit_start_date
         description: For inpatient visits, the start date is typically the admission date.For outpatient
           visits the start date and end date will be the same.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: visit_start_datetime
         description: ''
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('timestamp') }}"
       - name: visit_end_date
         description: For inpatient visits the end date is typically the discharge date. If aPerson is
           still an inpatient in the hospital at the time of the dataextract and does not have a visit_end_date,
@@ -49,11 +65,18 @@ models:
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: visit_end_datetime
         description: If a Person is still an inpatient in the hospital at the time of thedata extract
           and does not have a visit_end_datetime, then set thevisit_end_datetime to the datetime of the
           data pull.
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('timestamp') }}"
       - name: visit_type_concept_id
         description: Use this field to understand the provenance of the visit record, orwhere the record
           comes from.
@@ -65,6 +88,9 @@ models:
               field: concept_id
               from_condition: visit_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: provider_id
         description: There will only be one provider per visit record and the ETL documentshould clearly
           state how they were chosen (attending, admitting, etc.).If there are multiple providers associated
@@ -75,6 +101,9 @@ models:
           - relationships:
               to: ref('provider')
               field: provider_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: care_site_id
         description: This field provides information about the Care Site where the Visit tookplace.
         data_type: integer
@@ -82,10 +111,17 @@ models:
           - relationships:
               to: ref('care_site')
               field: care_site_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: visit_source_value
         description: This field houses the verbatim value from the source data representingthe kind of
           visit that took place (inpatient, outpatient, emergency,etc.)
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: visit_source_concept_id
         description: ''
         data_type: integer
@@ -93,6 +129,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: admitted_from_concept_id
         description: Use this field to determine where the patient was admitted from. Thisconcept is part
           of the visit domain and can indicate if a patient wasadmitted to the hospital from a long-term
@@ -104,9 +143,16 @@ models:
               field: concept_id
               from_condition: admitted_from_concept_id <> 0
               to_condition: domain_id = 'Visit'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: admitted_from_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: discharged_to_concept_id
         description: Use this field to determine where the patient was discharged to after avisit. This
           concept is part of the visit domain and can indicate if apatient was transferred to another
@@ -120,9 +166,16 @@ models:
               field: concept_id
               from_condition: discharged_to_concept_id <> 0
               to_condition: domain_id = 'Visit'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: discharged_to_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: preceding_visit_occurrence_id
         description: Use this field to find the visit that occurred for the person prior tothe given visit.
           There could be a few days or a few years in between.
@@ -131,3 +184,6 @@ models:
           - relationships:
               to: ref('visit_occurrence')
               field: visit_occurrence_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]

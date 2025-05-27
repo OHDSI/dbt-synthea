@@ -10,7 +10,7 @@ SELECT
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS nlp_system
     , {{ dbt.cast("null", api.Column.translate_type("date")) }} AS nlp_date
     , {{ dbt.cast("null", api.Column.translate_type("timestamp")) }} AS nlp_datetime
-    , {{ dbt.cast("null", api.Column.translate_type("boolean")) }} AS term_exists
+    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS term_exists
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS term_temporal
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS term_modifiers
 WHERE 1 = 0

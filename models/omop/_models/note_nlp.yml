@@ -9,11 +9,17 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: note_id
         description: This is the NOTE_ID for the NOTE record the NLP record is associated to.
         data_type: integer
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: section_concept_id
         description: ''
         data_type: integer
@@ -21,17 +27,33 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: snippet
         description: A small window of text surrounding the term
         data_type: varchar(250)
-      - name: “offset”
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
+      - name: offset
         description: Character offset of the extracted term in the input note
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: lexical_variant
         description: Raw text extracted from the NLP tool.
         data_type: varchar(250)
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "varchar"
       - name: note_nlp_concept_id
         description: ''
         data_type: integer
@@ -39,6 +61,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: note_nlp_source_concept_id
         description: ''
         data_type: integer
@@ -46,23 +71,49 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: nlp_system
         description: ''
         data_type: varchar(250)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: nlp_date
         description: The date of the note processing.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: nlp_datetime
         description: The date and time of the note processing.
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('timestamp') }}"
       - name: term_exists
         description: ''
         data_type: varchar(1)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: term_temporal
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: term_modifiers
         description: ''
         data_type: varchar(2000)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"

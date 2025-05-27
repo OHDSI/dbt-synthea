@@ -12,17 +12,11 @@ SELECT
     , i.immunization_date AS drug_exposure_end_datetime
     , {{ dbt.cast("i.immunization_date", api.Column.translate_type("date")) }} AS verbatim_end_date
     , 32827 AS drug_type_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS stop_reason
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS refills
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS quantity
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS days_supply
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS sig
     , 0 AS route_concept_id
     , '0' AS lot_number
     , i.immunization_code AS drug_source_value
     , srctosrcvm.source_concept_id AS drug_source_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS route_source_value
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS dose_unit_source_value
     , i.immunization_base_cost AS drug_base_cost
     , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS drug_paid_by_payer
 FROM {{ ref ('stg_synthea__immunizations') }} AS i

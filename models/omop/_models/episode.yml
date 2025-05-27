@@ -13,6 +13,9 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: person_id
         description: The PERSON_ID of the PERSON for whom the episode is recorded.
         data_type: integer
@@ -21,6 +24,9 @@ models:
           - relationships:
               to: ref('person')
               field: person_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: episode_concept_id
         description: The EPISODE_CONCEPT_ID represents the kind abstraction related to thedisease phase,
           outcome or treatment.
@@ -32,28 +38,54 @@ models:
               field: concept_id
               from_condition: episode_concept_id <> 0
               to_condition: domain_id = 'Episode'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: episode_start_date
         description: The date when the Episode beings.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: episode_start_datetime
         description: The date and time when the Episode begins.
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('timestamp') }}"
       - name: episode_end_date
         description: The date when the instance of the Episode is considered to have ended.
         data_type: date
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: episode_end_datetime
         description: The date when the instance of the Episode is considered to have ended.
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('timestamp') }}"
       - name: episode_parent_id
         description: Use this field to find the Episode that subsumes the given Episoderecord. This is
           used in the case that an Episode are nested into eachother.
         data_type: integer
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: episode_number
         description: For sequences of episodes, this is used to indicate the order theepisodes occurred.
           For example, lines of treatment could be indicatedhere.
         data_type: integer
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: episode_object_concept_id
         description: A Standard Concept representing the disease phase, outcome, or otherabstraction of
           which the episode consists. For example, if theEPISODE_CONCEPT_ID is treatmentregimen then the
@@ -66,6 +98,9 @@ models:
               field: concept_id
               from_condition: episode_object_concept_id <> 0
               to_condition: domain_id = 'Procedure, Regimen'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: episode_type_concept_id
         description: This field can be used to determine the provenance of the Episoderecord, as in whether
           the episode was from an EHR system, insuranceclaim, registry, or other sources.
@@ -77,11 +112,18 @@ models:
               field: concept_id
               from_condition: episode_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: episode_source_value
         description: The source code for the Episode as it appears in the source data. Thiscode is mapped
           to a Standard Condition Concept in the StandardizedVocabularies and the original code is stored
           here for reference.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: episode_source_concept_id
         description: A foreign key to a Episode Concept that refers to the code used in thesource.
         data_type: integer
@@ -89,3 +131,6 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]

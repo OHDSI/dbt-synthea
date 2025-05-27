@@ -176,7 +176,7 @@ def row_handler(row: Tag) -> OmopDocumentationContainer:
 
     # Remove dangling whitespace and newlines from parsed HTML
     cells_stripped: dict[str, str] = {
-        k: v.replace("\n", "").strip() for k, v in cells_raw.items()
+        k: v.replace("\n", "").strip().replace("“", "").replace("”", "") for k, v in cells_raw.items()
     }
 
     # Convert sentinels to booleans. Assign values to omop_documentation_container DataClass.
@@ -249,7 +249,7 @@ def omop_docs_to_dbt_config(
     doc_container: OmopDocumentationContainer,
 ) -> dict[str, str | list[str | dict[str, dict[str, str]]]]:
     """
-    Parse an OmopDocumentationContainer object ito dbt-config yaml format.
+    Parse an OmopDocumentationContainer object into dbt-config yaml format.
 
     With an OMOP documentation object, we can use some simple string parsing/heuristic
     to create dbt test configs.
@@ -279,7 +279,6 @@ def omop_docs_to_dbt_config(
                 }
             }
             tests.append(test)
-
         else:
             # Add constrained domain tests
             specific_test: dict[str, dict[str, str]] = {
@@ -291,6 +290,36 @@ def omop_docs_to_dbt_config(
                 }
             }
             tests.append(specific_test)
+
+    # Add dbt_expectations tests
+    tests.append("dbt_expectations.expect_column_to_exist")
+    if doc_container.datatype.lower() == "integer":
+        tests.append({
+            "dbt_expectations.expect_column_values_to_be_in_type_list": {
+                "column_type_list": [
+                    "{{ api.Column.translate_type('integer') }}",
+                    "{{ api.Column.translate_type('bigint') }}"
+                ]
+            }
+        })
+    elif doc_container.datatype.lower() in {"date", "float"}:
+        tests.append({
+            "dbt_expectations.expect_column_values_to_be_of_type": {
+                "column_type": f"{{{{ api.Column.translate_type('{doc_container.datatype.lower()}') }}}}"
+            }
+        })
+    elif doc_container.datatype.lower() == "datetime":
+        tests.append({
+            "dbt_expectations.expect_column_values_to_be_of_type": {
+                "column_type": "{{ api.Column.translate_type('timestamp') }}"
+            }
+        })
+    elif doc_container.datatype.lower().startswith("varchar"):
+        tests.append({
+            "dbt_expectations.expect_column_values_to_be_of_type": {
+                "column_type": "{{ api.Column.translate_type('varchar') }}"
+            }
+        })
 
     if tests:
         column_config["tests"] = tests

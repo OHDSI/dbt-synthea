@@ -8,6 +8,9 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: person_id
         description: The person from whom the specimen is collected.
         data_type: integer
@@ -16,6 +19,9 @@ models:
           - relationships:
               to: ref('person')
               field: person_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: specimen_concept_id
         description: ''
         data_type: integer
@@ -24,6 +30,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: specimen_type_concept_id
         description: ''
         data_type: integer
@@ -34,17 +43,31 @@ models:
               field: concept_id
               from_condition: specimen_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: specimen_date
         description: The date the specimen was collected.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: specimen_datetime
         description: ''
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('timestamp') }}"
       - name: quantity
         description: The amount of specimen collected from the person.
         data_type: float
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('float') }}"
       - name: unit_concept_id
         description: The unit for the quantity of the specimen.
         data_type: integer
@@ -52,6 +75,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: anatomic_site_concept_id
         description: This is the site on the body where the specimen is from.
         data_type: integer
@@ -59,6 +85,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: disease_status_concept_id
         description: ''
         data_type: integer
@@ -66,18 +95,41 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: specimen_source_id
         description: This is the identifier for the specimen from the source system.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: specimen_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: unit_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: anatomic_site_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: disease_status_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"

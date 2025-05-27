@@ -11,17 +11,32 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: provider_name
         description: This field contains information that describes a healthcare provider.
         data_type: varchar(255)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: npi
         description: This is the National Provider Number issued to health care providers inthe US by
           the Centers for Medicare and Medicaid Services (CMS).
         data_type: varchar(20)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: dea
         description: This is the identifier issued by the DEA, a US federal agency, thatallows a provider
           to write prescriptions for controlled substances.
         data_type: varchar(20)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: specialty_concept_id
         description: This field either represents the most common specialty that occurs inthe data or
           the most specific concept that represents all specialtieslisted, should the provider have more
@@ -32,6 +47,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: care_site_id
         description: This is the CARE_SITE_ID for the location that the provider primarilypractices in.
         data_type: integer
@@ -39,9 +57,16 @@ models:
           - relationships:
               to: ref('care_site')
               field: care_site_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: year_of_birth
         description: ''
         data_type: integer
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('integer') }}"
       - name: gender_concept_id
         description: This field represents the recorded gender of the provider in the sourcedata.
         data_type: integer
@@ -51,10 +76,17 @@ models:
               field: concept_id
               from_condition: gender_concept_id <> 0
               to_condition: domain_id = 'Gender'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: provider_source_value
         description: Use this field to link back to providers in the source data. This istypically used
           for error checking of ETL logic.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: specialty_source_value
         description: This refers to the specific type of healthcare provider or field ofexpertise listed
           in the source data, encompassing physician specialtieslike internal medicine, emergency medicine,
@@ -62,6 +94,10 @@ models:
           medical specialties like surgery, internal medicine, andradiology, while other services like
           prosthetics, acupuncture, andphysical therapy fall under the domain of “Service.”
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: specialty_source_concept_id
         description: This is often zero as many sites use proprietary codes to storephysician speciality.
         data_type: integer
@@ -69,9 +105,16 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: gender_source_value
         description: This is provider’s gender as it appears in the source data.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: gender_source_concept_id
         description: This is often zero as many sites use proprietary codes to store providergender.
         data_type: integer
@@ -79,3 +122,6 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]

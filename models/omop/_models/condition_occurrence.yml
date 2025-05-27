@@ -11,6 +11,9 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: person_id
         description: The PERSON_ID of the PERSON for whom the condition is recorded.
         data_type: integer
@@ -19,6 +22,9 @@ models:
           - relationships:
               to: ref('person')
               field: person_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: condition_concept_id
         description: The CONDITION_CONCEPT_ID field is recommended for primary use inanalyses, and must
           be used for network studies. This is the standardconcept mapped from the source value which
@@ -31,20 +37,38 @@ models:
               field: concept_id
               from_condition: condition_concept_id <> 0
               to_condition: domain_id = 'Condition'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: condition_start_date
         description: Use this date to determine the start date of the condition
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: condition_start_datetime
         description: ''
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('timestamp') }}"
       - name: condition_end_date
         description: Use this date to determine the end date of the condition
         data_type: date
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('date') }}"
       - name: condition_end_datetime
         description: ''
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('timestamp') }}"
       - name: condition_type_concept_id
         description: This field can be used to determine the provenance of the Conditionrecord, as in
           whether the condition was from an EHR system, insuranceclaim, registry, or other sources.
@@ -56,6 +80,9 @@ models:
               field: concept_id
               from_condition: condition_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: condition_status_concept_id
         description: This concept represents the point during the visit the diagnosis wasgiven (admitting
           diagnosis, final diagnosis), whether the diagnosis wasdetermined due to laboratory findings,
@@ -67,11 +94,18 @@ models:
               field: concept_id
               from_condition: condition_status_concept_id <> 0
               to_condition: domain_id = 'Condition Status'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: stop_reason
         description: The Stop Reason indicates why a Condition is no longer valid withrespect to the purpose
           within the source data. Note that a Stop Reasondoes not necessarily imply that the condition
           is no longer occurring.
         data_type: varchar(20)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: provider_id
         description: The provider associated with condition record, e.g. the provider whomade the diagnosis
           or the provider who recorded the symptom.
@@ -80,6 +114,9 @@ models:
           - relationships:
               to: ref('provider')
               field: provider_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: visit_occurrence_id
         description: The visit during which the condition occurred.
         data_type: integer
@@ -87,6 +124,9 @@ models:
           - relationships:
               to: ref('visit_occurrence')
               field: visit_occurrence_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: visit_detail_id
         description: The VISIT_DETAIL record during which the condition occurred. Forexample, if the person
           was in the ICU at the time of the diagnosis theVISIT_OCCURRENCE record would reflect the overall
@@ -96,10 +136,17 @@ models:
           - relationships:
               to: ref('visit_detail')
               field: visit_detail_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: condition_source_value
         description: This field houses the verbatim value from the source data representingthe condition
           that occurred. For example, this could be an ICD10 or Readcode.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
       - name: condition_source_concept_id
         description: This is the concept representing the condition source value and may notnecessarily
           be standard. This field is discouraged from use in analysisbecause it is not required to contain
@@ -112,7 +159,14 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
       - name: condition_status_source_value
         description: This field houses the verbatim value from the source data representingthe condition
           status.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: "{{ api.Column.translate_type('varchar') }}"
