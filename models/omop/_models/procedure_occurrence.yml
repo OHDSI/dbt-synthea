@@ -12,7 +12,8 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: person_id
         description: The PERSON_ID of the PERSON for whom the procedure is recorded. This maybe a system
           generated code.
@@ -24,7 +25,8 @@ models:
               field: person_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: procedure_concept_id
         description: The PROCEDURE_CONCEPT_ID field is recommended for primary use inanalyses, and must
           be used for network studies. This is the standardconcept mapped from the source value which
@@ -39,7 +41,8 @@ models:
               to_condition: domain_id = 'Procedure'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: procedure_date
         description: Use this date to determine the date the procedure started.
         data_type: date
@@ -82,7 +85,8 @@ models:
               to_condition: domain_id = 'Type Concept'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: modifier_concept_id
         description: The modifiers are intended to give additional information about theprocedure but
           as of now the vocabulary is under review.
@@ -93,14 +97,16 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: quantity
         description: If the quantity value is omitted, a single procedure is assumed.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: provider_id
         description: The provider associated with the procedure record, e.g. the provider whoperformed
           the Procedure.
@@ -111,7 +117,8 @@ models:
               field: provider_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: visit_occurrence_id
         description: The visit during which the procedure occurred.
         data_type: integer
@@ -121,7 +128,8 @@ models:
               field: visit_occurrence_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: visit_detail_id
         description: The VISIT_DETAIL record during which the Procedure occurred. Forexample, if the Person
           was in the ICU at the time of the Procedure theVISIT_OCCURRENCE record would reflect the overall
@@ -133,7 +141,8 @@ models:
               field: visit_detail_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: procedure_source_value
         description: This field houses the verbatim value from the source data representingthe procedure
           that occurred. For example, this could be an CPT4 or OPCS4code.
@@ -156,7 +165,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: modifier_source_value
         description: This field houses the verbatim value from the source data representingthe modifier
           code for the procedure that occurred.

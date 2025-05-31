@@ -14,7 +14,8 @@ models:
               field: episode_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: event_id
         description: This field is the primary key of the linked record in the database. Forexample, if
           the Episode Event is a Condition Occurrence, then theCONDITION_OCCURRENCE_ID of the linked record
@@ -24,7 +25,8 @@ models:
           - not_null
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: episode_event_field_concept_id
         description: This field is the CONCEPT_ID that identifies which table the primary keyof the linked
           record came from.
@@ -38,4 +40,5 @@ models:
               to_condition: domain_id = 'Metadata'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]

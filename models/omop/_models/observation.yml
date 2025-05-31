@@ -13,7 +13,8 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: person_id
         description: The PERSON_ID of the Person for whom the Observation is recorded. Thismay be a system
           generated code.
@@ -25,7 +26,8 @@ models:
               field: person_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: observation_concept_id
         description: The OBSERVATION_CONCEPT_ID field is recommended for primary use inanalyses, and must
           be used for network studies.
@@ -37,7 +39,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: observation_date
         description: The date of when the Observation was obtained. Depending on what theObservation represents
           this could be the date of a lab test, the date ofa survey, or the date a patient’s family history
@@ -68,7 +71,8 @@ models:
               to_condition: domain_id = 'Type Concept'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: value_as_number
         description: This is the numerical value of the Result of the Observation, ifapplicable and available.
           It is not expected that all Observations willhave numeric results, rather, this field is here
@@ -100,7 +104,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: qualifier_concept_id
         description: This field contains all attributes specifying the clinical fact further,such as as
           degrees, severities, drug-drug interaction alerts etc.
@@ -111,7 +116,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: unit_concept_id
         description: There is currently no recommended unit for individual observationconcepts. UNIT_SOURCE_VALUES
           should be mapped to a Standard Concept inthe Unit domain that best represents the unit as given
@@ -125,7 +131,8 @@ models:
               to_condition: domain_id = 'Unit'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: provider_id
         description: The provider associated with the observation record, e.g. the providerwho ordered
           the test or the provider who recorded the result.
@@ -136,7 +143,8 @@ models:
               field: provider_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: visit_occurrence_id
         description: The visit during which the Observation occurred.
         data_type: integer
@@ -146,7 +154,8 @@ models:
               field: visit_occurrence_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: visit_detail_id
         description: The VISIT_DETAIL record during which the Observation occurred. Forexample, if the
           Person was in the ICU at the time the VISIT_OCCURRENCErecord would reflect the overall hospital
@@ -158,7 +167,8 @@ models:
               field: visit_detail_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: observation_source_value
         description: This field houses the verbatim value from the source data representingthe Observation
           that occurred. For example, this could be an ICD10 orRead code.
@@ -181,7 +191,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: unit_source_value
         description: This field houses the verbatim value from the source data representingthe unit of
           the Observation that occurred.
@@ -214,7 +225,8 @@ models:
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: obs_event_field_concept_id
         description: If the Observation record is related to another record in the database,this field
           is the CONCEPT_ID that identifies which table the primary keyof the linked record came from.
@@ -225,4 +237,5 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]

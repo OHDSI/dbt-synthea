@@ -16,7 +16,8 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: person_id
         description: ''
         data_type: integer
@@ -27,7 +28,8 @@ models:
               field: person_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: visit_detail_concept_id
         description: This field contains a concept id representing the kind of visit detail,like inpatient
           or outpatient. All concepts in this field should bestandard and belong to the Visit domain.
@@ -41,7 +43,8 @@ models:
               to_condition: domain_id = 'Visit'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: visit_detail_start_date
         description: This is the date of the start of the encounter. This may or may not beequal to the
           date of the Visit the Visit Detail is associated with.
@@ -90,7 +93,8 @@ models:
               to_condition: domain_id = 'Type Concept'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: provider_id
         description: There will only be one provider per visit record andthe ETL document should clearly
           state how they were chosen (attending,admitting, etc.). This is a typical reason for leveraging
@@ -104,7 +108,8 @@ models:
               field: provider_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: care_site_id
         description: This field provides information about the Care Site where the VisitDetail took place.
         data_type: integer
@@ -114,7 +119,8 @@ models:
               field: care_site_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: visit_detail_source_value
         description: This field houses the verbatim value from the source data representingthe kind of
           visit detail that took place (inpatient, outpatient,emergency, etc.)
@@ -132,7 +138,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: admitted_from_concept_id
         description: Use this field to determine where the patient was admitted from. Thisconcept is part
           of the visit domain and can indicate if a patient wasadmitted to the hospital from a long-term
@@ -146,7 +153,8 @@ models:
               to_condition: domain_id = 'Visit'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: admitted_from_source_value
         description: ''
         data_type: varchar(50)
@@ -176,7 +184,8 @@ models:
               to_condition: domain_id = 'Visit'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: preceding_visit_detail_id
         description: Use this field to find the visit detail that occurred for the personprior to the
           given visit detail record. There could be a few days or afew years in between.
@@ -187,7 +196,8 @@ models:
               field: visit_detail_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: parent_visit_detail_id
         description: Use this field to find the visit detail that subsumes the given visitdetail record.
           This is used in the case that a visit detail record needsto be nested beyond the VISIT_OCCURRENCE/VISIT_DETAIL
@@ -199,7 +209,8 @@ models:
               field: visit_detail_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: visit_occurrence_id
         description: Use this field to link the VISIT_DETAIL record to its VISIT_OCCURRENCE.
         data_type: integer
@@ -210,4 +221,5 @@ models:
               field: visit_occurrence_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]

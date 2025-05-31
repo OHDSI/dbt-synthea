@@ -12,7 +12,8 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: gender_concept_id
         description: This field is meant to capture the biological sex at birth of thePerson. This field
           should not be used to study gender identity issues.
@@ -26,29 +27,33 @@ models:
               to_condition: domain_id = 'Gender'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: year_of_birth
         description: Compute age using year_of_birth.
         data_type: integer
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('integer') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: month_of_birth
         description: ''
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('integer') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: day_of_birth
         description: ''
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('integer') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: birth_datetime
         description: ''
         data_type: datetime
@@ -68,7 +73,8 @@ models:
               to_condition: domain_id = 'Race'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: ethnicity_concept_id
         description: 'This field captures Ethnicity as defined by the Office of Management andBudget (OMB)
           of the US Government: it distinguishes only betweenHispanic and Not Hispanic. Races and ethnic
@@ -83,7 +89,8 @@ models:
               to_condition: domain_id = 'Ethnicity'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: location_id
         description: The location refers to the physical address of the person. This fieldshould capture
           the last known location of the person.
@@ -94,7 +101,8 @@ models:
               field: location_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: provider_id
         description: The Provider refers to the last known primary care provider (GeneralPractitioner).
         data_type: integer
@@ -104,7 +112,8 @@ models:
               field: provider_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: care_site_id
         description: The Care Site refers to where the Provider typically provides theprimary care.
         data_type: integer
@@ -114,7 +123,8 @@ models:
               field: care_site_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: person_source_value
         description: Use this field to link back to persons in the source data. This istypically used
           for error checking of ETL logic.
@@ -140,7 +150,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: race_source_value
         description: This field is used to store the race of the person from the source data.It is not
           intended for use in standard analytics but for reference only.
@@ -158,7 +169,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: ethnicity_source_value
         description: This field is used to store the ethnicity of the person from the sourcedata. It is
           not intended for use in standard analytics but for referenceonly.
@@ -176,4 +188,5 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]

@@ -295,12 +295,11 @@ def omop_docs_to_dbt_config(
     # Add dbt_expectations tests
     tests.append("dbt_expectations.expect_column_to_exist")
     if doc_container.datatype.lower() == "integer":
+        type_list = CommentedSeq(["{{ api.Column.translate_type('integer') }}","{{ api.Column.translate_type('bigint') }}"])
+        type_list.fa.set_flow_style()
         tests.append({
             "dbt_expectations.expect_column_values_to_be_in_type_list": {
-                "column_type_list": [
-                    "{{ api.Column.translate_type('integer') }}",
-                    "{{ api.Column.translate_type('bigint') }}"
-                ]
+                "column_type_list": type_list
             }
         })
     elif doc_container.datatype.lower() in {"date", "float"}:
