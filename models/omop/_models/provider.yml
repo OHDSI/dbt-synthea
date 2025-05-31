@@ -13,7 +13,8 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: provider_name
         description: This field contains information that describes a healthcare provider.
         data_type: varchar(255)
@@ -49,7 +50,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: care_site_id
         description: This is the CARE_SITE_ID for the location that the provider primarilypractices in.
         data_type: integer
@@ -59,14 +61,16 @@ models:
               field: care_site_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: year_of_birth
         description: ''
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('integer') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: gender_concept_id
         description: This field represents the recorded gender of the provider in the sourcedata.
         data_type: integer
@@ -78,7 +82,8 @@ models:
               to_condition: domain_id = 'Gender'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: provider_source_value
         description: Use this field to link back to providers in the source data. This istypically used
           for error checking of ETL logic.
@@ -92,7 +97,7 @@ models:
           in the source data, encompassing physician specialtieslike internal medicine, emergency medicine,
           etc., as well as alliedhealth professionals such as nurses, midwives, and pharmacists. Itcovers
           medical specialties like surgery, internal medicine, andradiology, while other services like
-          prosthetics, acupuncture, andphysical therapy fall under the domain of “Service.”
+          prosthetics, acupuncture, andphysical therapy fall under the domain of Service.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -107,7 +112,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: gender_source_value
         description: This is provider’s gender as it appears in the source data.
         data_type: varchar(50)
@@ -124,4 +130,5 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]

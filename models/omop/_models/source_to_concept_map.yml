@@ -26,7 +26,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: source_vocabulary_id
         description: A foreign key to the VOCABULARY table defining the vocabulary of thesource code that
           is being translated to a Standard Concept.
@@ -54,7 +55,8 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint') }}"]
+              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
+                    }}"]
       - name: target_vocabulary_id
         description: The Vocabulary of the target Concept.
         data_type: varchar(20)
@@ -80,6 +82,7 @@ models:
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type: "{{ api.Column.translate_type('date') }}"
       - name: invalid_reason
@@ -87,5 +90,6 @@ models:
           with an update) or NULL when valid_end_date hasthe default value.
         data_type: varchar(1)
         tests:
+          - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type: "{{ api.Column.translate_type('varchar') }}"

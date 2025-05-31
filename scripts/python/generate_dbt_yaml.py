@@ -32,6 +32,7 @@ from bs4 import BeautifulSoup
 from bs4._typing import _AtMostOneElement  # pyright: ignore[reportPrivateUsage]
 from bs4.element import NavigableString, Tag
 from ruamel.yaml import YAML
+from ruamel.yaml.comments import CommentedSeq
 
 default_source_url = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/docs/cdm54.html"
 
@@ -294,12 +295,11 @@ def omop_docs_to_dbt_config(
     # Add dbt_expectations tests
     tests.append("dbt_expectations.expect_column_to_exist")
     if doc_container.datatype.lower() == "integer":
+        type_list = CommentedSeq(["{{ api.Column.translate_type('integer') }}","{{ api.Column.translate_type('bigint') }}"])
+        type_list.fa.set_flow_style()
         tests.append({
             "dbt_expectations.expect_column_values_to_be_in_type_list": {
-                "column_type_list": [
-                    "{{ api.Column.translate_type('integer') }}",
-                    "{{ api.Column.translate_type('bigint') }}"
-                ]
+                "column_type_list": type_list
             }
         })
     elif doc_container.datatype.lower() in {"date", "float"}:
