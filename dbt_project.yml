@@ -17,31 +17,31 @@ clean-targets: # directories to be removed by `dbt clean`
   - "target"
 
 vars:
-  seed_source: false
+  seed_source: true
 
 models:
   synthea_omop_etl:
     intermediate:
       +materialized: table
       +docs:
-        node_color: "#FBC511"
+        node_color: '#FBC511'
     omop:
       +materialized: table
       +docs:
-        node_color: "#EB6622"
+        node_color: '#EB6622'
     staging:
       synthea:
         +materialized: view
         +docs:
-          node_color: "#336B91"
+          node_color: '#336B91'
       vocabulary:
         +materialized: view
         +docs:
-          node_color: "#336B91"
+          node_color: '#336B91'
       map:
         +materialized: view
         +docs:
-          node_color: "#336B91"
+          node_color: '#336B91'
 
 seeds:
   +quote_columns: true
@@ -50,14 +50,14 @@ seeds:
       +enabled: true
       +schema: map_seeds
       +docs:
-        node_color: "#69AED5"
+        node_color: '#69AED5'
     vocabulary:
-      +enabled: false
+      +enabled: true
       +schema: vocab_seeds
       +docs:
-        node_color: "#69AED5"
+        node_color: '#69AED5'
     synthea:
-      +enabled: false
-      +schema: synthea_seeds
+      +enabled: true
+      +schema: synthea_seeds    
       +docs:
-        node_color: "#69AED5"
+        node_color: '#69AED5'

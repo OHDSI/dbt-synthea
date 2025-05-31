@@ -1,6 +1,8 @@
 models:
   - name: concept_synonym
-    description: The CONCEPT_SYNONYM table is used to store alternate names and descriptions for Concepts.
+    description: The CONCEPT_SYNONYM table captures alternative terms, synonyms, and translations of Concept
+      Name into various languages linked to specific concepts, providing users with a comprehensive view
+      of how Concepts may be expressed or referenced.
     columns:
       - name: concept_id
         description: ''

@@ -14,7 +14,6 @@ WITH cte_observations_lower AS (
 
     SELECT
         {{ timestamptz_to_naive("\"date\"") }} AS observation_datetime
-        , {{ dbt.cast("\"date\"", api.Column.translate_type("date")) }} AS observation_date
         , patient AS patient_id
         , encounter AS encounter_id
         , category AS observation_category
