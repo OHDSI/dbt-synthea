@@ -36,8 +36,8 @@ WITH cte_claims_lower AS (
         , diagnosis8 AS diagnosis_8
         , referringproviderid AS referring_provider_id
         , appointmentid AS encounter_id
-        , currentillnessdate AS current_illness_date
-        , servicedate AS service_datetime
+        , {{ timestamptz_to_naive("currentillnessdate") }} AS current_illness_date
+        , {{ timestamptz_to_naive("servicedate") }} AS service_datetime
         , supervisingproviderid AS supervising_provider_id
         , status1 AS claim_status_1
         , status2 AS claim_status_2
@@ -45,9 +45,9 @@ WITH cte_claims_lower AS (
         , outstanding1 AS outstanding_1
         , outstanding2 AS outstanding_2
         , outstandingp AS outstanding_patient
-        , lastbilleddate1 AS last_billed_date_1
-        , lastbilleddate2 AS last_billed_date_2
-        , lastbilleddatep AS last_billed_date_patient
+        , {{ timestamptz_to_naive("lastbilleddate1") }} AS last_billed_date_1
+        , {{ timestamptz_to_naive("lastbilleddate2") }} AS last_billed_date_2
+        , {{ timestamptz_to_naive("lastbilleddatep") }} AS last_billed_date_patient
         , healthcareclaimtypeid1 AS claim_type_id_1
         , healthcareclaimtypeid2 AS claim_type_id_2
     FROM cte_claims_lower

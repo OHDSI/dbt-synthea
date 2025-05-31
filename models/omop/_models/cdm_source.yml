@@ -22,7 +22,7 @@ models:
         description: The description of the CDM instance.
         data_type: varchar(MAX)
       - name: source_documentation_reference
-        description: ''
+        description: Refers to a publication or web resource describing the source data
         data_type: varchar(255)
       - name: cdm_etl_reference
         description: ''

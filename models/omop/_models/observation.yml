@@ -66,7 +66,7 @@ models:
           into twocodes; one becomes the OBSERVATION_CONCEPT_ID and the other becomes theVALUE_AS_CONCEPT_ID.
           It is important when using the Observation table tokeep this possibility in mind and to examine
           the VALUE_AS_CONCEPT_IDfield for relevant information.
-        data_type: Integer
+        data_type: integer
         tests:
           - relationships:
               to: ref('concept')

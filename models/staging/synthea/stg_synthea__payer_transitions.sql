@@ -15,10 +15,8 @@ WITH cte_payer_transitions_lower AS (
     SELECT
         patient AS patient_id
         , memberid AS member_id
-        , start_year AS coverage_start_datetime
-        , {{ dbt.cast("start_year", api.Column.translate_type("date")) }} AS coverage_start_date
-        , end_year AS coverage_end_datetime
-        , {{ dbt.cast("end_year", api.Column.translate_type("date")) }} AS coverage_end_date
+        , {{ timestamptz_to_naive("start_year") }} AS coverage_start_datetime
+        , {{ timestamptz_to_naive("end_year") }} AS coverage_end_datetime
         , payer AS payer_id
         , secondary_payer AS secondary_payer_id
         , ownership AS plan_owner_relationship
@@ -27,5 +25,22 @@ WITH cte_payer_transitions_lower AS (
 
 )
 
+, cte_payer_transitions_date_columns AS (
+
+    SELECT
+        patient_id
+        , member_id
+        , coverage_start_datetime
+        , {{ dbt.cast("coverage_start_datetime", api.Column.translate_type("date")) }} AS coverage_start_date
+        , coverage_end_datetime
+        , {{ dbt.cast("coverage_end_datetime", api.Column.translate_type("date")) }} AS coverage_end_date
+        , payer_id
+        , secondary_payer_id
+        , plan_owner_relationship
+        , plan_owner_name
+    FROM cte_payer_transitions_rename
+
+)
+
 SELECT *
-FROM cte_payer_transitions_rename
+FROM cte_payer_transitions_date_columns

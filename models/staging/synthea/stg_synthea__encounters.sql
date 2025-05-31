@@ -14,10 +14,13 @@ WITH cte_encounters_lower AS (
 
     SELECT
         id AS encounter_id
-        , "start" AS encounter_start_datetime
+        , {{ timestamptz_to_naive("\"start\"") }} AS encounter_start_datetime
         , {{ dbt.cast("\"start\"", api.Column.translate_type("date")) }} AS encounter_start_date
         -- default to start date if stop date is null
-        , COALESCE("stop", "start") AS encounter_stop_datetime
+        , COALESCE(
+            {{ timestamptz_to_naive("\"stop\"") }},
+            {{ timestamptz_to_naive("\"start\"") }}
+        ) AS encounter_stop_datetime
         , COALESCE(
             {{ dbt.cast("\"stop\"", api.Column.translate_type("date")) }},
             {{ dbt.cast("\"start\"", api.Column.translate_type("date")) }}
@@ -38,5 +41,32 @@ WITH cte_encounters_lower AS (
 
 )
 
+, cte_encounters_date_columns AS (
+
+    SELECT
+            encounter_id
+            , encounter_start_datetime
+            , {{ dbt.cast("encounter_start_datetime", api.Column.translate_type("date")) }} AS encounter_start_date
+            , encounter_stop_datetime
+            , COALESCE(
+                {{ dbt.cast("encounter_start_datetime", api.Column.translate_type("date")) }},
+                {{ dbt.cast("encounter_stop_datetime", api.Column.translate_type("date")) }}
+            ) AS encounter_stop_date
+            , patient_id
+            , organization_id
+            , provider_id
+            , payer_id
+            , encounter_class
+            , encounter_code
+            , encounter_description
+            , base_encounter_cost
+            , total_encounter_cost
+            , encounter_payer_coverage
+            , encounter_reason_code
+            , encounter_reason_description
+    FROM cte_encounters_rename
+
+)
+
 SELECT *
-FROM cte_encounters_rename
+FROM cte_encounters_date_columns
