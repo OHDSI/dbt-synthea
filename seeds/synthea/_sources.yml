@@ -49,8 +49,8 @@ seeds:
         DIAGNOSIS8: varchar
         REFERRINGPROVIDERID: varchar
         APPOINTMENTID: varchar
-        CURRENTILLNESSDATE: timestamp
-        SERVICEDATE: timestamp
+        CURRENTILLNESSDATE: timestamptz
+        SERVICEDATE: timestamptz
         SUPERVISINGPROVIDERID: varchar
         STATUS1: varchar
         STATUS2: varchar
@@ -58,9 +58,9 @@ seeds:
         OUTSTANDING1: float
         OUTSTANDING2: float
         OUTSTANDINGP: float
-        LASTBILLEDDATE1: timestamp
-        LASTBILLEDDATE2: timestamp
-        LASTBILLEDDATEP: timestamp
+        LASTBILLEDDATE1: timestamptz
+        LASTBILLEDDATE2: timestamptz
+        LASTBILLEDDATEP: timestamptz
         HEALTHCARECLAIMTYPEID1: integer
         HEALTHCARECLAIMTYPEID2: integer
   - name: claims_transactions
@@ -73,8 +73,8 @@ seeds:
         TYPE: varchar
         AMOUNT: float
         METHOD: varchar
-        FROMDATE: timestamp
-        TODATE: timestamp
+        FROMDATE: timestamptz
+        TODATE: timestamptz
         PLACEOFSERVICE: varchar
         PROCEDURECODE: varchar
         MODIFIER1: varchar
@@ -111,8 +111,8 @@ seeds:
   - name: devices
     config:
       column_types:
-        START: timestamp
-        STOP: timestamp
+        START: timestamptz
+        STOP: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         CODE: varchar
@@ -122,8 +122,8 @@ seeds:
     config:
       column_types:
         Id: varchar
-        START: timestamp
-        STOP: timestamp
+        START: timestamptz
+        STOP: timestamptz
         PATIENT: varchar
         ORGANIZATION: varchar
         PROVIDER: varchar
@@ -140,7 +140,7 @@ seeds:
     config:
       column_types:
         Id: varchar
-        DATE: timestamp
+        DATE: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         SERIES_UID: varchar
@@ -155,7 +155,7 @@ seeds:
   - name: immunizations
     config:
       column_types:
-        DATE: timestamp
+        DATE: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         CODE: varchar
@@ -164,8 +164,8 @@ seeds:
   - name: medications
     config:
       column_types:
-        START: timestamp
-        STOP: timestamp
+        START: timestamptz
+        STOP: timestamptz
         PATIENT: varchar
         PAYER: varchar
         ENCOUNTER: varchar
@@ -180,7 +180,7 @@ seeds:
   - name: observations
     config:
       column_types:
-        DATE: timestamp
+        DATE: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         CATEGORY: varchar
@@ -236,8 +236,8 @@ seeds:
       column_types:
         PATIENT: varchar
         MEMBERID: varchar
-        START_YEAR: timestamp
-        END_YEAR: timestamp
+        START_YEAR: timestamptz
+        END_YEAR: timestamptz
         PAYER: varchar
         SECONDARY_PAYER: varchar
         OWNERSHIP: varchar
@@ -269,8 +269,8 @@ seeds:
   - name: procedures
     config:
       column_types:
-        START: timestamp
-        STOP: timestamp
+        START: timestamptz
+        STOP: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         CODE: varchar
