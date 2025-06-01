@@ -89,7 +89,7 @@ models:
         data_type: varchar(50)
       - name: visit_detail_source_concept_id
         description: ''
-        data_type: Integer
+        data_type: integer
         tests:
           - relationships:
               to: ref('concept')
@@ -98,7 +98,7 @@ models:
         description: Use this field to determine where the patient was admitted from. Thisconcept is part
           of the visit domain and can indicate if a patient wasadmitted to the hospital from a long-term
           care facility, for example.
-        data_type: Integer
+        data_type: integer
         tests:
           - dbt_utils.relationships_where:
               to: ref('concept')

@@ -13,10 +13,8 @@ WITH cte_devices_lower AS (
 , cte_devices_rename AS (
 
     SELECT
-        {{ adapter.quote("start") }} AS device_start_datetime
-        , {{ dbt.cast(adapter.quote("start"), api.Column.translate_type("date")) }} AS device_start_date
-        , {{ adapter.quote("stop") }} AS device_stop_datetime
-        , {{ dbt.cast(adapter.quote("stop"), api.Column.translate_type("date")) }} AS device_stop_date
+        {{ timestamptz_to_naive(adapter.quote("start")) }} AS device_start_datetime
+        , {{ timestamptz_to_naive(adapter.quote("stop")) }} AS device_stop_datetime
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS device_code
@@ -26,5 +24,21 @@ WITH cte_devices_lower AS (
 
 )
 
+, cte_devices_date_columns AS (
+
+    SELECT
+        device_start_datetime
+        , {{ dbt.cast("device_start_datetime", api.Column.translate_type("date")) }} AS device_start_date
+        , device_stop_datetime
+        , {{ dbt.cast("device_stop_datetime", api.Column.translate_type("date")) }} AS device_stop_date
+        , patient_id
+        , encounter_id
+        , device_code
+        , device_description
+        , udi
+    FROM cte_devices_rename
+
+)
+
 SELECT *
-FROM cte_devices_rename
+FROM cte_devices_date_columns

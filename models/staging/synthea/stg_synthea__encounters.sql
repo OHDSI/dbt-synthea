@@ -14,14 +14,12 @@ WITH cte_encounters_lower AS (
 
     SELECT
         id AS encounter_id
-        , {{ adapter.quote("start") }} AS encounter_start_datetime
-        , {{ dbt.cast(adapter.quote("start"), api.Column.translate_type("date")) }} AS encounter_start_date
+        , {{ timestamptz_to_naive(adapter.quote("start")) }} AS encounter_start_datetime
         -- default to start date if stop date is null
-        , COALESCE({{ adapter.quote("stop") }}, {{ adapter.quote("start") }}) AS encounter_stop_datetime
         , COALESCE(
-            {{ dbt.cast(adapter.quote("stop"), api.Column.translate_type("date")) }},
-            {{ dbt.cast(adapter.quote("start"), api.Column.translate_type("date")) }}
-        ) AS encounter_stop_date
+            {{ timestamptz_to_naive(adapter.quote("stop")) }},
+            {{ timestamptz_to_naive(adapter.quote("start")) }}
+        ) AS encounter_stop_datetime
         , patient AS patient_id
         , organization AS organization_id
         , provider AS provider_id
@@ -38,5 +36,32 @@ WITH cte_encounters_lower AS (
 
 )
 
+, cte_encounters_date_columns AS (
+
+    SELECT
+            encounter_id
+            , encounter_start_datetime
+            , {{ dbt.cast("encounter_start_datetime", api.Column.translate_type("date")) }} AS encounter_start_date
+            , encounter_stop_datetime
+            , COALESCE(
+                {{ dbt.cast("encounter_start_datetime", api.Column.translate_type("date")) }},
+                {{ dbt.cast("encounter_stop_datetime", api.Column.translate_type("date")) }}
+            ) AS encounter_stop_date
+            , patient_id
+            , organization_id
+            , provider_id
+            , payer_id
+            , encounter_class
+            , encounter_code
+            , encounter_description
+            , base_encounter_cost
+            , total_encounter_cost
+            , encounter_payer_coverage
+            , encounter_reason_code
+            , encounter_reason_description
+    FROM cte_encounters_rename
+
+)
+
 SELECT *
-FROM cte_encounters_rename
+FROM cte_encounters_date_columns

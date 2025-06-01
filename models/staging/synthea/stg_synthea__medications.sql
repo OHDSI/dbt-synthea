@@ -13,10 +13,8 @@ WITH cte_medications_lower AS (
 , cte_medications_rename AS (
 
     SELECT
-        {{ adapter.quote("start") }} AS medication_start_datetime
-        , {{ dbt.cast(adapter.quote("start"), api.Column.translate_type("date")) }} AS medication_start_date
-        , {{ adapter.quote("stop") }} AS medication_stop_datetime
-        , {{ dbt.cast(adapter.quote("stop"), api.Column.translate_type("date")) }} AS medication_stop_date
+        {{ timestamptz_to_naive(adapter.quote("start")) }} AS medication_start_datetime
+        , {{ timestamptz_to_naive(adapter.quote("stop")) }} AS medication_stop_datetime
         , patient AS patient_id
         , payer AS payer_id
         , encounter AS encounter_id
@@ -32,5 +30,27 @@ WITH cte_medications_lower AS (
 
 )
 
+, cte_medications_date_columns AS (
+
+    SELECT
+        medication_start_datetime
+        , {{ dbt.cast("medication_start_datetime", api.Column.translate_type("date")) }} AS medication_start_date
+        , medication_stop_datetime
+        , {{ dbt.cast("medication_stop_datetime", api.Column.translate_type("date")) }} AS medication_stop_date
+        , patient_id
+        , payer_id
+        , encounter_id
+        , medication_code
+        , medication_description
+        , medication_base_cost
+        , medication_payer_coverage
+        , dispenses
+        , medication_total_cost
+        , medication_reason_code
+        , medication_reason_description
+    FROM cte_medications_rename
+
+)
+
 SELECT *
-FROM cte_medications_rename
+FROM cte_medications_date_columns
