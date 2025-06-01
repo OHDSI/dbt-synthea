@@ -13,8 +13,8 @@ WITH cte_medications_lower AS (
 , cte_medications_rename AS (
 
     SELECT
-        {{ timestamptz_to_naive("\"start\"") }} AS medication_start_datetime
-        , {{ timestamptz_to_naive("\"stop\"") }} AS medication_stop_datetime
+        {{ timestamptz_to_naive(adapter.quote("start")) }} AS medication_start_datetime
+        , {{ timestamptz_to_naive(adapter.quote("stop")) }} AS medication_stop_datetime
         , patient AS patient_id
         , payer AS payer_id
         , encounter AS encounter_id

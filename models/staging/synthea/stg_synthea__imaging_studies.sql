@@ -14,7 +14,7 @@ WITH cte_imaging_studies_lower AS (
 
     SELECT
         id AS imaging_id
-        , {{ timestamptz_to_naive("\"date\"") }} AS imaging_datetime
+        , {{ timestamptz_to_naive(adapter.quote("date")) }} AS imaging_datetime
         , patient AS patient_id
         , encounter AS encounter_id
         , series_uid

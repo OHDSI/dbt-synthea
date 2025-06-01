@@ -15,7 +15,7 @@ WITH cte_providers_lower AS (
     SELECT
         id AS provider_id
         , organization AS organization_id
-        , "name" AS provider_name
+        , {{ adapter.quote("name") }} AS provider_name
         , gender AS provider_gender
         , speciality AS provider_specialty
         , address AS provider_address

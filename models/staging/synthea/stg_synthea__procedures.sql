@@ -13,8 +13,8 @@ WITH cte_procedures_lower AS (
 , cte_procedures_rename AS (
 
     SELECT
-        {{ timestamptz_to_naive("\"start\"") }} AS procedure_start_datetime
-        , {{ timestamptz_to_naive("\"stop\"") }} AS procedure_stop_datetime
+        {{ timestamptz_to_naive(adapter.quote("start")) }} AS procedure_start_datetime
+        , {{ timestamptz_to_naive(adapter.quote("stop")) }} AS procedure_stop_datetime
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS procedure_code

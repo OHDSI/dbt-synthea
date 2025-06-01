@@ -13,7 +13,7 @@ WITH cte_immunizations_lower AS (
 , cte_immunizations_rename AS (
 
     SELECT
-        {{ timestamptz_to_naive("\"date\"") }} AS immunization_date
+        {{ timestamptz_to_naive(adapter.quote("date")) }} AS immunization_date
         , patient AS patient_id
         , encounter AS encounter_id
         , code AS immunization_code
