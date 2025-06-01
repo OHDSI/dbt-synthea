@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["duckdb<=1.2.2"]
+# dependencies = ["duckdb<=1.3"]
 # ///
 
 """
@@ -107,7 +107,7 @@ def parse_cli_arguments() -> CliArgs:
         """,
     )
     _ = parser.add_argument(
-        "--output_dir",
+        "--output",
         "-o",
         type=Path,
         help="""Optional output directory.
