@@ -1,0 +1,9 @@
+jinja2
+pre-commit
+sqlfluff
+sqlfluff-templater-dbt
+ruff
+beautifulsoup4
+ruamel-yaml
+requests
+codespell
