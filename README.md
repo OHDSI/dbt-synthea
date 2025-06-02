@@ -76,11 +76,38 @@ dbt seed
 ```
  6. **If you'd like to run the ETL on your own Synthea dataset,** first toggle the `seed_source` variable in `dbt_project.yml` to `false`. This will tell dbt not to look for the source data in the seed schemas.
  
- 7. **[BYO DATA ONLY]** Load your Synthea and Vocabulary data into the database by running the following commands (modify the commands as needed to specify the path to the folder storing the Synthea and vocabulary csv files, respectively).  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".  **NOTE only Synthea v3.0.0 is supported at this time.**
+ 7. **[BYO DATA ONLY]** 
+
+ (a) Optional - Convert csv files to parquet files. This will significantly reduce file size and may make the run process faster.
+ If using uv:
+```bash
+uv run scripts/python/convert_to_parquet.py <path/to/synthea/csvs>
+uv run scripts/python/convert_to_parquet.py <path/to/synthea/csvs> --vocab
+```
+
+If using pip/python:
+```bash
+python3 scripts/python/convert_to_parquet.py <path/to/synthea/csvs>
+python3 scripts/python/convert_to_parquet.py <path/to/synthea/csvs> --vocab
+```
+
+>Note: Pass the --vocab or -v flags when converting the vocabulary tables. There is also an --output or -o argument you can pass followed by the path to the desired output directory. If not passed then by default the parquet file directory will be created in the same directory as the csv file directory.
+
+ (b) Load your Synthea and Vocabulary data into the database by running the following commands (modify the commands as needed to specify the path to the folder storing the Synthea and vocabulary files, respectively).  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".  **NOTE only Synthea v3.0.0 is supported at this time.**
+
+ If using uv:
 ``` bash
-file_dict=$(python3 scripts/python/get_csv_filepaths.py path/to/synthea/csvs)
+file_dict=$(uv run scripts/python/get_filepaths.py <path/to/synthea/files>)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: false}"
-file_dict=$(python3 scripts/python/get_csv_filepaths.py path/to/vocab/csvs)
+file_dict=$(uv run scripts/python/get_filepaths.py <path/to/vocab/files>)
+dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: true}"
+```
+
+If using pip/python:
+``` bash
+file_dict=$(python3 scripts/python/get_filepaths.py <path/to/synthea/files>)
+dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: false}"
+file_dict=$(python3 scripts/python/get_filepaths.py <path/to/vocab/files>)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: true}"
 ```
 
