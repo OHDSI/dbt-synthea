@@ -20,11 +20,10 @@ jobs:
               uses: actions/setup-python@v5
               with:
                 python-version: '3.12'
-                cache: 'pip'
-                cache-dependency-path: 'requirements/duckdb.txt'
-            - name: Install dependencies
-              run: |
-                pip install -r requirements/duckdb.txt
+            - name: Install uv
+              run: pip install uv
+            - name: Install dependencies with uv
+              run: uv sync --dev --group duckdb
             - name: Setup profile
               run: |
                 cat << EOF > profiles.yml
