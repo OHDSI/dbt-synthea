@@ -17,7 +17,7 @@ clean-targets: # directories to be removed by `dbt clean`
   - "target"
 
 vars:
-  seed_source: false
+  seed_source: true
   synthea_tables: &synthea_config
     +enabled: true
     +schema: synthea_seeds    
@@ -70,8 +70,8 @@ vars:
         DIAGNOSIS8: varchar
         REFERRINGPROVIDERID: varchar
         APPOINTMENTID: varchar
-        CURRENTILLNESSDATE: timestamp
-        SERVICEDATE: timestamp
+        CURRENTILLNESSDATE: timestamptz
+        SERVICEDATE: timestamptz
         SUPERVISINGPROVIDERID: varchar
         STATUS1: varchar
         STATUS2: varchar
@@ -79,9 +79,9 @@ vars:
         OUTSTANDING1: float
         OUTSTANDING2: float
         OUTSTANDINGP: float
-        LASTBILLEDDATE1: timestamp
-        LASTBILLEDDATE2: timestamp
-        LASTBILLEDDATEP: timestamp
+        LASTBILLEDDATE1: timestamptz
+        LASTBILLEDDATE2: timestamptz
+        LASTBILLEDDATEP: timestamptz
         HEALTHCARECLAIMTYPEID1: float
         HEALTHCARECLAIMTYPEID2: float
     claims_transactions:
@@ -93,8 +93,8 @@ vars:
         TYPE: varchar
         AMOUNT: float
         METHOD: varchar
-        FROMDATE: timestamp
-        TODATE: timestamp
+        FROMDATE: timestamptz
+        TODATE: timestamptz
         PLACEOFSERVICE: varchar
         PROCEDURECODE: varchar
         MODIFIER1: varchar
@@ -129,8 +129,8 @@ vars:
         DESCRIPTION: varchar
     devices:
       +column_types:
-        START: timestamp
-        STOP: timestamp
+        START: timestamptz
+        STOP: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         CODE: varchar
@@ -139,8 +139,8 @@ vars:
     encounters:
       +column_types:
         Id: varchar
-        START: timestamp
-        STOP: timestamp
+        START: timestamptz
+        STOP: timestamptz
         PATIENT: varchar
         ORGANIZATION: varchar
         PROVIDER: varchar
@@ -156,7 +156,7 @@ vars:
     imaging_studies:
       +column_types:
         Id: varchar
-        DATE: timestamp
+        DATE: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         SERIES_UID: varchar
@@ -170,7 +170,7 @@ vars:
         PROCEDURE_CODE: varchar
     immunizations:
       +column_types:
-        DATE: timestamp
+        DATE: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         CODE: varchar
@@ -178,8 +178,8 @@ vars:
         BASE_COST: float
     medications:
       +column_types:
-        START: timestamp
-        STOP: timestamp
+        START: timestamptz
+        STOP: timestamptz
         PATIENT: varchar
         PAYER: varchar
         ENCOUNTER: varchar
@@ -193,7 +193,7 @@ vars:
         REASONDESCRIPTION: varchar
     observations:
       +column_types:
-        DATE: timestamp
+        DATE: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         CATEGORY: varchar
@@ -246,8 +246,8 @@ vars:
       +column_types:
         PATIENT: varchar
         MEMBERID: varchar
-        START_YEAR: timestamp
-        END_YEAR: timestamp
+        START_YEAR: timestamptz
+        END_YEAR: timestamptz
         PAYER: varchar
         SECONDARY_PAYER: varchar
         OWNERSHIP: varchar
@@ -277,8 +277,8 @@ vars:
         MEMBER_MONTHS: float
     procedures:
       +column_types:
-        START: timestamp
-        STOP: timestamp
+        START: timestamptz
+        STOP: timestamptz
         PATIENT: varchar
         ENCOUNTER: varchar
         CODE: varchar
