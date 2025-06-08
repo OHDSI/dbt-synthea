@@ -20,14 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-
-      - name: Install uv
-        run: pip install uv
+          python-version-file: "pyproject.toml"
 
       - name: Install dependencies with uv
         run: uv sync --dev --group duckdb
@@ -44,17 +44,11 @@ jobs:
                 schema: dbt_synthea_dev
             target: dev
           EOF
-      - run: source .venv/bin/activate
-      - run: dbt deps
-      - run: dbt seed
-      - run: dbt run
-      - run: dbt test
+          
+      - run: uv run dbt deps
+      - run: uv run dbt seed
+      - run: uv run dbt run
+      - run: uv run dbt test
 
       - name: Generate DBT Docs
-        run: dbt docs generate
-
-      - name: Upload DBT Docs (for download)
-        uses: actions/upload-artifact@v4
-        with:
-          name: dbt-docs-preview
-          path: ./target
+        run: uv run dbt docs generate
