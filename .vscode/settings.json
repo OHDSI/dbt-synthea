@@ -4,7 +4,7 @@
         "**/target/**": ""
     },
     "python.terminal.activateEnvInCurrentTerminal": true,
-    "python.defaultInterpreterPath": "./dbt-env/bin/python3",
+    "python.defaultInterpreterPath": "./.venv/bin",
     "dbt.queryLimit": 500,
     "yaml.schemas": {
         "https://raw.githubusercontent.com/dbt-labs/dbt-jsonschema/main/schemas/dbt_yml_files.json": [
