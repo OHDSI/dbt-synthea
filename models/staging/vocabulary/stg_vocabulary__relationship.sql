@@ -10,5 +10,13 @@ WITH cte_relationship_lower AS (
     FROM {{ source('vocabulary','relationship') }}
 )
 
-SELECT *
+SELECT
+
+    relationship_id
+    , relationship_name
+    , {{ dbt.cast("is_hierarchical", api.Column.translate_type("varchar")) }} AS is_hierarchical
+    , {{ dbt.cast("defines_ancestry", api.Column.translate_type("varchar")) }} AS defines_ancestry
+    , reverse_relationship_id
+    , relationship_concept_id
+
 FROM cte_relationship_lower

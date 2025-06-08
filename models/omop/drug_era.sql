@@ -214,10 +214,12 @@ SELECT
     , drug_concept_id
     , drug_era_start_date
     , drug_era_end_date
-    , drug_exposure_count
-    , {{ dbt.datediff(
-            dbt.cast("min_drug_sub_exposure_start_date", api.Column.translate_type("date")),
-            dbt.cast("drug_era_end_date", api.Column.translate_type("date")), 
-            "day") 
-    }} - sum_days_exposed AS gap_days
+    , {{ dbt.cast("drug_exposure_count", api.Column.translate_type("integer")) }} AS drug_exposure_count
+    , {{ dbt.cast(
+            dbt.datediff(
+                dbt.cast("min_drug_sub_exposure_start_date", api.Column.translate_type("date")),
+                dbt.cast("drug_era_end_date", api.Column.translate_type("date")), 
+                "day") 
+        , api.Column.translate_type("integer"))
+    }} - {{ dbt.cast("sum_days_exposed", api.Column.translate_type("integer")) }} AS gap_days
 FROM cteDrugEra

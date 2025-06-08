@@ -4,13 +4,9 @@ SELECT
     , pr.procedure_start_date AS measurement_date
     , pr.procedure_start_datetime AS measurement_datetime
     , {{ dbt.cast("pr.procedure_start_datetime", api.Column.translate_type("time")) }} AS measurement_time
-    , 32827 AS measurement_type_concept_id
-    , 0 AS operator_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("decimal")) }} AS value_as_number
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS value_as_number
     , 0 AS value_as_concept_id
     , 0 AS unit_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("decimal")) }} AS range_low
-    , {{ dbt.cast("null", api.Column.translate_type("decimal")) }} AS range_high
     , vd.provider_id
     , vd.visit_occurrence_id
     , vd.visit_detail_id
@@ -18,9 +14,6 @@ SELECT
     , srctosrcvm.source_concept_id AS measurement_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS unit_source_value
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS value_source_value
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS unit_source_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("bigint")) }} AS measurement_event_id
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS meas_event_field_concept_id
 FROM {{ ref ('stg_synthea__procedures') }} AS pr
 INNER JOIN {{ ref ('int__source_to_standard_vocab_map') }} AS srctostdvm
     ON

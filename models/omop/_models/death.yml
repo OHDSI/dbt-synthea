@@ -12,14 +12,24 @@ models:
           - relationships:
               to: ref('person')
               field: person_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: death_date
         description: The date the person was deceased.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: death_datetime
         description: ''
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: death_type_concept_id
         description: This is the provenance of the death record, i.e., where it came from. Itis possible
           that an administrative claims database would source deathinformation from a government file
@@ -31,6 +41,9 @@ models:
               field: concept_id
               from_condition: death_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: cause_concept_id
         description: This is the Standard Concept representing the Person’s cause of death,if available.
         data_type: integer
@@ -38,9 +51,16 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: cause_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: cause_source_concept_id
         description: ''
         data_type: integer
@@ -48,3 +68,6 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"

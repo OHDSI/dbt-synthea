@@ -12,21 +12,15 @@ SELECT
     , coalesce(m.medication_stop_datetime, m.medication_start_datetime) AS drug_exposure_end_datetime
     , m.medication_stop_date AS verbatim_end_date
     , 32838 AS drug_type_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS stop_reason
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS refills
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS quantity
     , {{ dbt.datediff(
         "m.medication_start_date",
         "m.medication_stop_date", 
         "day") 
     }} AS days_supply
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS sig
     , 0 AS route_concept_id
     , '0' AS lot_number
     , m.medication_code AS drug_source_value
     , srctosrcvm.source_concept_id AS drug_source_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS route_source_value
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS dose_unit_source_value
     , m.medication_base_cost AS drug_base_cost
     , m.medication_payer_coverage AS drug_paid_by_payer
 FROM {{ ref ('stg_synthea__medications') }} AS m

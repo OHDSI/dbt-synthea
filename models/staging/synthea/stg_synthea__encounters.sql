@@ -28,8 +28,8 @@ WITH cte_encounters_lower AS (
         , code AS encounter_code
         , description AS encounter_description
         , base_encounter_cost
-        , {{ dbt.cast("total_claim_cost", api.Column.translate_type("decimal")) }} AS total_encounter_cost
-        , {{ dbt.cast("payer_coverage", api.Column.translate_type("decimal")) }} AS encounter_payer_coverage
+        , {{ dbt.cast("total_claim_cost", api.Column.translate_type("float")) }} AS total_encounter_cost
+        , {{ dbt.cast("payer_coverage", api.Column.translate_type("float")) }} AS encounter_payer_coverage
         , reasoncode AS encounter_reason_code
         , reasondescription AS encounter_reason_description
     FROM cte_encounters_lower

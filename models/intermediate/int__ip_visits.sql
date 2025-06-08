@@ -128,8 +128,8 @@ SELECT
         WHEN er.person_id IS NOT NULL THEN 'er+ip'
         ELSE 'inpatient'
     END AS visit_class
-    , v.visit_start_date
-    , v.visit_end_date
+    , {{ dbt.cast("v.visit_start_date", api.Column.translate_type("date")) }} AS visit_start_date
+    , {{ dbt.cast("v.visit_end_date", api.Column.translate_type("date")) }} AS visit_end_date
 FROM cte_visit_ids AS v
 INNER JOIN cte_visit_ends AS ve
     ON

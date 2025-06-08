@@ -163,10 +163,10 @@ dbt seed
  
  7. **If you'd like to run the ETL on your own Synthea dataset,** first toggle the `seed_source` variable in `dbt_project.yml` to `false`. This will tell dbt not to look for the source data in the seed schemas.
  
- 8. **[BYO DATA ONLY]** Create the empty vocabulary and Synthea tables by running the following commands.  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".
+ 8. **[BYO DATA ONLY]** Create the empty vocabulary and Synthea tables by running the following commands.  The vocab tables will be created in a schema named "<target schema>_vocab", and the Synthea tables in a schema named "<target schema>_synthea".
 ``` bash
-dbt run-operation create_vocab_tables
-dbt run-operation create_synthea_tables
+dbt run-operation create_source_tables --args "{vocab_tables: true}"
+dbt run-operation create_source_tables --args "{vocab_tables: false}"
 ```
 
  9. **[BYO DATA ONLY]** Use the technology/package of your choice to load the OMOP vocabulary and raw Synthea files into these newly-created tables. **NOTE only Synthea v3.0.0 is supported at this time.**

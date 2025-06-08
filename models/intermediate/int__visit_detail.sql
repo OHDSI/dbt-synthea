@@ -11,7 +11,7 @@ SELECT
     , e.encounter_start_date AS visit_detail_start_date
     , e.encounter_start_datetime AS visit_detail_start_datetime
     , e.encounter_stop_date AS visit_detail_end_date
-    , e.encounter_stop_datetime AS visit_detail_stop_datetime
+    , e.encounter_stop_datetime AS visit_detail_end_datetime
     , 32827 AS visit_detail_type_concept_id
     , e.provider_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id

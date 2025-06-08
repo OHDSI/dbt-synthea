@@ -13,9 +13,18 @@ SELECT
         WHEN upper(p.patient_gender) = 'F' THEN 8532
         ELSE 0
     END AS gender_concept_id
-    , extract(YEAR FROM p.birth_date) AS year_of_birth
-    , extract(MONTH FROM p.birth_date) AS month_of_birth
-    , extract(DAY FROM p.birth_date) AS day_of_birth
+    , {{ dbt.cast(
+        dbt_date.date_part("year", "p.birth_date"),
+        api.Column.translate_type("integer")) 
+    }} AS year_of_birth
+    , {{ dbt.cast(
+        dbt_date.date_part("month", "p.birth_date"),
+        api.Column.translate_type("integer")) 
+    }} AS month_of_birth
+    , {{ dbt.cast(
+        dbt_date.date_part("day", "p.birth_date"),
+        api.Column.translate_type("integer")) 
+    }} AS day_of_birth
     , {{ dbt.cast("NULL", api.Column.translate_type("timestamp")) }} AS birth_datetime
     , CASE
         WHEN upper(p.race) = 'WHITE' THEN 8527

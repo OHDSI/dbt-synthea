@@ -5,7 +5,7 @@ SELECT
     , visit_detail_start_date
     , visit_detail_start_datetime
     , visit_detail_end_date
-    , visit_detail_stop_datetime
+    , visit_detail_end_datetime
     , visit_detail_type_concept_id
     , provider_id
     , care_site_id

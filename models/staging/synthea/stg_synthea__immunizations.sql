@@ -18,7 +18,7 @@ WITH cte_immunizations_lower AS (
         , encounter AS encounter_id
         , code AS immunization_code
         , description AS immunization_description
-        , {{ dbt.cast("base_cost", api.Column.translate_type("decimal")) }} AS immunization_base_cost
+        , {{ dbt.cast("base_cost", api.Column.translate_type("float")) }} AS immunization_base_cost
     FROM cte_immunizations_lower
 
 )
