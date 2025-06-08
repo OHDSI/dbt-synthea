@@ -1,0 +1,60 @@
+name: Test dbt duckdb
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - macros/**
+      - models/**
+      - scripts/**
+      - seeds/**
+      - snapshots/**
+      - tests/**
+      - dbt_project.yml
+      - .github/workflows/**
+  workflow_dispatch:
+
+jobs:
+  test-dbt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies with uv
+        run: uv sync --dev --group duckdb
+
+      - name: Setup DBT profile
+        run: |
+          mkdir -p ~/.dbt
+          cat << EOF > ~/.dbt/profiles.yml
+          synthea_omop_etl:
+            outputs:
+              dev:
+                type: duckdb
+                path: synthea_omop_etl.duckdb
+                schema: dbt_synthea_dev
+            target: dev
+          EOF
+
+      - run: dbt deps
+      - run: dbt seed
+      - run: dbt run
+      - run: dbt test
+
+      - name: Generate DBT Docs
+        run: dbt docs generate
+
+      - name: Upload DBT Docs (for download)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-docs-preview
+          path: ./target
