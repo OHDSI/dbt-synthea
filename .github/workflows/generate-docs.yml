@@ -46,7 +46,7 @@ jobs:
             - run: uv run dbt deps
             - run: uv run dbt seed
             - run: uv run dbt run
-            - run: duv run bt test
+            - run: uv run dbt test
             - name: Generate Docs and prepare for upload
               run: |
                   uv run dbt docs generate
