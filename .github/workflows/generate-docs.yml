@@ -18,11 +18,11 @@ jobs:
             - uses: actions/checkout@v4
 
             - name: Install uv
-            uses: astral-sh/setup-uv@v6
-            with:
-              version: "latest"
-              enable-cache: true
-              cache-dependency-glob: "**/pyproject.toml"
+              uses: astral-sh/setup-uv@v6
+              with:
+                version: "latest"
+                enable-cache: true
+                cache-dependency-glob: "**/pyproject.toml"
             
             - name: Set up Python
               uses: actions/setup-python@v5
@@ -43,13 +43,13 @@ jobs:
                   target: dev
                 target: dev
                 EOF
-            - run: dbt deps
-            - run: dbt seed
-            - run: dbt run
-            - run: dbt test
+            - run: uv run dbt deps
+            - run: uv run dbt seed
+            - run: uv run dbt run
+            - run: duv run bt test
             - name: Generate Docs and prepare for upload
               run: |
-                  dbt docs generate
+                  uv run dbt docs generate
                   sed -i "s#<img style=\"width: 100px; height: 40px\" class=\"logo\" ng-src=\"{{ logo }}\" />#<img style=\"width: 140px\" src=\"assets/OHDSI-logo-with-text-horizontal-colored-white-background.png\" />#g" ./target/index.html
                   mkdir ./payload
                   mv ./target/index.html ./payload
