@@ -2,132 +2,340 @@ models:
   - name: stg_vocabulary__concept
     columns:
       - name: concept_id
+        description: A unique identifier for each Concept across all domains.
         data_type: integer
+        tests:
+          - not_null
+          - unique
       - name: concept_name
-        data_type: string
+        description: An unambiguous, meaningful and descriptive name for the Concept.
+        data_type: varchar(255)
+        tests:
+          - not_null
       - name: domain_id
-        data_type: string
+        description: A foreign key to the DOMAINtable the Concept belongs to.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - relationships:
+              to: ref('domain')
+              field: domain_id
       - name: vocabulary_id
-        data_type: string
+        description: A foreign key to the VOCABULARYtable indicating from which source the Concept has
+          been adapted.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - relationships:
+              to: ref('vocabulary')
+              field: vocabulary_id
       - name: concept_class_id
-        data_type: string
+        description: The attribute or concept class of the Concept. Examples are ‘ClinicalDrug’, ‘Ingredient’,
+          ‘Clinical Finding’ etc.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept_class')
+              field: concept_class_id
       - name: standard_concept
-        data_type: string
+        description: This flag determines where a Concept is a Standard Concept, i.e. is usedin the data,
+          a Classification Concept, or a non-standard Source Concept.The allowable values are ‘S’ (Standard
+          Concept) and ‘C’ (ClassificationConcept), otherwise the content is NULL.
+        data_type: varchar(1)
       - name: concept_code
-        data_type: string
+        description: The concept code represents the identifier of the Concept in the sourcevocabulary,
+          such as SNOMED-CT concept IDs, RxNorm RXCUIs etc. Note thatconcept codes are not unique across
+          vocabularies.
+        data_type: varchar(50)
+        tests:
+          - not_null
       - name: valid_start_date
+        description: The date when the Concept was first recorded. The default value is1-Jan-1970, meaning,
+          the Concept has no (known) date of inception.
         data_type: date
+        tests:
+          - not_null
       - name: valid_end_date
+        description: The date when the Concept became invalid because it was deleted orsuperseded (updated)
+          by a new concept. The default value is 31-Dec-2099,meaning, the Concept is valid until it becomes
+          deprecated.
         data_type: date
+        tests:
+          - not_null
       - name: invalid_reason
-        data_type: string
+        description: Reason the Concept was invalidated. Possible values are D (deleted), U(replaced with
+          an update) or NULL when valid_end_date has the defaultvalue.
+        data_type: varchar(1)
   - name: stg_vocabulary__concept_ancestor
     columns:
       - name: ancestor_concept_id
+        description: The Concept Id for the higher-level concept that forms the ancestor inthe relationship.
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
       - name: descendant_concept_id
+        description: The Concept Id for the lower-level concept that forms the descendant inthe relationship.
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
       - name: min_levels_of_separation
+        description: The minimum separation in number of levels of hierarchy between ancestorand descendant
+          concepts. This is an attribute that is used to simplifyhierarchic analysis.
         data_type: integer
+        tests:
+          - not_null
       - name: max_levels_of_separation
+        description: The maximum separation in number of levels of hierarchy between ancestorand descendant
+          concepts. This is an attribute that is used to simplifyhierarchic analysis.
         data_type: integer
+        tests:
+          - not_null
   - name: stg_vocabulary__concept_class
     columns:
       - name: concept_class_id
-        data_type: string
+        description: A unique key for each class.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - unique
       - name: concept_class_name
-        data_type: string
+        description: The name describing the Concept Class, e.g. Clinical Finding,Ingredient, etc.
+        data_type: varchar(255)
+        tests:
+          - not_null
       - name: concept_class_concept_id
+        description: A Concept that represents the Concept Class.
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
   - name: stg_vocabulary__concept_relationship
     columns:
-      - name: relationship_id
-        data_type: string
-      - name: relationship_name
-        data_type: string
-      - name: is_hierarchical
-        data_type: boolean
-      - name: defines_ancestry
-        data_type: boolean
-      - name: reverse_relationship_id
-        data_type: string
-      - name: relationship_concept_id
+      - name: concept_id_1
+        description: ''
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: concept_id_2
+        description: ''
+        data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
+      - name: relationship_id
+        description: The relationship between CONCEPT_ID_1 and CONCEPT_ID_2. Please see theVocabularyConventions.
+          for more information.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - relationships:
+              to: ref('relationship')
+              field: relationship_id
+      - name: valid_start_date
+        description: The date when the relationship is first recorded.
+        data_type: date
+        tests:
+          - not_null
+      - name: valid_end_date
+        description: The date when the relationship is invalidated.
+        data_type: date
+        tests:
+          - not_null
+      - name: invalid_reason
+        description: Reason the relationship was invalidated. Possible values are ‘D’(deleted), ‘U’ (updated)
+          or NULL.
+        data_type: varchar(1)
   - name: stg_vocabulary__concept_synonym
     columns:
       - name: concept_id
+        description: ''
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
       - name: concept_synonym_name
-        data_type: string
+        description: ''
+        data_type: varchar(1000)
+        tests:
+          - not_null
       - name: language_concept_id
+        description: ''
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
   - name: stg_vocabulary__domain
     columns:
       - name: domain_id
-        data_type: string
+        description: A unique key for each domain.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - unique
       - name: domain_name
-        data_type: string
+        description: The name describing the Domain, e.g. Condition, Procedure, Measurementetc.
+        data_type: varchar(255)
+        tests:
+          - not_null
       - name: domain_concept_id
+        description: A Concept representing the Domain Concept the DOMAIN record belongs to.
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
   - name: stg_vocabulary__drug_strength
     columns:
       - name: drug_concept_id
+        description: The Concept representing the Branded Drug or Clinical Drug Product.
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
       - name: ingredient_concept_id
+        description: The Concept representing the active ingredient contained within the drugproduct.
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
       - name: amount_value
+        description: The numeric value or the amount of active ingredient contained withinthe drug product.
         data_type: float
-      - name: amount_unit
-        data_type: string
+      - name: amount_unit_concept_id
+        description: The Concept representing the Unit of measure for the amount of activeingredient contained
+          within the drug product.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
       - name: numerator_value
+        description: The concentration of the active ingredient contained within the drugproduct.
         data_type: float
-      - name: numerator_unit
-        data_type: string
+      - name: numerator_unit_concept_id
+        description: The Concept representing the Unit of measure for the concentration ofactive ingredient.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
       - name: denominator_value
+        description: The amount of total liquid (or other divisible product, such asointment, gel, spray,
+          etc.).
         data_type: float
-      - name: denominator_unit
-        data_type: string
+      - name: denominator_unit_concept_id
+        description: The Concept representing the denominator unit for the concentration ofactive ingredient.
+        data_type: integer
+        tests:
+          - relationships:
+              to: ref('concept')
+              field: concept_id
       - name: box_size
+        description: The number of units of Clinical Branded Drug or Quantified Clinical orBranded Drug
+          contained in a box as dispensed to the patient.
         data_type: integer
       - name: valid_start_date
+        description: The date when the Concept was first recorded. The default value is1-Jan-1970.
         data_type: date
+        tests:
+          - not_null
       - name: valid_end_date
+        description: The date when then Concept became invalid.
         data_type: date
+        tests:
+          - not_null
       - name: invalid_reason
-        data_type: string
+        description: Reason the concept was invalidated. Possible values are D (deleted), U(replaced with
+          an update) or NULL when valid_end_date has the defaultvalue.
+        data_type: varchar(1)
   - name: stg_vocabulary__relationship
     columns:
       - name: relationship_id
-        data_type: string
+        description: The type of relationship captured by the relationship record.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - unique
       - name: relationship_name
-        data_type: string
+        description: ''
+        data_type: varchar(255)
+        tests:
+          - not_null
       - name: is_hierarchical
-        data_type: boolean
+        description: Defines whether a relationship defines concepts into classes orhierarchies. Values
+          are 1 for hierarchical relationship or 0 if not.
+        data_type: varchar(1)
+        tests:
+          - not_null
       - name: defines_ancestry
-        data_type: boolean
+        description: Defines whether a hierarchical relationship contributes to theconcept_ancestor table.
+          These are subsets of the hierarchicalrelationships. Valid values are 1 or 0.
+        data_type: varchar(1)
+        tests:
+          - not_null
       - name: reverse_relationship_id
-        data_type: string
+        description: The identifier for the relationship used to define the reverserelationship between
+          two concepts.
+        data_type: varchar(20)
+        tests:
+          - not_null
       - name: relationship_concept_id
+        description: A foreign key that refers to an identifier in the CONCEPTtable for the unique relationship
+          concept.
         data_type: integer
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
   - name: stg_vocabulary__vocabulary
     columns:
       - name: vocabulary_id
-        data_type: string
+        description: A unique identifier for each Vocabulary, such as ICD9CM, SNOMED, Visit.
+        data_type: varchar(20)
+        tests:
+          - not_null
+          - unique
       - name: vocabulary_name
-        data_type: string
+        description: The name describing the vocabulary, for example, InternationalClassification of Diseases,
+          Ninth Revision, Clinical Modification,Volume 1 and 2 (NCHS) etc.
+        data_type: varchar(255)
+        tests:
+          - not_null
       - name: vocabulary_reference
-        data_type: string
+        description: External reference to documentation or available download of the aboutthe vocabulary.
+        data_type: varchar(255)
       - name: vocabulary_version
-        data_type: string
+        description: Version of the Vocabulary as indicated in the source.
+        data_type: varchar(255)
       - name: vocabulary_concept_id
+        description: A Concept that represents the Vocabulary the VOCABULARY record belongsto.
         data_type: integer
-      - name: vocabulary_concept_name
-        data_type: string
-      - name: vocabulary_concept_code
-        data_type: string
-      - name: valid_start_date
-        data_type: date
-      - name: valid_end_date
-        data_type: date
-      - name: invalid_reason
-        data_type: string
+        tests:
+          - not_null
+          - relationships:
+              to: ref('concept')
+              field: concept_id
