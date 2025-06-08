@@ -13,16 +13,16 @@ models:
           - not_null
           - unique
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: relationship_name
         description: ''
         data_type: varchar(255)
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: is_hierarchical
         description: Defines whether a relationship defines concepts into classes orhierarchies. Values
           are 1 for hierarchical relationship or 0 if not.
@@ -30,8 +30,8 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: defines_ancestry
         description: Defines whether a hierarchical relationship contributes to theconcept_ancestor table.
           These are subsets of the hierarchicalrelationships. Valid values are 1 or 0.
@@ -39,8 +39,8 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: reverse_relationship_id
         description: The identifier for the relationship used to define the reverserelationship between
           two concepts.
@@ -48,8 +48,8 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: relationship_concept_id
         description: A foreign key that refers to an identifier in the CONCEPTtable for the unique relationship
           concept.
@@ -61,5 +61,4 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"

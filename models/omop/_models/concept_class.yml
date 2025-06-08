@@ -14,16 +14,16 @@ models:
           - not_null
           - unique
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: concept_class_name
         description: The name describing the Concept Class, e.g. Clinical Finding,Ingredient, etc.
         data_type: varchar(255)
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: concept_class_concept_id
         description: A Concept that represents the Concept Class.
         data_type: integer
@@ -34,5 +34,4 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"

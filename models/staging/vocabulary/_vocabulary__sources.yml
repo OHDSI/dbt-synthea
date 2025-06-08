@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: vocabulary
-    schema: "{% if var('seed_source', false) %}{{ target.schema }}_vocab_seeds{% else %}{{ target.schema }}{% endif %}"
+    schema: "{% if var('seed_source', false) %}{{ target.schema }}_vocab_seeds{% else %}{{ target.schema }}_vocab{% endif %}"
     tables:
       - name: concept
         identifier: "{% if var('seed_source', false) %}concept_seed{% else %}concept{% endif %}"

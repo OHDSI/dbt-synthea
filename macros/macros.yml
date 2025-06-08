@@ -1,7 +1,68 @@
 macros:
+  - name: check_if_exists
+    description: This macro checks if a table exists in the specified database and schema.
+    arguments:
+      - name: database
+        type: str
+        description: The database name.
+      - name: schema
+        type: str
+        description: The schema name.
+      - name: table
+        type: str
+        description: The table name.
+  
+  - name: create_source_tables
+    description: This macro creates empty Synthea and vocabulary tables in the synthea or vocab schema, respectively.
+    arguments:
+      - name: vocab_tables
+        type: bool
+        description: Whether to create vocabulary tables.
+
+  - name: load_data_duckdb
+    description: This macro loads Synthea or OMOP vocabulary data into DuckDB, casting columns to appropriate types and applying transformations.
+    arguments:
+      - name: file_dict
+        type: dict
+        description: A dictionary mapping table names to file paths.
+      - name: vocab_tables
+        type: bool
+        description: Whether to load vocabulary tables.
+
+  - name: lowercase_columns
+    description: This macro converts column names to lowercase, handling SQL keywords safely.
+    arguments:
+      - name: column_names
+        type: list[str]
+        description: A list of column names to convert.
+
+  - name: regexp_like
+    description: This macro provides a cross-database implementation of the REGEXP_LIKE function.
+    arguments:
+      - name: subject
+        type: str
+        description: The string to match against the pattern.
+      - name: pattern
+        type: str
+        description: The regular expression pattern.
+
   - name: safe_hash
     description: This macro allows concatenation and hashing of fields that may contain `NULL` elements. For example, fields in an address.
     arguments:
       - name: columns
         type: list[str]
         description: A list of column names
+
+  - name: get_equivalent_types
+    description: This macro returns a list of equivalent data types for a given standard type.
+    arguments:
+      - name: standard_type
+        type: str
+        description: The standard data type to find equivalents for.
+
+  - name: get_type_variants
+    description: This macro returns all equivalent types for a list of standard types.
+    arguments:
+      - name: standard_types
+        type: list[str]
+        description: A list of standard data types to find equivalents for.
