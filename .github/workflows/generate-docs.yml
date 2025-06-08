@@ -30,7 +30,7 @@ jobs:
                 python-version: '3.12'
                 
             - name: Install dependencies with uv
-              run: uv sync --dev --group duckdb
+              run: uv sync --group duckdb
             - name: Setup profile
               run: |
                 cat << EOF > profiles.yml
