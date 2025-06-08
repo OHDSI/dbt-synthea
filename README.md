@@ -25,31 +25,46 @@ Users are welcomed, however, to utilize their own Synthea and/or OMOP vocabulary
 - This project currently only supports **Synthea v3.0.0**
 - Python **3.12.0** is the suggested version of Python for this project.
 
-### Repo Setup
- 1. Clone this repository to your machine
- 2. `cd` into the repo directory and set up a virtual environment:
+### Setup -uv
+
+ 1. We reccomend using uv to manage dependencies, particularly for development. Installation instructions can be found [here](https://docs.astral.sh/uv/getting-started/installation/). Please follow the instructions for your local setup then return here once uv is installed.
+
+ 2. Clone this repository to your machine
+ 3. Change directory - `cd` - into the repo directory and set up a virtual environment:
+
+ If using duckdb:
  ```bash
- python3 -m venv dbt-env
+ uv sync --group duckdb
  ```
- - If you are using VS Code, create a .env file in  the root of your repo workspace (`touch .env`) and add a PYTHONPATH entry for your virtual env (for example, if you cloned your repo in your computer's home directory, the entry will read as: `PYTHONPATH="~/dbt-synthea/dbt-env/bin/python"`)
- - Now, in VS Code, once you set this virtualenv as your preferred interpreter for the project, the vscode config in the repo will automatically source this env each time you open a new terminal in the project.  Otherwise, each time you open a new terminal to use dbt for this project, run:
+
+ If using postgres:
+ ```bash
+ uv sync --group postgres
+ ```
+
+ If you want to add the dev dependencies such as formaters like sqlfluff then add the --dev tag:
+ ```bash
+ uv sync --group duckdb --dev
+ ```
+
+And if you want to add all dependeencies then use:
 ```bash
-source dbt-env/bin/activate         # activate the environment for Mac and Linux OR
-dbt-env\Scripts\activate            # activate the environment for Windows
+uv sync --all-groups
 ```
+
+> Note: The --group and --dev arguments must be passed at the same time, passing them separately e.g `uv sync --group duckdb` `uv sync --dev` will just result in the last group specified being installed.
+
+ - If you are using VS Code, and are new to using uv as a package manager, then you may need to change some settings so that vs code automatically locates and uses the local python environment created by uv. Add the following to your [user settings.json file](https://code.visualstudio.com/docs/configure/settings#_settings-file-locations): `"python.defaultInterpreterPath": "./.venv/bin",`. This option is already configured in the vs code settings file located in the project, so the environment should be located automatically, but if there are any issues then you can remove or alter that local setting.
+
 3. Set up your [profiles.yml file](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml).  You can either:
    - Create a file in the `~/.dbt/` directory named `profiles.yml` (if you've already got this directory and file, you can skip this step and add profile block(s) for this project to that file)
    - Create a `profiles.yml` file in the root of the `dbt-synthea` repo folder
    - Create the file wherever you wish, following the guidance [here](https://docs.getdbt.com/docs/core/connect-data-platform/connection-profiles#advanced-customizing-a-profile-directory)
 
-### DuckDB Setup
- 1. In your virtual environment install requirements for duckdb (see [here for contents](./requirements/duckdb.in))
-```bash
-pip3 install -r requirements/duckdb.txt
-pre-commit install
-```
+4. Set up your profiles.yml file according to the instructions below.
 
- 2. Add the following block to your `profiles.yml` file:
+#### Duckdb
+Add the following block to your `profiles.yml` file:
 ```yaml
 synthea_omop_etl:
   outputs:
@@ -60,7 +75,25 @@ synthea_omop_etl:
   target: dev
 ```
 
- 3. Ensure your profile is setup correctly using dbt debug:
+#### Postgres
+First of all set up a local Postgres database with a dedicated schema for developing this project (e.g. `dbt_synthea_dev`).
+Then add the following to your `profiles.yml` file:
+```yaml
+synthea_omop_etl:
+  outputs:
+    dev:
+      dbname: <name of local postgres DB>
+      host: <host, e.g. localhost>
+      user: <username>
+      password: <password>
+      port: 5432
+      schema: dbt_synthea_dev
+      threads: 4 # See https://docs.getdbt.com/docs/running-a-dbt-project/using-threads for more details
+      type: postgres
+  target: dev
+```
+
+5. Ensure your profile is setup correctly using dbt debug:
 ```bash
 dbt debug
 ```
@@ -78,24 +111,17 @@ dbt seed
  
  7. **[BYO DATA ONLY]** 
 
- (a) Optional - Convert csv files to parquet files. This will significantly reduce file size and may make the run process faster.
- If using uv:
+ Optional - Convert csv files to parquet files. This will significantly reduce file size and may make the run process faster.
 ```bash
 uv run scripts/python/convert_to_parquet.py <path/to/synthea/csvs>
 uv run scripts/python/convert_to_parquet.py <path/to/synthea/csvs> --vocab
 ```
 
-If using pip/python:
-```bash
-python3 scripts/python/convert_to_parquet.py <path/to/synthea/csvs>
-python3 scripts/python/convert_to_parquet.py <path/to/synthea/csvs> --vocab
-```
-
 >Note: Pass the --vocab or -v flags when converting the vocabulary tables. There is also an --output or -o argument you can pass followed by the path to the desired output directory. If not passed then by default the parquet file directory will be created in the same directory as the csv file directory.
 
- (b) Load your Synthea and Vocabulary data into the database by running the following commands (modify the commands as needed to specify the path to the folder storing the Synthea and vocabulary files, respectively).  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".  **NOTE only Synthea v3.0.0 is supported at this time.**
+#### Duckdb
+ Load your Synthea and Vocabulary data into the database by running the following commands (modify the commands as needed to specify the path to the folder storing the Synthea and vocabulary files, respectively).  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".  **NOTE only Synthea v3.0.0 is supported at this time.**
 
- If using uv:
 ``` bash
 file_dict=$(uv run scripts/python/get_filepaths.py <path/to/synthea/files>)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: false}"
@@ -103,13 +129,14 @@ file_dict=$(uv run scripts/python/get_filepaths.py <path/to/vocab/files>)
 dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: true}"
 ```
 
-If using pip/python:
+#### Postgres
+**[(a)]** Create the empty vocabulary and Synthea tables by running the following commands.  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".
 ``` bash
-file_dict=$(python3 scripts/python/get_filepaths.py <path/to/synthea/files>)
-dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: false}"
-file_dict=$(python3 scripts/python/get_filepaths.py <path/to/vocab/files>)
-dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables: true}"
+dbt run-operation create_vocab_tables
+dbt run-operation create_synthea_tables
 ```
+
+**[(b)]** Use the technology/package of your choice to load the OMOP vocabulary and raw Synthea files into these newly-created tables. **NOTE only Synthea v3.0.0 is supported at this time.**
 
  8. Seed the location mapper:
 ```bash
@@ -117,66 +144,6 @@ dbt seed --select states
 ```
 
  9. Build the OMOP tables:
-```bash
-dbt build
-# or `dbt run`, `dbt test`
-```
-
-### Postgres Setup
- 1. In your virtual environment install requirements for Postgres (see [here for contents](./requirements/postgres.in))
-```bash
-pip3 install -r requirements/postgres.txt
-pre-commit install
-```
- 2. Set up a local Postgres database with a dedicated schema for developing this project (e.g. `dbt_synthea_dev`)
-
- 3. Add the following block to your `profiles.yml` file:
-```yaml
-synthea_omop_etl:
-  outputs:
-    dev:
-      dbname: <name of local postgres DB>
-      host: <host, e.g. localhost>
-      user: <username>
-      password: <password>
-      port: 5432
-      schema: dbt_synthea_dev
-      threads: 4 # See https://docs.getdbt.com/docs/running-a-dbt-project/using-threads for more details
-      type: postgres
-  target: dev
-```
-
- 4. Ensure your profile is setup correctly using dbt debug:
-```bash
-dbt debug
-```
-
- 5. Load dbt dependencies:
-```bash
-dbt deps
-```
-
- 6. **If you'd like to run the default ETL using the pre-seeded Synthea dataset,** run `dbt seed` to load the CSVs with the Synthea dataset and vocabulary data. This materializes the seed CSVs as tables in your target schema (vocab) and a _synthea schema (Synthea tables).  **Then, skip to step 10 below.**
-```bash
-dbt seed
-```
- 
- 7. **If you'd like to run the ETL on your own Synthea dataset,** first toggle the `seed_source` variable in `dbt_project.yml` to `false`. This will tell dbt not to look for the source data in the seed schemas.
- 
- 8. **[BYO DATA ONLY]** Create the empty vocabulary and Synthea tables by running the following commands.  The vocabulary tables will be created in the target schema specified in your profiles.yml for the profile you are targeting.  The Synthea tables will be created in a schema named "<target schema>_synthea".
-``` bash
-dbt run-operation create_vocab_tables
-dbt run-operation create_synthea_tables
-```
-
- 9. **[BYO DATA ONLY]** Use the technology/package of your choice to load the OMOP vocabulary and raw Synthea files into these newly-created tables. **NOTE only Synthea v3.0.0 is supported at this time.**
-
- 10. Seed the location mapper:
-```bash
-dbt seed --select states
-```
-
- 11. Build the OMOP tables:
 ```bash
 dbt build
 # or `dbt run`, `dbt test`

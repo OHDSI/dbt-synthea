@@ -1,3 +1,0 @@
--r common.in
-
-dbt-duckdb==1.8
