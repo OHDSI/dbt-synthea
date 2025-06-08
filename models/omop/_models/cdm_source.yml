@@ -9,45 +9,45 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: cdm_source_abbreviation
         description: The abbreviation of the CDM instance.
         data_type: varchar(25)
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: cdm_holder
         description: The holder of the CDM instance.
         data_type: varchar(255)
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: source_description
         description: The description of the CDM instance.
         data_type: varchar(MAX)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: source_documentation_reference
         description: Refers to a publication or web resource describing the source data
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: cdm_etl_reference
         description: ''
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: source_release_date
         description: The date the data was extracted from the source system. In some systemsthat is the
           same as the date the ETL was run. Typically the latest evendate in the source is on the source_release_date.
@@ -55,23 +55,23 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('date') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: cdm_release_date
         description: The date the ETL script was completed. Typically this is after thesource_release_date.
         data_type: date
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('date') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: cdm_version
         description: Version of the OMOP CDM used as string. e.g. v5.4
         data_type: varchar(10)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: cdm_version_concept_id
         description: The Concept Id representing the version of the CDM.
         data_type: integer
@@ -82,13 +82,12 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: vocabulary_version
         description: Version of the OMOP standardised vocabularies loaded
         data_type: varchar(20)
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"

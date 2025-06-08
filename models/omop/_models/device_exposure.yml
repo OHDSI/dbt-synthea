@@ -16,8 +16,7 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
         description: ''
         data_type: integer
@@ -28,8 +27,7 @@ models:
               field: person_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: device_concept_id
         description: The DEVICE_CONCEPT_ID field is recommended for primary use in analyses,and must be
           used for network studies. This is the standard conceptmapped from the source concept id which
@@ -44,38 +42,37 @@ models:
               to_condition: domain_id = 'Device'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: device_exposure_start_date
         description: Use this date to determine the start date of the device record.
         data_type: date
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('date') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: device_exposure_start_datetime
         description: ''
         data_type: datetime
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('timestamp') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: device_exposure_end_date
         description: The DEVICE_EXPOSURE_END_DATE denotes the day the device exposure endedfor the patient,
           if given.
         data_type: date
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('date') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: device_exposure_end_datetime
         description: ''
         data_type: datetime
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('timestamp') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: device_type_concept_id
         description: You can use the TYPE_CONCEPT_ID to denote the provenance of the record,as in whether
           the record is from administrative claims or EHR.
@@ -89,31 +86,29 @@ models:
               to_condition: domain_id = 'Type Concept'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: unique_device_id
         description: This is the Unique Device Identification (UDI-DI) number for devicesregulated by
           the FDA, if given.
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: production_id
         description: This is the Production Identifier (UDI-PI) portion of the Unique DeviceIdentification.
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: quantity
         description: ''
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: provider_id
         description: The Provider associated with device record, e.g. the provider who wrotethe prescription
           or the provider who implanted the device.
@@ -124,8 +119,7 @@ models:
               field: provider_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_occurrence_id
         description: The Visit during which the device was prescribed or given.
         data_type: integer
@@ -135,8 +129,7 @@ models:
               field: visit_occurrence_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_id
         description: The Visit Detail during which the device was prescribed or given.
         data_type: integer
@@ -146,16 +139,15 @@ models:
               field: visit_detail_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: device_source_value
         description: This field houses the verbatim value from the source data representingthe device
           exposure that occurred. For example, this could be an NDC orGemscript code.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: device_source_concept_id
         description: This is the concept representing the device source value and may notnecessarily be
           standard. This field is discouraged from use in analysisbecause it is not required to contain
@@ -170,8 +162,7 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: unit_concept_id
         description: UNIT_SOURCE_VALUES should be mapped to a Standard Concept in the Unitdomain that
           best represents the unit as given in the source data.
@@ -184,16 +175,15 @@ models:
               to_condition: domain_id = 'Unit'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: unit_source_value
         description: This field houses the verbatim value from the source data representingthe unit of
           the Device. For example, blood transfusions are considereddevices and can be given in mL quantities.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: unit_source_concept_id
         description: This is the concept representing the UNIT_SOURCE_VALUE and may notnecessarily be
           standard. This field is discouraged from use in analysisbecause it is not required to contain
@@ -208,5 +198,4 @@ models:
               field: concept_id
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"

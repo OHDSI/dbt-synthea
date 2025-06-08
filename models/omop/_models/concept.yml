@@ -22,16 +22,15 @@ models:
           - unique
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list: ["{{ api.Column.translate_type('integer') }}", "{{ api.Column.translate_type('bigint')
-                    }}"]
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: concept_name
         description: An unambiguous, meaningful and descriptive name for the Concept.
         data_type: varchar(255)
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: domain_id
         description: A foreign key to the DOMAINtable the Concept belongs to.
         data_type: varchar(20)
@@ -41,8 +40,8 @@ models:
               to: ref('domain')
               field: domain_id
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: vocabulary_id
         description: A foreign key to the VOCABULARYtable indicating from which source the Concept has
           been adapted.
@@ -53,8 +52,8 @@ models:
               to: ref('vocabulary')
               field: vocabulary_id
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: concept_class_id
         description: The attribute or concept class of the Concept. Examples are ‘ClinicalDrug’, ‘Ingredient’,
           ‘Clinical Finding’ etc.
@@ -65,8 +64,8 @@ models:
               to: ref('concept_class')
               field: concept_class_id
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: standard_concept
         description: This flag determines where a Concept is a Standard Concept, i.e. is usedin the data,
           a Classification Concept, or a non-standard Source Concept.The allowable values are ‘S’ (Standard
@@ -74,8 +73,8 @@ models:
         data_type: varchar(1)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: concept_code
         description: The concept code represents the identifier of the Concept in the sourcevocabulary,
           such as SNOMED-CT concept IDs, RxNorm RXCUIs etc. Note thatconcept codes are not unique across
@@ -84,8 +83,8 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: valid_start_date
         description: The date when the Concept was first recorded. The default value is1-Jan-1970, meaning,
           the Concept has no (known) date of inception.
@@ -93,8 +92,8 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('date') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: valid_end_date
         description: The date when the Concept became invalid because it was deleted orsuperseded (updated)
           by a new concept. The default value is 31-Dec-2099,meaning, the Concept is valid until it becomes
@@ -103,13 +102,13 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('date') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: invalid_reason
         description: Reason the Concept was invalidated. Possible values are D (deleted), U(replaced with
           an update) or NULL when valid_end_date has the defaultvalue.
         data_type: varchar(1)
         tests:
           - dbt_expectations.expect_column_to_exist
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: "{{ api.Column.translate_type('varchar') }}"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
