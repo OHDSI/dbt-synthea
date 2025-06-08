@@ -44,7 +44,7 @@ jobs:
                 schema: dbt_synthea_dev
             target: dev
           EOF
-
+      - run: source .venv/bin/activate
       - run: dbt deps
       - run: dbt seed
       - run: dbt run
