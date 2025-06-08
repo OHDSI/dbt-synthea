@@ -7,13 +7,13 @@
         {% set sources = var('synthea_tables') %}
     {% endif %}
 
-{% set first_key, first_val = (file_dict | dictsort | first) %}
-{% set parquet = first_val.endswith(".parquet") %}
-{% set csv = first_val.endswith(".csv") %}
+    {% set first_key, first_val = (file_dict | dictsort | first) %}
+    {% set parquet = first_val.endswith(".parquet") %}
+    {% set csv = first_val.endswith(".csv") %}
 
-{% do adapter.create_schema(api.Relation.create(database=database, schema=schema)) %}
+    {% do adapter.create_schema(api.Relation.create(database=database, schema=schema)) %}
 
-{% set file_table_names = file_dict.keys() | list %}
+    {% set file_table_names = file_dict.keys() | list %}
 
     {% for n, p in file_dict.items() %}
         {% set table = sources.get(n.lower()) %}  
@@ -39,12 +39,27 @@
             {% endif %}
         {% endfor %}
 
+        {% set object_type_query %}
+            SELECT table_type 
+            FROM information_schema.tables 
+            WHERE table_schema = '{{ schema }}' 
+            AND table_name = '{{ n.lower() }}'
+        {% endset %}
+        
+        {% set results = run_query(object_type_query) %}
+        {% if results.rows %}
+            {% set table_type = results.rows[0]['table_type'] %}
+            {% if table_type == 'BASE TABLE' %}
+                {% do run_query("DROP TABLE " ~ schema ~ "." ~ n.lower()) %}
+            {% elif table_type == 'VIEW' %}
+                {% do run_query("DROP VIEW " ~ schema ~ "." ~ n.lower()) %}
+            {% endif %}
+        {% endif %}
+
         {% if csv %}
-            {% do run_query("DROP TABLE IF EXISTS " ~ schema ~ "." ~ n.lower() ~ ";") %}
             {% set create_table_sql = "CREATE TABLE " ~ schema ~ "." ~ n.lower() ~ " AS SELECT " ~ column_casts | join(', ') ~ " FROM read_csv('" ~ p ~ "', quote = '');" %}
         {% elif parquet %}
-            {% do run_query("DROP VIEW IF EXISTS " ~ schema ~ "." ~ n.lower() ~ ";") %}
-            {% set create_table_sql = "CREATE VIEW " ~ schema ~ "." ~ n.lower() ~ " AS SELECT " ~ column_casts | join(', ') ~ " FROM read_csv('" ~ p ~ "', quote = '');" %}
+            {% set create_table_sql = "CREATE VIEW " ~ schema ~ "." ~ n.lower() ~ " AS SELECT " ~ column_casts | join(', ') ~ " FROM read_parquet('" ~ p ~ "');" %}
         {% endif %}
         {% do run_query(create_table_sql) %}
     {% endfor %}
