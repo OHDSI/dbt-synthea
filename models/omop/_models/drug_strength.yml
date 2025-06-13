@@ -15,6 +15,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: ingredient_concept_id
         description: The Concept representing the active ingredient contained within the drugproduct.
         data_type: integer
@@ -26,6 +31,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: ingredient_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: amount_value
         description: The numeric value or the amount of active ingredient contained withinthe drug product.
         data_type: float
@@ -44,6 +54,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: amount_unit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: numerator_value
         description: The concentration of the active ingredient contained within the drugproduct.
         data_type: float
@@ -61,6 +76,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: numerator_unit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: denominator_value
         description: The amount of total liquid (or other divisible product, such asointment, gel, spray,
           etc.).
@@ -79,6 +99,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: denominator_unit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: box_size
         description: The number of units of Clinical Branded Drug or Quantified Clinical orBranded Drug
           contained in a box as dispensed to the patient.

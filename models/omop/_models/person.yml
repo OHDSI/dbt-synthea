@@ -27,6 +27,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: gender_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: year_of_birth
         description: Compute age using year_of_birth.
         data_type: integer
@@ -69,6 +74,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: race_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: ethnicity_concept_id
         description: 'This field captures Ethnicity as defined by the Office of Management andBudget (OMB)
           of the US Government: it distinguishes only betweenHispanic and Not Hispanic. Races and ethnic
@@ -84,6 +94,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: ethnicity_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: location_id
         description: The location refers to the physical address of the person. This fieldshould capture
           the last known location of the person.

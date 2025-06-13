@@ -58,6 +58,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: payer_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: payer_source_value
         description: This is the Payer as it appears in the source data.
         data_type: varchar(50)
@@ -85,6 +90,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: plan_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: plan_source_value
         description: This is the health benefit Plan of the Person as it appears in thesource data.
         data_type: varchar(50)
@@ -113,6 +123,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: sponsor_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: sponsor_source_value
         description: The Plan sponsor as it appears in the source data.
         data_type: varchar(50)
@@ -147,6 +162,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: stop_reason_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: stop_reason_source_value
         description: The Plan stop reason as it appears in the source data.
         data_type: varchar(50)

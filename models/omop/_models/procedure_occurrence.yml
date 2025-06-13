@@ -40,6 +40,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: procedure_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: procedure_date
         description: Use this date to determine the date the procedure started.
         data_type: date
@@ -83,6 +88,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: procedure_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: modifier_concept_id
         description: The modifiers are intended to give additional information about theprocedure but
           as of now the vocabulary is under review.
@@ -94,6 +104,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: modifier_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: quantity
         description: If the quantity value is omitted, a single procedure is assumed.
         data_type: integer

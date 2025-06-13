@@ -42,6 +42,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_detail_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: visit_detail_start_date
         description: This is the date of the start of the encounter. This may or may not beequal to the
           date of the Visit the Visit Detail is associated with.
@@ -91,6 +96,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_detail_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: provider_id
         description: There will only be one provider per visit record andthe ETL document should clearly
           state how they were chosen (attending,admitting, etc.). This is a typical reason for leveraging
@@ -147,6 +157,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: admitted_from_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: admitted_from_source_value
         description: ''
         data_type: varchar(50)
@@ -177,6 +192,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: discharged_to_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: preceding_visit_detail_id
         description: Use this field to find the visit detail that occurred for the personprior to the
           given visit detail record. There could be a few days or afew years in between.

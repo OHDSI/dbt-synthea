@@ -40,6 +40,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: condition_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: condition_start_date
         description: Use this date to determine the start date of the condition
         data_type: date
@@ -83,6 +88,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: condition_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: condition_status_concept_id
         description: This concept represents the point during the visit the diagnosis wasgiven (admitting
           diagnosis, final diagnosis), whether the diagnosis wasdetermined due to laboratory findings,
@@ -97,6 +107,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: condition_status_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: stop_reason
         description: The Stop Reason indicates why a Condition is no longer valid withrespect to the purpose
           within the source data. Note that a Stop Reasondoes not necessarily imply that the condition

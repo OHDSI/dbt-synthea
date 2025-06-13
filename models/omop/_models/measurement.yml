@@ -50,6 +50,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: measurement_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: measurement_date
         description: Use this date to determine the date of the measurement.
         data_type: date
@@ -86,6 +91,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: measurement_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: operator_concept_id
         description: The meaning of Concept 4172703for ‘=’ is identical to omission of a OPERATOR_CONCEPT_ID
           value. Sincethe use of this field is rare, it’s important when devising analyses tonot to forget
@@ -98,6 +108,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: operator_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: value_as_number
         description: This is the numerical value of the Result of the Measurement, ifavailable. Note that
           measurements such as blood pressures will be splitinto their component parts i.e. one record
@@ -118,6 +133,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: value_as_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unit_concept_id
         description: At present, there isn’t a prescribed unit for individual measurements,such as Hemoglobin
           A1C, meaning it’s not obligatory to express thesemeasurements as a percentage. UNIT_SOURCE_VALUES
@@ -133,6 +153,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: unit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: range_low
         description: Ranges have the same unit as the VALUE_AS_NUMBER. These ranges areprovided by the
           source and should remain NULL if not given.
@@ -255,3 +280,8 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: meas_event_field_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL

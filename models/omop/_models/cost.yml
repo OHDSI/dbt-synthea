@@ -43,6 +43,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: cost_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: currency_concept_id
         description: ''
         data_type: integer
@@ -53,6 +58,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: currency_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: total_charge
         description: ''
         data_type: float
@@ -154,6 +164,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: revenue_code_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: revenue_code_source_value
         description: Revenue codes are a method to charge for a class of procedures andconditions in the
           U.S. hospital system.
@@ -172,6 +187,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drg_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: drg_source_value
         description: Diagnosis Related Groups are US codes used to classify hospital casesinto one of
           approximately 500 groups.
