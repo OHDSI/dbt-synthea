@@ -38,6 +38,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: observation_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: observation_date
         description: The date of when the Observation was obtained. Depending on what theObservation represents
           this could be the date of a lab test, the date ofa survey, or the date a patient’s family history
@@ -69,6 +74,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: observation_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: value_as_number
         description: This is the numerical value of the Result of the Observation, ifapplicable and available.
           It is not expected that all Observations willhave numeric results, rather, this field is here
@@ -101,6 +111,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: value_as_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: qualifier_concept_id
         description: This field contains all attributes specifying the clinical fact further,such as as
           degrees, severities, drug-drug interaction alerts etc.
@@ -112,6 +127,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: qualifier_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unit_concept_id
         description: There is currently no recommended unit for individual observationconcepts. UNIT_SOURCE_VALUES
           should be mapped to a Standard Concept inthe Unit domain that best represents the unit as given
@@ -126,6 +146,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: unit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: provider_id
         description: The provider associated with the observation record, e.g. the providerwho ordered
           the test or the provider who recorded the result.
@@ -226,3 +251,8 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: obs_event_field_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL

@@ -33,6 +33,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: specimen_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: specimen_type_concept_id
         description: ''
         data_type: integer
@@ -46,6 +51,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: specimen_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: specimen_date
         description: The date the specimen was collected.
         data_type: date
@@ -78,6 +88,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: unit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: anatomic_site_concept_id
         description: This is the site on the body where the specimen is from.
         data_type: integer
@@ -88,6 +103,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: anatomic_site_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: disease_status_concept_id
         description: ''
         data_type: integer
@@ -98,6 +118,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: disease_status_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: specimen_source_id
         description: This is the identifier for the specimen from the source system.
         data_type: varchar(50)

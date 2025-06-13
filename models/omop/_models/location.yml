@@ -71,6 +71,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: country_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: country_source_value
         description: The name of the country.
         data_type: varchar(80)

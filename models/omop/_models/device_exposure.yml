@@ -43,6 +43,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: device_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: device_exposure_start_date
         description: Use this date to determine the start date of the device record.
         data_type: date
@@ -87,6 +92,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: device_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unique_device_id
         description: This is the Unique Device Identification (UDI-DI) number for devicesregulated by
           the FDA, if given.
@@ -176,6 +186,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: unit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unit_source_value
         description: This field houses the verbatim value from the source data representingthe unit of
           the Device. For example, blood transfusions are considereddevices and can be given in mL quantities.

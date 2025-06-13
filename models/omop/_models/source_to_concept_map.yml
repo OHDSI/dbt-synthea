@@ -27,6 +27,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: source_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: source_vocabulary_id
         description: A foreign key to the VOCABULARY table defining the vocabulary of thesource code that
           is being translated to a Standard Concept.
@@ -55,6 +60,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: target_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: target_vocabulary_id
         description: The Vocabulary of the target Concept.
         data_type: varchar(20)

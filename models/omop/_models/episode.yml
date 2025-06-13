@@ -41,6 +41,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: episode_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: episode_start_date
         description: The date when the Episode beings.
         data_type: date
@@ -101,6 +106,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: episode_object_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: episode_type_concept_id
         description: This field can be used to determine the provenance of the Episoderecord, as in whether
           the episode was from an EHR system, insuranceclaim, registry, or other sources.
@@ -115,6 +125,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: episode_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: episode_source_value
         description: The source code for the Episode as it appears in the source data. Thiscode is mapped
           to a Standard Condition Concept in the StandardizedVocabularies and the original code is stored
