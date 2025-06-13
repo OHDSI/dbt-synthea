@@ -46,6 +46,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: drug_exposure_start_date
         description: Use this date to determine the start date of the drug record.
         data_type: date
@@ -98,6 +103,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: stop_reason
         description: The reason a person stopped a medication as it is represented in thesource. Reasons
           include regimen completed, changed, removed, etc. Thisfield will be retired in v6.0.
@@ -147,6 +157,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: route_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: lot_number
         description: ''
         data_type: varchar(50)

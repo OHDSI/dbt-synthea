@@ -224,7 +224,7 @@ def create_table_dict(
                 "name": table,
                 "description": table_description,
                 "columns": [
-                    omop_docs_to_dbt_config(doc_container)
+                    omop_docs_to_dbt_config(table, doc_container)
                     for doc_container in parsed_table
                 ],
             }
@@ -247,6 +247,7 @@ def extract_table_description(table_handle: Tag) -> str:
 
 
 def omop_docs_to_dbt_config(
+    table: str,
     doc_container: OmopDocumentationContainer,
 ) -> dict[str, str | list[str | dict[str, dict[str, str]]]]:
     """
@@ -291,7 +292,7 @@ def omop_docs_to_dbt_config(
                 }
             }
             tests.append(specific_test)
-
+    
     # Add dbt_expectations tests
     tests.append("dbt_expectations.expect_column_to_exist")
     if doc_container.datatype.lower() == "integer":
@@ -318,6 +319,17 @@ def omop_docs_to_dbt_config(
                 "column_type_list": "{{ get_equivalent_types('varchar') }}"
             }
         })
+
+    if doc_container.cdm_field.endswith("_concept_id") and not doc_container.cdm_field.endswith("_source_concept_id"):
+        if table.lower() not in {"concept", "concept_ancestor", "concept_relationship", "concept_synonym", "concept_class", "domain", "relationship", "vocabulary"}:
+            tests.append({
+                "dbt_utils.relationships_where": {
+                    "to": "ref('concept')",
+                    "field": "concept_id",
+                    "from_condition": f"{doc_container.cdm_field} != 0",
+                    "to_condition": "standard_concept = 'S' AND invalid_reason IS NULL",
+                }
+            })
 
     if tests:
         column_config["tests"] = tests

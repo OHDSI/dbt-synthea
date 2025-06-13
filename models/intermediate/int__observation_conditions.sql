@@ -5,7 +5,6 @@ SELECT
     , srctostdvm.target_concept_id AS observation_concept_id
     , c.condition_start_date AS observation_date
     , c.condition_start_date AS observation_datetime
-    , 38000280 AS observation_type_concept_id
     , vd.provider_id
     , vd.visit_occurrence_id
     , vd.visit_detail_id

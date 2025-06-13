@@ -42,6 +42,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: visit_start_date
         description: For inpatient visits, the start date is typically the admission date.For outpatient
           visits the start date and end date will be the same.
@@ -91,6 +96,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: provider_id
         description: There will only be one provider per visit record and the ETL documentshould clearly
           state how they were chosen (attending, admitting, etc.).If there are multiple providers associated
@@ -146,6 +156,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: admitted_from_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: admitted_from_source_value
         description: ''
         data_type: varchar(50)
@@ -169,6 +184,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: discharged_to_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: discharged_to_source_value
         description: ''
         data_type: varchar(50)
