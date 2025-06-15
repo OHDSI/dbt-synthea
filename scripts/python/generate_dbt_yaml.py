@@ -13,20 +13,14 @@ If you make this file executable you should also be able to run it directly usin
 just the file path/name and the output directory path. e.g:
 ./generate_dbt_yaml.py <output_dir>
 
-CDM version used is CDM 5.4 which corresponds to the urls referenced below.
+CDM version used is CDM 5.4 which corresponds to the default URLs in the script. 
+This is the only CDM version currently supported by this dbt project.
+These URLs point to the field-level and table-level CSV files from the OMOP CDM
+documentation, and the Data Quality Dashboard (DQD) CSV threshold files.
 
-This script processes two CSV files:
+The script generates dbt YAML files for each OMOP table, including field-level details and table descriptions.
 
-1. Field-level documentation: Contains details about individual fields in the OMOP CDM tables.
-   Default URL: https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv
-
-2. Table-level documentation: Contains descriptions for each OMOP CDM table.
-   Default URL: https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Table_Level.csv
-
-The script generates dbt YAML files for each table, including field-level details and table descriptions.
-
-If you wish to use a different CDM version, either pass the url in as the --source argument
-or download the html file and pass the path in as --source.
+You may optionally download the html files and pass in their paths as arguments.
 For example using wget <url>.
 """
 
@@ -95,7 +89,7 @@ def is_url(value: str) -> bool:
 
 def download_url_to_temp_file(url: str, output_dir: Path) -> Path:
     """Download a URL to a .tmp file in the output directory and return the local Path."""
-    response = requests.get(url)
+    response: requests.Response = requests.get(url)
     response.raise_for_status()  # raises if e.g. 404 or timeout
 
     with tempfile.NamedTemporaryFile(
@@ -105,7 +99,7 @@ def download_url_to_temp_file(url: str, output_dir: Path) -> Path:
         return Path(tmp_file.name)
 
 
-def parse_cli_arguments() -> tuple[Path, str, str]:
+def parse_cli_arguments() -> tuple[Path, str, str, str, str]:
     """
     Parse command line arguments.
 
@@ -185,6 +179,7 @@ def parse_cli_arguments() -> tuple[Path, str, str]:
 
     return output_dir, args.field_source, args.table_source, args.dqd_field_source, args.dqd_table_source
 
+
 def sentinel_to_bool(text: str) -> bool:
     """Convert sentinel strings to boolean"""
     if text == "Yes":
@@ -193,9 +188,9 @@ def sentinel_to_bool(text: str) -> bool:
         return False
 
 
-def generate_table_yaml_params(table_container: OmopTableDocumentationContainer) -> dict:
+def generate_table_yaml_params(table_container: OmopTableDocumentationContainer) -> dict[str, str | list[dict[str, dict[str, str]]]]:
     """Generate table-level YAML"""
-    table_params = {
+    table_params: dict[str, str | list[dict[str, dict[str, str]]]] = {
         "name": table_container.table_name,
         "description": table_container.description,
     }
@@ -224,10 +219,7 @@ def generate_table_yaml_params(table_container: OmopTableDocumentationContainer)
 
 def create_table_dict(
     table_container: OmopTableDocumentationContainer,
-) -> dict[
-    str,
-    list[dict[str, str | list[dict[str, str | list[str | dict[str, dict[str, str]]]]]]],
-]:
+) -> dict[str, list[dict[str, str | list[dict[str, str | list[str | dict[str, dict[str, str]]]]]]]]:
     """Create a table dictionary to mimic the dbt yaml format"""
     table_dict: dict[
         str,
@@ -315,7 +307,6 @@ def omop_docs_to_dbt_config(
             }
         })
 
-    # Add dbt_expectations tests
     tests.append("dbt_expectations.expect_column_to_exist")
     if doc_container.datatype.lower() == "integer":
         tests.append({
@@ -363,22 +354,22 @@ def parse_and_create_table_containers(
     cdm_field_file_path: Path,
     dqd_field_file_path: Path,
     cdm_table_file_path: Path,
-    dqd_table_file_path: Path
+    dqd_table_file_path: Path,
 ) -> list[OmopTableDocumentationContainer]:
     """Parse all CSV files and create complete table containers with their fields."""
-    
+    fields_by_table: dict[str, list[OmopFieldDocumentationContainer]] = {}
+    table_containers: list[OmopTableDocumentationContainer] = []
+
     field_containers = parse_field_containers(cdm_field_file_path, dqd_field_file_path)
     
     table_info = parse_table_info(cdm_table_file_path, dqd_table_file_path)
     
-    fields_by_table = {}
     for field_container in field_containers:
         table_name = field_container.table_name
         if table_name not in fields_by_table:
             fields_by_table[table_name] = []
         fields_by_table[table_name].append(field_container)
     
-    table_containers = []
     for table_name, table_data in table_info.items():
         if table_name.lower() in EXCLUDED_TABLES:
             continue
@@ -399,8 +390,8 @@ def parse_field_containers(
     dqd_file_path: Path,
 ) -> list[OmopFieldDocumentationContainer]:
     """Parse the CDM CSV file and enrich the OmopFieldDocumentationContainer objects with additional info from the DQD file."""
-    containers = []
-    dqd_mapping = {}
+    containers: list[OmopFieldDocumentationContainer] = []
+    dqd_mapping: dict[tuple[str, str], dict[str, str]] = {}
 
     # Parse DQD file
     with open(dqd_file_path, mode="r", encoding="utf-8-sig") as dqd_csv_file:
@@ -441,11 +432,11 @@ def parse_field_containers(
 
 def parse_table_info(
     cdm_file_path: Path,
-    dqd_file_path: Path
+    dqd_file_path: Path,
 ) -> dict[str, dict[str, str]]:
     """Parse the table-level CSV files and return table information."""
-    table_info = {}
-    dqd_mapping = {}
+    table_info: dict[str, dict[str, str]] = {}
+    dqd_mapping: dict[str, dict[str, str]] = {}
 
     # Parse DQD file
     with open(dqd_file_path, mode="r", encoding="utf-8-sig") as dqd_csv_file:
@@ -472,6 +463,7 @@ def parse_table_info(
 
 def resolve_source_path(source: str, output_dir: Path) -> Path:
     """Resolve the source path by downloading if it's a URL or validating if it's a local file."""
+    source_path: Path
     if is_url(source):
         try:
             return download_url_to_temp_file(source, output_dir)
