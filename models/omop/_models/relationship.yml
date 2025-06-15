@@ -24,7 +24,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: is_hierarchical
-        description: Defines whether a relationship defines concepts into classes orhierarchies. Values
+        description: Defines whether a relationship defines concepts into classes or hierarchies. Values
           are 1 for hierarchical relationship or 0 if not.
         data_type: varchar(1)
         tests:
@@ -33,8 +33,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: defines_ancestry
-        description: Defines whether a hierarchical relationship contributes to theconcept_ancestor table.
-          These are subsets of the hierarchicalrelationships. Valid values are 1 or 0.
+        description: Defines whether a hierarchical relationship contributes to the concept_ancestor table.
+          These are subsets of the hierarchical relationships. Valid values are 1 or 0.
         data_type: varchar(1)
         tests:
           - not_null
@@ -42,7 +42,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: reverse_relationship_id
-        description: The identifier for the relationship used to define the reverserelationship between
+        description: The identifier for the relationship used to define the reverse relationship between
           two concepts.
         data_type: varchar(20)
         tests:
@@ -51,8 +51,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: relationship_concept_id
-        description: A foreign key that refers to an identifier in the CONCEPTtable for the unique relationship
-          concept.
+        description: A foreign key that refers to an identifier in the [CONCEPT](https://ohdsi.github.io/CommonDataModel/cdm54.html#concept)
+          table for the unique relationship concept.
         data_type: integer
         tests:
           - not_null

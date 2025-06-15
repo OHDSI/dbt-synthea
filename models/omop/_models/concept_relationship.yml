@@ -29,7 +29,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: relationship_id
-        description: The relationship between CONCEPT_ID_1 and CONCEPT_ID_2. Please see theVocabularyConventions.
+        description: The relationship between CONCEPT_ID_1 and CONCEPT_ID_2. Please see the [Vocabulary
+          Conventions](https://ohdsi.github.io/CommonDataModel/dataModelConventions.html#concept_relationships).
           for more information.
         data_type: varchar(20)
         tests:
@@ -57,7 +58,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: invalid_reason
-        description: Reason the relationship was invalidated. Possible values are ‘D’(deleted), ‘U’ (updated)
+        description: Reason the relationship was invalidated. Possible values are 'D' (deleted), 'U' (updated)
           or NULL.
         data_type: varchar(1)
         tests:

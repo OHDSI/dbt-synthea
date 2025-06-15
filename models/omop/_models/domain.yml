@@ -18,7 +18,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: domain_name
-        description: The name describing the Domain, e.g. Condition, Procedure, Measurementetc.
+        description: The name describing the Domain, e.g. Condition, Procedure, Measurement etc.
         data_type: varchar(255)
         tests:
           - not_null
