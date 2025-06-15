@@ -31,9 +31,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: death_type_concept_id
-        description: This is the provenance of the death record, i.e., where it came from. Itis possible
-          that an administrative claims database would source deathinformation from a government file
-          so do not assume the Death Type isthe same as the Visit Type, etc.
+        description: This is the provenance of the death record, i.e., where it came from. It is possible
+          that an administrative claims database would source death information from a government file
+          so do not assume the Death Type is the same as the Visit Type, etc.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -50,7 +50,7 @@ models:
               from_condition: death_type_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: cause_concept_id
-        description: This is the Standard Concept representing the Person’s cause of death,if available.
+        description: This is the Standard Concept representing the Person's cause of death, if available.
         data_type: integer
         tests:
           - relationships:

@@ -62,7 +62,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: country_concept_id
-        description: The Concept Id representing the country. Values should conform to the Geographydomain.
+        description: The Concept Id representing the country. Values should conform to the 
+          [Geography](https://athena.ohdsi.org/search-terms/terms?domain=Geography&standardConcept=Standard&page=1&pageSize=15&query=&boosts)
+          domain.
         data_type: integer
         tests:
           - relationships:
