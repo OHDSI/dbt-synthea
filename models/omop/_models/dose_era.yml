@@ -2,6 +2,9 @@ models:
   - name: dose_era
     description: A Dose Era is defined as a span of time when the Person is assumed to be exposed to a
       constant dose of a specific active ingredient.
+    tests:
+      - person_completeness:
+          threshold: '100'
     columns:
       - name: dose_era_id
         description: ''

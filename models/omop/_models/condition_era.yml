@@ -3,14 +3,17 @@ models:
     description: "A Condition Era is defined as a span of time when the Person is assumed to have a given
       condition. Similar to Drug Eras, Condition Eras are chronological periods of Condition Occurrence
       and every Condition Occurrence record should be part of a Condition Era. Combining individual Condition
-      Occurrences into a single Condition Era serves two purposes:\n\n- It allows aggregation of chronic
+      Occurrences into a single Condition Era serves two purposes:  - It allows aggregation of chronic
       conditions that require frequent ongoing care, instead of treating each Condition Occurrence as
-      an independent event.\n- It allows aggregation of multiple, closely timed doctor visits for the
-      same Condition to avoid double-counting the Condition Occurrences.\nFor example, consider a Person
-      who visits her Primary Care Physician (PCP) and who is referred to a specialist. At a later time,
-      the Person visits the specialist, who confirms the PCP's original diagnosis and provides the appropriate
+      an independent event. - It allows aggregation of multiple, closely timed doctor visits for the same
+      Condition to avoid double-counting the Condition Occurrences. For example, consider a Person who
+      visits her Primary Care Physician (PCP) and who is referred to a specialist. At a later time, the
+      Person visits the specialist, who confirms the PCP's original diagnosis and provides the appropriate
       treatment to resolve the condition. These two independent doctor visits should be aggregated into
       one Condition Era."
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: condition_era_id
         description: ''

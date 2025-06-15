@@ -1,6 +1,9 @@
 models:
   - name: specimen
     description: The specimen domain contains the records identifying biological samples from a person.
+    tests:
+      - person_completeness:
+          threshold: '100'
     columns:
       - name: specimen_id
         description: Unique identifier for each specimen.

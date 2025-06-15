@@ -6,6 +6,9 @@ models:
       every record in the VISIT_OCCURRENCE table there may be 0 or more records in the VISIT_DETAIL table
       with a 1:n relationship where n may be 0. The VISIT_DETAIL table is structurally very similar to
       VISIT_OCCURRENCE table and belongs to the visit domain.
+    tests:
+      - person_completeness:
+          threshold: '100'
     columns:
       - name: visit_detail_id
         description: Use this to identify unique interactions between a person and the health care system.

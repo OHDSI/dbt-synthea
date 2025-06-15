@@ -1,0 +1,22 @@
+macros:
+  - name: concept_record_completeness
+    description: Measures the percent of rows with a value of 0 in a given x_concept_id column.
+    arguments:
+      - name: model 
+        type: string
+        description: Model Name
+      - name: column_name
+        type: string
+        description: Column name
+      - name: threshold
+        type: string
+        description: Failure threshold - a percent of failing rows above this value will cause the test to fail
+  - name: person_completeness
+    description: Measures the percent of persons with at least one row in a given table.
+    arguments:
+      - name: model 
+        type: string
+        description: Model Name
+      - name: threshold
+        type: string
+        description: Failure threshold - a percent of failing rows above this value will cause the test to fail

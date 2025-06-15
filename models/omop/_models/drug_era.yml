@@ -5,6 +5,9 @@ models:
       records corresponding to the source when Drug was delivered to the Person, while successive periods
       of Drug Exposures are combined under certain rules to produce continuous Drug Eras. Every record
       in the DRUG_EXPOSURE table should be part of a drug era based on the dates of exposure.'
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: drug_era_id
         description: ''

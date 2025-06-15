@@ -43,7 +43,7 @@ from ruamel.yaml import YAML
 DEFAULT_FIELD_SOURCE_URL = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
 DEFAULT_TABLE_SOURCE_URL = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Table_Level.csv"
 DEFAULT_DATA_QUALITY_FIELD_CONFIG_URL = "https://raw.githubusercontent.com/OHDSI/DataQualityDashboard/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
-DEFAULT_DATA_QUALITY_TABLE_CONFIG_URL = "https://raw.githubusercontent.com/OHDSI/DataQualityDashboard/refs/heads/main/inst/csv/OMOP_CDMv5.4_Table_Level.csv"
+DEFAULT_DATA_QUALITY_TABLE_CONFIG_URL = "https://raw.githubusercontent.com/OHDSI/DataQualityDashboard/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
 
 EXCLUDED_TABLES: set[str] = {"cohort", "cohort_definition", "cohort_attribute"}
 VOCABULARY_TABLES: set[str] = {"concept", "concept_ancestor", "concept_relationship", "concept_synonym", "concept_class", "domain", "relationship", "vocabulary"}
@@ -142,18 +142,10 @@ def parse_cli_arguments() -> tuple[Path, str, str]:
 
     # DQD field-level source url.
     _ = parser.add_argument(
-        "--dqd-source-field",
-        "-dsf",
+        "--dqd-source",
+        "-ds",
         type=str,
         help=f'Path or url to DQD field-level source csv. If none provided defaults to:\n"{DEFAULT_DATA_QUALITY_FIELD_CONFIG_URL}"',
-    )
-
-    # DQD table-level source url.
-    _ = parser.add_argument(
-        "--dqd-source-table",
-        "-dst",
-        type=str,
-        help=f'Path or url to DQD table-level source csv. If none provided defaults to:\n"{DEFAULT_DATA_QUALITY_TABLE_CONFIG_URL}"',
     )
 
     _ = parser.add_argument(
@@ -193,37 +185,10 @@ def sentinel_to_bool(text: str) -> bool:
         return False
 
 
-def generate_table_yaml_params(table_container: OmopTableDocumentationContainer) -> dict:
-    """Generate table-level YAML"""
-    table_params = {
-        "name": table_container.table_name,
-        "description": table_container.description,
-    }
-
-    # Dynamically build the 'tests' section
-    tests = []
-    if table_container.person_completeness_threshold not in {"NA", ""}:
-        tests.append({
-            "person_completeness": {
-                "threshold": table_container.person_completeness_threshold
-            }
-        })
-
-    # Add 'tests' only if there are valid tests
-    if tests:
-        table_params["tests"] = tests
-
-    # Add 'columns' after 'tests'
-    table_params["columns"] = [
-        omop_docs_to_dbt_config(table_container.table_name, field_container)
-        for field_container in table_container.fields
-    ]
-
-    return table_params
-
-
 def create_table_dict(
-    table_container: OmopTableDocumentationContainer,
+    table: str,
+    table_description: str,
+    parsed_table: list[OmopFieldDocumentationContainer],
 ) -> dict[
     str,
     list[dict[str, str | list[dict[str, str | list[str | dict[str, dict[str, str]]]]]]],
@@ -237,7 +202,16 @@ def create_table_dict(
             ]
         ],
     ] = {
-        "models": [generate_table_yaml_params(table_container)]
+        "models": [
+            {
+                "name": table.lower(),  # Ensure table name is lowercase in YAML
+                "description": table_description,
+                "columns": [
+                    omop_docs_to_dbt_config(table, doc_container)
+                    for doc_container in parsed_table
+                ],
+            }
+        ]
     }
     return table_dict
 
@@ -359,42 +333,39 @@ def omop_docs_to_dbt_config(
     return column_config
 
 
-def parse_and_create_table_containers(
-    cdm_field_file_path: Path,
-    dqd_field_file_path: Path,
-    cdm_table_file_path: Path,
-    dqd_table_file_path: Path
-) -> list[OmopTableDocumentationContainer]:
-    """Parse all CSV files and create complete table containers with their fields."""
-    
-    field_containers = parse_field_containers(cdm_field_file_path, dqd_field_file_path)
-    
-    table_info = parse_table_info(cdm_table_file_path, dqd_table_file_path)
-    
-    fields_by_table = {}
-    for field_container in field_containers:
-        table_name = field_container.table_name
-        if table_name not in fields_by_table:
-            fields_by_table[table_name] = []
-        fields_by_table[table_name].append(field_container)
-    
-    table_containers = []
-    for table_name, table_data in table_info.items():
-        if table_name.lower() in EXCLUDED_TABLES:
-            continue
-            
-        table_container = OmopTableDocumentationContainer(
-            table_name=table_name,
-            description=table_data["description"],
-            person_completeness_threshold=table_data["person_completeness_threshold"],
-            fields=fields_by_table.get(table_name, [])
-        )
-        table_containers.append(table_container)
-    
-    return table_containers
+def parse_and_enrich_table_containers(
+    cdm_file_path: Path,
+    dqd_file_path: Path
+) -> dict[str, str]:
+    """Parse the CDM CSV file and enrich the OmopTableDocumentationContainer objects with additional info from the DQD file."""
+    containers = []
+    dqd_mapping = {}
 
+    # Parse DQD file
+    with open(dqd_file_path, mode="r", encoding="utf-8-sig") as dqd_csv_file:
+        dqd_reader = csv.DictReader(dqd_csv_file)
+        for row in dqd_reader:
+            key = row["cdmTableName"].strip().lower()
+            dqd_mapping[key] = {
+                "person_completeness_threshold": row["measurePersonCompletenessThreshold"].strip()
+            }
+    
+    with open(cdm_file_path, mode="r", encoding="utf-8-sig") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            key = (row["cdmTableName"].strip().lower())
+            dqd_data = dqd_mapping.get(key, {})
+            container = OmopTableDocumentationContainer(
+                **{
+                    "table_name": row["cdmTableName"].strip().lower(),
+                    "description": '' if row["tableDescription"].strip() == 'NA' else row["tableDescription"].strip(),
+                    "person_completeness_threshold": dqd_data.get("person_completeness_threshold", ""),
+                }
+            )
+            containers.append(container)
+    return containers
 
-def parse_field_containers(
+def parse_and_enrich_field_containers(
     cdm_file_path: Path,
     dqd_file_path: Path,
 ) -> list[OmopFieldDocumentationContainer]:
@@ -439,37 +410,6 @@ def parse_field_containers(
     return containers
 
 
-def parse_table_info(
-    cdm_file_path: Path,
-    dqd_file_path: Path
-) -> dict[str, dict[str, str]]:
-    """Parse the table-level CSV files and return table information."""
-    table_info = {}
-    dqd_mapping = {}
-
-    # Parse DQD file
-    with open(dqd_file_path, mode="r", encoding="utf-8-sig") as dqd_csv_file:
-        dqd_reader = csv.DictReader(dqd_csv_file)
-        for row in dqd_reader:
-            key = row["cdmTableName"].strip().lower()
-            dqd_mapping[key] = {
-                "person_completeness_threshold": row["measurePersonCompletenessThreshold"].strip()
-            }
-    
-    # Parse CDM table file
-    with open(cdm_file_path, mode="r", encoding="utf-8-sig") as csv_file:
-        reader = csv.DictReader(csv_file)
-        for row in reader:
-            table_name = row["cdmTableName"].strip().lower()
-            dqd_data = dqd_mapping.get(table_name, {})
-            table_info[table_name] = {
-                "description": '' if row["tableDescription"].strip() == 'NA' else row["tableDescription"].strip().replace('\n', ' '),
-                "person_completeness_threshold": dqd_data.get("person_completeness_threshold", ""),
-            }
-    
-    return table_info
-
-
 def resolve_source_path(source: str, output_dir: Path) -> Path:
     """Resolve the source path by downloading if it's a URL or validating if it's a local file."""
     if is_url(source):
@@ -484,13 +424,6 @@ def resolve_source_path(source: str, output_dir: Path) -> Path:
         return source_path
 
 
-def cleanup_temp_files(*file_paths: Path) -> None:
-    """Clean up temporary files."""
-    for file_path in file_paths:
-        if file_path.suffix == ".tmp" and file_path.exists():
-            file_path.unlink()
-
-
 def main(
     field_source: str,
     table_source: str,
@@ -499,43 +432,53 @@ def main(
     output_dir: Path,
 ) -> None:
     """Main loop to generate dbt YAML files from the OMOP CDM documentation"""
-    
-    # Resolve all source paths
     field_source_path = resolve_source_path(field_source, output_dir)
     dqd_field_source_path = resolve_source_path(dqd_field_source, output_dir)
+
+    containers = parse_and_enrich_field_containers(
+        cdm_file_path=field_source_path,
+        dqd_file_path=dqd_field_source_path
+    )
+
     table_source_path = resolve_source_path(table_source, output_dir)
     dqd_table_source_path = resolve_source_path(dqd_table_source, output_dir)
 
-    # Parse and create complete table containers
-    table_containers = parse_and_create_table_containers(
-        cdm_field_file_path=field_source_path,
-        dqd_field_file_path=dqd_field_source_path,
-        cdm_table_file_path=table_source_path,
-        dqd_table_file_path=dqd_table_source_path
+    table_info = parse_and_enrich_table_containers(
+        cdm_file_path=table_source_path,
+        dqd_file_path=dqd_table_source_path
     )
 
-    print(f" Found {len(table_containers)} tables in the OMOP CDM documentation after excluding {len(EXCLUDED_TABLES)} excluded tables.")
+    tables = {container.table_name for container in containers}
 
-    # Generate YAML files for each table
-    for table_container in table_containers:
-        table_dict = create_table_dict(table_container)
+    filtered_table_names: list[str] = [
+        table for table in tables if table.lower() not in EXCLUDED_TABLES
+    ]
+
+    print(f" Found {len(tables)} tables in the OMOP CDM documentation, filtered to {len(filtered_table_names)} tables.")
+
+    for table in filtered_table_names:
+        table_containers = [c for c in containers if c.table_name == table]
+        table_description = table_info.description
+
+        table_dict = create_table_dict(table, table_description, table_containers)
 
         yaml: YAML = YAML()
         yaml.indent(mapping=2, sequence=4, offset=2)  # pyright: ignore[reportUnknownMemberType]
         yaml.width = 100
-        yaml.allow_duplicate_keys = True
-        
-        output_file = output_dir / f"{table_container.table_name.lower()}.yml"
-        with open(output_file, "w") as f:
-            yaml.dump(table_dict, f)
+        yaml.dump(table_dict, open(f"{output_dir}/{table.lower()}.yml", "w"))
+        yaml.allow_duplicate_keys
 
-    # Clean up temporary files
-    cleanup_temp_files(
-        field_source_path,
-        dqd_field_source_path,
-        table_source_path,
-        dqd_table_source_path
-    )
+        if field_source_path.suffix == ".tmp" and field_source_path.exists():
+            field_source_path.unlink()
+
+        if table_source_path.suffix == ".tmp" and table_source_path.exists():
+            table_source_path.unlink()
+
+        if dqd_field_source_path.suffix == ".tmp" and dqd_field_source_path.exists():
+            dqd_field_source_path.unlink()
+        
+        if dqd_table_source_path.suffix == ".tmp" and dqd_table_source_path.exists():
+            dqd_table_source_path.unlink()
 
     print(f" Exported to `{output_dir}`")
     print("  Done!")

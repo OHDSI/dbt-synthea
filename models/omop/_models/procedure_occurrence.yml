@@ -2,6 +2,9 @@ models:
   - name: procedure_occurrence
     description: This table contains records of activities or processes ordered by, or carried out by,
       a healthcare provider on the patient with a diagnostic or therapeutic purpose.
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: procedure_occurrence_id
         description: The unique key given to a procedure record for a person. Refer to the ETL for how

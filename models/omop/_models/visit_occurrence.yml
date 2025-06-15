@@ -6,6 +6,9 @@ models:
       way around, or the interaction is remote, (ii) whether and what kind of trained medical staff is
       delivering the service during the Visit, and (iii) whether the Visit is transient or for a longer
       period involving a stay in bed.
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: visit_occurrence_id
         description: Use this to identify unique interactions between a person and the health care system.
