@@ -14,7 +14,7 @@ SELECT
     , c.condition_code AS condition_source_value
     , srctosrcvm.source_concept_id AS condition_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS condition_status_source_value
-    , 0 AS condition_status_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS condition_status_concept_id
 FROM {{ ref('stg_synthea__conditions') }} AS c
 INNER JOIN {{ ref ('int__source_to_standard_vocab_map') }} AS srctostdvm
     ON

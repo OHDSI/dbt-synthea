@@ -17,9 +17,9 @@ SELECT
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , visit_class AS visit_source_value
     , 0 AS visit_source_concept_id
-    , 0 AS admitted_from_concept_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }} AS admitted_from_concept_id
     , {{ dbt.cast("NULL", api.Column.translate_type("varchar")) }} AS admitted_from_source_value
-    , 0 AS discharged_to_concept_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }} AS discharged_to_concept_id
     , {{ dbt.cast("NULL", api.Column.translate_type("varchar")) }} AS discharged_to_source_value
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }} AS preceding_visit_occurrence_id
 FROM {{ ref( 'int__visits') }}
