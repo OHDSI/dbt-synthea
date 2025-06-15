@@ -47,6 +47,8 @@ models:
               field: concept_id
               from_condition: measurement_concept_id <> 0
               to_condition: domain_id = 'Measurement'
+          - concept_record_completeness:
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -88,6 +90,8 @@ models:
               field: concept_id
               from_condition: measurement_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -151,6 +155,8 @@ models:
               field: concept_id
               from_condition: unit_concept_id <> 0
               to_condition: domain_id = 'Unit'
+          - concept_record_completeness:
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -228,6 +234,8 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '10'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -251,6 +259,8 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '100'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"

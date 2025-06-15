@@ -54,6 +54,8 @@ models:
               field: concept_id
               from_condition: period_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"

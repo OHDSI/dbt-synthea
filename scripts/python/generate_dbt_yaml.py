@@ -40,8 +40,12 @@ from urllib.parse import ParseResult, urlparse
 import requests
 from ruamel.yaml import YAML
 
-default_field_source_url = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
-default_table_source_url = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Table_Level.csv"
+DEFAULT_FIELD_SOURCE_URL = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
+DEFAULT_TABLE_SOURCE_URL = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Table_Level.csv"
+DEFAULT_DATA_QUALITY_CONFIG_URL = "https://raw.githubusercontent.com/OHDSI/DataQualityDashboard/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
+
+EXCLUDED_TABLES: set[str] = {"cohort", "cohort_definition", "cohort_attribute"}
+VOCABULARY_TABLES: set[str] = {"concept", "concept_ancestor", "concept_relationship", "concept_synonym", "concept_class", "domain", "relationship", "vocabulary"}
 
 
 @dataclass
@@ -51,7 +55,6 @@ class OmopDocumentationContainer:
     table_name: str
     cdm_field: str
     user_guide: str
-    etl_conventions: str
     datatype: str
     required: bool
     primary_key: bool
@@ -59,6 +62,8 @@ class OmopDocumentationContainer:
     foreign_key_table: str
     foreign_key_domain: str
     foreign_key_class: str
+    standard_concept_record_completeness_threshold: str
+    source_concept_record_completeness_threshold: str
 
 
 @dataclass
@@ -66,8 +71,9 @@ class CliArgs:
     """A dataclass to ensure correct typing of command line arguments"""
 
     output_dir: Path = Path()
-    field_source: str = default_field_source_url
-    table_source: str = default_table_source_url
+    field_source: str = DEFAULT_FIELD_SOURCE_URL
+    table_source: str = DEFAULT_TABLE_SOURCE_URL
+    dqd_source: str = DEFAULT_DATA_QUALITY_CONFIG_URL
     overwrite: bool = False
 
 
@@ -113,7 +119,7 @@ def parse_cli_arguments() -> tuple[Path, str, str]:
         "--field-source",
         "-fs",
         type=str,
-        help=f'Path or url to field-level source csv. If none provided defaults to:\n"{default_field_source_url}"',
+        help=f'Path or url to field-level source csv. If none provided defaults to:\n"{DEFAULT_FIELD_SOURCE_URL}"',
     )
 
     # Common data model table-level source url.
@@ -121,7 +127,15 @@ def parse_cli_arguments() -> tuple[Path, str, str]:
         "--table-source",
         "-ts",
         type=str,
-        help=f'Path or url to table-level source csv. If none provided defaults to:\n"{default_table_source_url}"',
+        help=f'Path or url to table-level source csv. If none provided defaults to:\n"{DEFAULT_TABLE_SOURCE_URL}"',
+    )
+
+    # DQD field-level source url.
+    _ = parser.add_argument(
+        "--dqd-source",
+        "-ds",
+        type=str,
+        help=f'Path or url to DQD field-level source csv. If none provided defaults to:\n"{DEFAULT_DATA_QUALITY_CONFIG_URL}"',
     )
 
     _ = parser.add_argument(
@@ -151,7 +165,7 @@ def parse_cli_arguments() -> tuple[Path, str, str]:
     else:
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    return output_dir, args.field_source, args.table_source
+    return output_dir, args.field_source, args.table_source, args.dqd_source
 
 def sentinel_to_bool(text: str) -> bool:
     """Convert sentinel strings to boolean"""
@@ -204,7 +218,7 @@ def omop_docs_to_dbt_config(
     """
     column_config: dict[str, str | list[str | dict[str, dict[str, str]]]] = {
         "name": doc_container.cdm_field,
-        "description": '' if doc_container.user_guide == 'NA' else doc_container.user_guide.replace('\n', ' '),
+        "description": doc_container.user_guide,
         "data_type": doc_container.datatype,
     }
 
@@ -218,7 +232,7 @@ def omop_docs_to_dbt_config(
         tests.append("unique")
 
     if doc_container.foreign_key:
-        if (doc_container.foreign_key_domain == "" or doc_container.foreign_key_domain == "NA") and (doc_container.foreign_key_class == "" or doc_container.foreign_key_class == "NA"):
+        if doc_container.foreign_key_domain == "" and doc_container.foreign_key_class == "":
             # Handle simpler cases first, where domain/class is not constrained
             test: dict[str, dict[str, str]] = {
                 "relationships": {
@@ -227,29 +241,44 @@ def omop_docs_to_dbt_config(
                 }
             }
             tests.append(test)
-        elif doc_container.foreign_key_domain != "" and doc_container.foreign_key_domain != "NA":
-            # Add constrained domain tests
-            specific_test: dict[str, dict[str, str]] = {
-                "dbt_utils.relationships_where": {
-                    "to": f"ref('{doc_container.foreign_key_table.lower()}')",
-                    "field": f"{doc_container.foreign_key_table.lower()}_id",
-                    "from_condition": f"{doc_container.cdm_field} <> 0",
-                    "to_condition": f"domain_id = '{doc_container.foreign_key_domain}'",
+        else: 
+            if doc_container.foreign_key_domain != "":
+                # Add constrained domain tests
+                specific_test: dict[str, dict[str, str]] = {
+                    "dbt_utils.relationships_where": {
+                        "to": f"ref('{doc_container.foreign_key_table.lower()}')",
+                        "field": f"{doc_container.foreign_key_table.lower()}_id",
+                        "from_condition": f"{doc_container.cdm_field} <> 0",
+                        "to_condition": f"domain_id = '{doc_container.foreign_key_domain}'",
+                    }
                 }
-            }
-            tests.append(specific_test)
-        else:
-            # Add constrained class tests
-            specific_test: dict[str, dict[str, str]] = {
-                "dbt_utils.relationships_where": {
-                    "to": f"ref('{doc_container.foreign_key_table.lower()}')",
-                    "field": f"{doc_container.foreign_key_table.lower()}_id",
-                    "from_condition": f"{doc_container.cdm_field} <> 0",
-                    "to_condition": f"concept_class_id = '{doc_container.foreign_key_class}'",
+                tests.append(specific_test)
+            if doc_container.foreign_key_class != "":
+                # Add constrained class tests
+                specific_test: dict[str, dict[str, str]] = {
+                    "dbt_utils.relationships_where": {
+                        "to": f"ref('{doc_container.foreign_key_table.lower()}')",
+                        "field": f"{doc_container.foreign_key_table.lower()}_id",
+                        "from_condition": f"{doc_container.cdm_field} <> 0",
+                        "to_condition": f"concept_class_id = '{doc_container.foreign_key_class}'",
+                    }
                 }
-            }
-            tests.append(specific_test)
+                tests.append(specific_test)
     
+    if doc_container.standard_concept_record_completeness_threshold != "":
+        tests.append({
+            "concept_record_completeness": {
+                "threshold": doc_container.standard_concept_record_completeness_threshold,
+            }
+        })
+    
+    if doc_container.source_concept_record_completeness_threshold != "":
+        tests.append({
+            "concept_record_completeness": {
+                "threshold": doc_container.source_concept_record_completeness_threshold,
+            }
+        })
+
     # Add dbt_expectations tests
     tests.append("dbt_expectations.expect_column_to_exist")
     if doc_container.datatype.lower() == "integer":
@@ -278,7 +307,7 @@ def omop_docs_to_dbt_config(
         })
 
     if doc_container.cdm_field.endswith("_concept_id") and not doc_container.cdm_field.endswith("_source_concept_id"):
-        if table.lower() not in {"concept", "concept_ancestor", "concept_relationship", "concept_synonym", "concept_class", "domain", "relationship", "vocabulary"}:
+        if table.lower() not in VOCABULARY_TABLES:
             tests.append({
                 "dbt_utils.relationships_where": {
                     "to": "ref('concept')",
@@ -294,30 +323,6 @@ def omop_docs_to_dbt_config(
     return column_config
 
 
-def parse_csv_file(file_path: Path) -> list[OmopDocumentationContainer]:
-    """Parse the CSV file and return a list of OmopDocumentationContainer objects."""
-    containers = []
-    with open(file_path, mode="r", encoding="utf-8-sig") as csv_file:
-        reader = csv.DictReader(csv_file)
-        for row in reader:
-            containers.append(
-                OmopDocumentationContainer(
-                    table_name=row["cdmTableName"].strip(),
-                    cdm_field=row["cdmFieldName"].strip().replace('"', ''),
-                    user_guide=row["userGuidance"].strip(),
-                    etl_conventions=row["etlConventions"].strip(),
-                    datatype=row["cdmDatatype"].strip(),
-                    required=sentinel_to_bool(row["isRequired"].strip()),
-                    primary_key=sentinel_to_bool(row["isPrimaryKey"].strip()),
-                    foreign_key=sentinel_to_bool(row["isForeignKey"].strip()),
-                    foreign_key_table=row["fkTableName"].strip(),
-                    foreign_key_domain=row["fkDomain"].strip(),
-                    foreign_key_class=row["fkClass"].strip(),
-                )
-            )
-    return containers
-
-
 def parse_table_descriptions(file_path: Path) -> dict[str, str]:
     """Parse the CSV file containing table descriptions and return a dictionary mapping table names to descriptions."""
     table_descriptions = {}
@@ -325,9 +330,54 @@ def parse_table_descriptions(file_path: Path) -> dict[str, str]:
         reader = csv.DictReader(csv_file)
         for row in reader:
             table_name = row["cdmTableName"].strip().lower()
-            description = row["tableDescription"].strip()
+            description = '' if row["tableDescription"].strip() == 'NA' else row["tableDescription"].strip()
             table_descriptions[table_name] = description
     return table_descriptions
+
+
+def parse_and_enrich_documentation_containers(
+    cdm_file_path: Path,
+    dqd_file_path: Path,
+) -> list[OmopDocumentationContainer]:
+    """Parse the CDM CSV file and enrich the OmopDocumentationContainer objects with additional info from the DQD file."""
+    containers = []
+    dqd_mapping = {}
+
+    # Parse DQD file
+    with open(dqd_file_path, mode="r", encoding="utf-8-sig") as dqd_csv_file:
+        dqd_reader = csv.DictReader(dqd_csv_file)
+        for row in dqd_reader:
+            key = (row["cdmTableName"].strip().lower(), row["cdmFieldName"].strip().lower())
+            dqd_mapping[key] = {
+                "foreign_key_class": '' if row["fkClass"].strip() == 'NA' else row["fkClass"].strip(),
+                "standard_concept_record_completeness_threshold": row["standardConceptRecordCompletenessThreshold"].strip(),
+                "source_concept_record_completeness_threshold": row["sourceConceptRecordCompletenessThreshold"].strip(),
+            }
+
+    # Parse CDM file and enrich containers
+    with open(cdm_file_path, mode="r", encoding="utf-8-sig") as cdm_csv_file:
+        cdm_reader = csv.DictReader(cdm_csv_file)
+        for row in cdm_reader:
+            key = (row["cdmTableName"].strip().lower(), row["cdmFieldName"].strip().lower().replace('"', ''))
+            dqd_data = dqd_mapping.get(key, {})
+            container = OmopDocumentationContainer(
+                **{
+                    "table_name": row["cdmTableName"].strip().lower(),
+                    "cdm_field": row["cdmFieldName"].strip().lower().replace('"', ''),
+                    "user_guide": '' if row["userGuidance"].strip() == 'NA' else row["userGuidance"].strip().replace('\n', ' '),
+                    "datatype": row["cdmDatatype"].strip(),
+                    "required": sentinel_to_bool(row["isRequired"].strip()),
+                    "primary_key": sentinel_to_bool(row["isPrimaryKey"].strip()),
+                    "foreign_key": sentinel_to_bool(row["isForeignKey"].strip()),
+                    "foreign_key_table": '' if row["fkTableName"].strip() == 'NA' else row["fkTableName"].strip().lower(),
+                    "foreign_key_domain": '' if row["fkDomain"].strip() == 'NA' else row["fkDomain"].strip(),
+                    "foreign_key_class": dqd_data.get("foreign_key_class", ""),
+                    "standard_concept_record_completeness_threshold": dqd_data.get("standard_concept_record_completeness_threshold", ""),
+                    "source_concept_record_completeness_threshold": dqd_data.get("source_concept_record_completeness_threshold", ""),
+                }
+            )
+            containers.append(container)
+    return containers
 
 
 def resolve_source_path(source: str, output_dir: Path) -> Path:
@@ -343,23 +393,29 @@ def resolve_source_path(source: str, output_dir: Path) -> Path:
             raise ValueError(f"Source file does not exist: {source_path}")
         return source_path
 
+
 def main(
     field_source: str,
     table_source: str,
+    dqd_source: str,
     output_dir: Path,
 ) -> None:
     """Main loop to generate dbt YAML files from the OMOP CDM documentation"""
     field_source_path = resolve_source_path(field_source, output_dir)
-    containers = parse_csv_file(field_source_path)
+    dqd_source_path = resolve_source_path(dqd_source, output_dir)
+
+    containers = parse_and_enrich_documentation_containers(
+        cdm_file_path=field_source_path,
+        dqd_file_path=dqd_source_path
+    )
 
     table_source_path = resolve_source_path(table_source, output_dir)
     table_descriptions = parse_table_descriptions(table_source_path)
 
     tables = {container.table_name for container in containers}
 
-    unwanted_tables: set[str] = {"cohort", "cohort_definition", "cohort_attribute"}
     filtered_table_names: list[str] = [
-        table for table in tables if table.lower() not in unwanted_tables
+        table for table in tables if table.lower() not in EXCLUDED_TABLES
     ]
 
     print(f" Found {len(tables)} tables in the OMOP CDM documentation, filtered to {len(filtered_table_names)} tables.")
@@ -367,8 +423,6 @@ def main(
     for table in filtered_table_names:
         table_containers = [c for c in containers if c.table_name == table]
         table_description = table_descriptions.get(table.lower(), '')
-        if table_description == 'NA':
-            table_description = ''
 
         table_dict = create_table_dict(table, table_description, table_containers)
 
@@ -384,10 +438,13 @@ def main(
         if table_source_path.suffix == ".tmp" and table_source_path.exists():
             table_source_path.unlink()
 
+        if dqd_source_path.suffix == ".tmp" and dqd_source_path.exists():
+            dqd_source_path.unlink()
+
     print(f" Exported to `{output_dir}`")
     print("  Done!")
 
 
 if __name__ == "__main__":
-    output_dir, field_source, table_source = parse_cli_arguments()
-    main(field_source, table_source, output_dir)
+    output_dir, field_source, table_source, dqd_source = parse_cli_arguments()
+    main(field_source, table_source, dqd_source, output_dir)

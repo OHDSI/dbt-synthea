@@ -38,6 +38,8 @@ models:
               field: concept_id
               from_condition: episode_concept_id <> 0
               to_condition: domain_id = 'Episode'
+          - concept_record_completeness:
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -147,6 +149,8 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '100'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
