@@ -9,6 +9,9 @@ models:
       utilization (reaching certain cost thresholds such as deductibles), plan availability and purchasing
       choices of the Person. The unique combinations of Payer organizations, health benefit Plans and
       time periods in which they are valid for a Person are recorded in this table.
+    tests:
+      - person_completeness:
+          threshold: '100'
     columns:
       - name: payer_plan_period_id
         description: A unique identifier for each unique combination of a Person, Payer, Plan, and Period

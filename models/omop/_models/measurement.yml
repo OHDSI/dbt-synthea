@@ -12,6 +12,9 @@ models:
       in that they require a standardized test or some other activity to generate a quantitative or qualitative
       result. If there is no result, it is assumed that the lab test was conducted but the result was
       not captured.
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: measurement_id
         description: The unique key given to a Measurement record for a Person. Refer to the ETL for how

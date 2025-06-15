@@ -6,6 +6,9 @@ models:
       medical equipment and supplies (e.g. bandages, crutches, syringes), other instruments used in medical
       procedures (e.g. sutures, defibrillators) and material used in clinical care (e.g. adhesives, body
       material, dental material, surgical material).
+    tests:
+      - person_completeness:
+          threshold: '100'
     columns:
       - name: device_exposure_id
         description: The unique key given to records a person's exposure to a foreign physical object

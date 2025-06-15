@@ -5,6 +5,9 @@ models:
       to a Person it will exert a certain biochemical effect on the metabolism. Drugs include prescription
       and over-the-counter medicines, vaccines, and large-molecule biologic therapies. Radiological devices
       ingested or applied locally do not count as Drugs.
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: drug_exposure_id
         description: The unique key given to records of drug dispensings or administrations for a person.

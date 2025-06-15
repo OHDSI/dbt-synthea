@@ -3,6 +3,9 @@ models:
     description: This table contains records of Events of a Person suggesting the presence of a disease
       or medical condition stated as a diagnosis, a sign, or a symptom, which is either observed by a
       Provider or reported by the patient.
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: condition_occurrence_id
         description: The unique key given to a condition record for a person. Refer to the ETL for how
