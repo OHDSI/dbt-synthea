@@ -21,6 +21,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: provider_name is not null
+              strictly: false
       - name: npi
         description: This is the National Provider Number issued to health care providers in the US by
           the Centers for Medicare and Medicaid Services (CMS).
@@ -29,6 +33,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: npi is not null
+              strictly: false
       - name: dea
         description: This is the identifier issued by the DEA, a US federal agency, that allows a provider
           to write prescriptions for controlled substances.
@@ -37,6 +45,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: dea is not null
+              strictly: false
       - name: specialty_concept_id
         description: This field either represents the most common specialty that occurs in the data or
           the most specific concept that represents all specialties listed, should the provider have more
@@ -101,6 +113,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: provider_source_value is not null
+              strictly: false
       - name: specialty_source_value
         description: This refers to the specific type of healthcare provider or field of expertise listed
           in the source data, encompassing physician specialties like internal medicine, emergency medicine,
@@ -112,6 +128,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: specialty_source_value is not null
+              strictly: false
       - name: specialty_source_concept_id
         description: This is often zero as many sites use proprietary codes to store physician speciality.
         data_type: integer
@@ -131,6 +151,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: gender_source_value is not null
+              strictly: false
       - name: gender_source_concept_id
         description: This is often zero as many sites use proprietary codes to store provider gender.
         data_type: integer

@@ -112,6 +112,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: unique_device_id is not null
+              strictly: false
       - name: production_id
         description: This is the Production Identifier (UDI-PI) portion of the Unique Device Identification.
         data_type: varchar(255)
@@ -119,6 +123,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: production_id is not null
+              strictly: false
       - name: quantity
         description: ''
         data_type: integer
@@ -165,6 +173,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: device_source_value is not null
+              strictly: false
       - name: device_source_concept_id
         description: This is the concept representing the device source value and may not necessarily
           be standard. This field is discouraged from use in analysis because it is not required to contain
@@ -210,6 +222,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: unit_source_value is not null
+              strictly: false
       - name: unit_source_concept_id
         description: This is the concept representing the UNIT_SOURCE_VALUE and may not necessarily be
           standard. This field is discouraged from use in analysis because it is not required to contain

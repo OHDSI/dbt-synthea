@@ -31,6 +31,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: concept_name is not null
+              strictly: false
       - name: domain_id
         description: A foreign key to the [DOMAIN](https://ohdsi.github.io/CommonDataModel/cdm54.html#domain)
           table the Concept belongs to.
@@ -43,6 +47,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: domain_id is not null
+              strictly: false
       - name: vocabulary_id
         description: A foreign key to the [VOCABULARY](https://ohdsi.github.io/CommonDataModel/cdm54.html#vocabulary)
           table indicating from which source the Concept has been adapted.
@@ -55,6 +63,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: vocabulary_id is not null
+              strictly: false
       - name: concept_class_id
         description: The attribute or concept class of the Concept. Examples are 'Clinical Drug', 'Ingredient',
           'Clinical Finding' etc.
@@ -67,6 +79,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: concept_class_id is not null
+              strictly: false
       - name: standard_concept
         description: This flag determines where a Concept is a Standard Concept, i.e. is used in the data,
           a Classification Concept, or a non-standard Source Concept. The allowable values are 'S' (Standard
@@ -76,6 +92,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 1
+              row_condition: standard_concept is not null
+              strictly: false
       - name: concept_code
         description: The concept code represents the identifier of the Concept in the source vocabulary,
           such as SNOMED-CT concept IDs, RxNorm RXCUIs etc. Note that concept codes are not unique across
@@ -86,6 +106,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: concept_code is not null
+              strictly: false
       - name: valid_start_date
         description: The date when the Concept was first recorded. The default value is 1-Jan-1970, meaning,
           the Concept has no (known) date of inception.
@@ -113,3 +137,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 1
+              row_condition: invalid_reason is not null
+              strictly: false

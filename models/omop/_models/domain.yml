@@ -17,6 +17,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: domain_id is not null
+              strictly: false
       - name: domain_name
         description: The name describing the Domain, e.g. Condition, Procedure, Measurement etc.
         data_type: varchar(255)
@@ -25,6 +29,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: domain_name is not null
+              strictly: false
       - name: domain_concept_id
         description: A Concept representing the Domain Concept the DOMAIN record belongs to.
         data_type: integer

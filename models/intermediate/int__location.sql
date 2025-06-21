@@ -33,7 +33,7 @@ SELECT
     , address_1
     , city
     , state
-    , zip
+    , {{ dbt.replace("zip", "'-'", "''") }} AS zip
     , county
     , {{ safe_hash(address_columns) }} AS location_source_value
 FROM unioned_location_sources

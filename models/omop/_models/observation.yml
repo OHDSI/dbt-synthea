@@ -103,6 +103,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 60
+              row_condition: value_as_string is not null
+              strictly: false
       - name: value_as_concept_id
         description: It is possible that some records destined for the Observation table have two clinical
           ideas represented in one source code. This is common with ICD10 codes that describe a family
@@ -201,6 +205,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: observation_source_value is not null
+              strictly: false
       - name: observation_source_concept_id
         description: This is the concept representing the OBSERVATION_SOURCE_VALUE and may not necessarily
           be standard. This field is discouraged from use in analysis because it is not required to contain
@@ -226,6 +234,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: unit_source_value is not null
+              strictly: false
       - name: qualifier_source_value
         description: This field houses the verbatim value from the source data representing the qualifier
           of the Observation that occurred.
@@ -234,6 +246,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: qualifier_source_value is not null
+              strictly: false
       - name: value_source_value
         description: This field houses the verbatim result value of the Observation from the source data.  Do
           not get confused with the Observation_source_value which captures source value of the observation
@@ -243,6 +259,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: value_source_value is not null
+              strictly: false
       - name: observation_event_id
         description: If the Observation record is related to another record in the database, this field
           is the primary key of the linked record.

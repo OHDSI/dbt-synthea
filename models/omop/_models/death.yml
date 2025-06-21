@@ -78,6 +78,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: cause_source_value is not null
+              strictly: false
       - name: cause_source_concept_id
         description: ''
         data_type: integer

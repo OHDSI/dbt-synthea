@@ -13,12 +13,12 @@ SELECT
     , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS quantity
     , days_supply
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS sig
-    , route_concept_id
-    , lot_number
+    , 0 AS route_concept_id
+    , '0' AS lot_number
     , provider_id
     , visit_occurrence_id
     , visit_detail_id
-    , drug_source_value
+    , {{ string_truncate("drug_source_value", 50) }} AS drug_source_value
     , drug_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS route_source_value
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS dose_unit_source_value

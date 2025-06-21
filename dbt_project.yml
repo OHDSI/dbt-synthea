@@ -86,7 +86,7 @@ vars:
         HEALTHCARECLAIMTYPEID2: float
     claims_transactions:
       +column_types:
-        Id: varchar
+        ID: varchar
         CLAIMID: varchar
         CHARGEID: float
         PATIENTID: varchar

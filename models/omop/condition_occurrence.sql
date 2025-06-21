@@ -11,7 +11,7 @@ SELECT
     , vd.provider_id
     , vd.visit_occurrence_id
     , vd.visit_detail_id
-    , c.condition_code AS condition_source_value
+    , {{ string_truncate("c.condition_code", 50) }} AS condition_source_value
     , srctosrcvm.source_concept_id AS condition_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS condition_status_source_value
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS condition_status_concept_id

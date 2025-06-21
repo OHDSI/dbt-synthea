@@ -17,8 +17,6 @@ SELECT
         "m.medication_stop_date", 
         "day") 
     }} AS days_supply
-    , 0 AS route_concept_id
-    , '0' AS lot_number
     , m.medication_code AS drug_source_value
     , srctosrcvm.source_concept_id AS drug_source_concept_id
     , m.medication_base_cost AS drug_base_cost

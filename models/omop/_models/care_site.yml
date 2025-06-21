@@ -20,6 +20,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: care_site_name is not null
+              strictly: false
       - name: place_of_service_concept_id
         description: This is a high-level way of characterizing a Care Site. Typically, however, Care
           Sites can provide care in multiple settings (inpatient, outpatient, etc.) and this granularity
@@ -58,6 +62,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: care_site_source_value is not null
+              strictly: false
       - name: place_of_service_source_value
         description: ''
         data_type: varchar(50)
@@ -65,3 +73,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: place_of_service_source_value is not null
+              strictly: false

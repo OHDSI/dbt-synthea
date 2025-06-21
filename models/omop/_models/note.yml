@@ -84,6 +84,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 250
+              row_condition: note_title is not null
+              strictly: false
       - name: note_text
         description: The content of the note.
         data_type: varchar(MAX)
@@ -161,6 +165,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: note_source_value is not null
+              strictly: false
       - name: note_event_id
         description: If the Note record is related to another record in the database, this field is the
           primary key of the linked record.

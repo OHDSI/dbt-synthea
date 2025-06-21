@@ -18,6 +18,9 @@ denominator AS (
             ELSE COUNT(*)
         END AS denom
     FROM validation
+    {% if column_name == 'unit_concept_id' and (model == 'measurement' or model == 'observation') %}
+    WHERE value_as_number IS NOT NULL
+    {% endif %}
 
 ),
 
@@ -28,7 +31,12 @@ validation_errors AS (
     CROSS JOIN denominator
     GROUP BY denom
     HAVING
-        SUM(CASE WHEN concept_field = 0 THEN 1 ELSE 0 END) * 100.0 / denom > {{ threshold }}
+        SUM(
+            CASE 
+                WHEN concept_field = 0 THEN 1 
+                ELSE 0 
+            END
+        ) * 1.0 / denom > {{ threshold }}
 
 )
 

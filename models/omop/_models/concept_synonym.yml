@@ -23,6 +23,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 1000
+              row_condition: concept_synonym_name is not null
+              strictly: false
       - name: language_concept_id
         description: ''
         data_type: integer

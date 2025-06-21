@@ -123,6 +123,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: stop_reason is not null
+              strictly: false
       - name: refills
         description: This is only filled in when the record is coming from a prescription written this
           field is meant to represent intended refills at time of the prescription.
@@ -178,6 +182,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: lot_number is not null
+              strictly: false
       - name: provider_id
         description: The Provider associated with drug record, e.g. the provider who wrote the prescription
           or the provider who administered the drug.
@@ -220,6 +228,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: drug_source_value is not null
+              strictly: false
       - name: drug_source_concept_id
         description: This is the concept representing the drug source value and may not necessarily be
           standard. This field is discouraged from use in analysis because it is not required to contain
@@ -244,6 +256,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: route_source_value is not null
+              strictly: false
       - name: dose_unit_source_value
         description: This field houses the verbatim value from the source data representing the dose unit
           of the drug given.
@@ -252,3 +268,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: dose_unit_source_value is not null
+              strictly: false

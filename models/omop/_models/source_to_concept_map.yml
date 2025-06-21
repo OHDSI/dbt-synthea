@@ -17,6 +17,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: source_code is not null
+              strictly: false
       - name: source_concept_id
         description: A foreign key to the Source Concept that is being translated into a Standard Concept.
         data_type: integer
@@ -42,6 +46,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: source_vocabulary_id is not null
+              strictly: false
       - name: source_code_description
         description: An optional description for the source code. This is included as a convenience to
           compare the description of the source code to the name of the concept.
@@ -50,6 +58,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: source_code_description is not null
+              strictly: false
       - name: target_concept_id
         description: The target Concept to which the source code is being mapped.
         data_type: integer
@@ -77,6 +89,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: target_vocabulary_id is not null
+              strictly: false
       - name: valid_start_date
         description: The date when the mapping instance was first recorded.
         data_type: date
@@ -102,3 +118,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 1
+              row_condition: invalid_reason is not null
+              strictly: false

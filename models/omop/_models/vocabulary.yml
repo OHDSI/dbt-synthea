@@ -13,6 +13,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: vocabulary_id is not null
+              strictly: false
       - name: vocabulary_name
         description: The name describing the vocabulary, for example, International Classification of
           Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS) etc.
@@ -22,6 +26,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: vocabulary_name is not null
+              strictly: false
       - name: vocabulary_reference
         description: External reference to documentation or available download of the about the vocabulary.
         data_type: varchar(255)
@@ -29,6 +37,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: vocabulary_reference is not null
+              strictly: false
       - name: vocabulary_version
         description: Version of the Vocabulary as indicated in the source.
         data_type: varchar(255)
@@ -36,6 +48,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: vocabulary_version is not null
+              strictly: false
       - name: vocabulary_concept_id
         description: A Concept that represents the Vocabulary the VOCABULARY record belongs to.
         data_type: integer

@@ -12,7 +12,7 @@ SELECT
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }} AS admitted_from_concept_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }} AS discharged_to_concept_id
     , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }} AS preceding_visit_detail_id
-    , visit_detail_source_value
+    , {{ string_truncate("visit_detail_source_value", 50) }} AS visit_detail_source_value
     , 0 AS visit_detail_source_concept_id
     , {{ dbt.cast("NULL", api.Column.translate_type("varchar")) }} AS admitted_from_source_value
     , {{ dbt.cast("NULL", api.Column.translate_type("varchar")) }} AS discharged_to_source_value

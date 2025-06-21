@@ -51,6 +51,7 @@ class OmopFieldDocumentationContainer:
     cdm_field: str
     user_guide: str
     datatype: str
+    varchar_length: int | None
     required: bool
     primary_key: bool
     foreign_key: bool
@@ -188,8 +189,20 @@ def sentinel_to_bool(text: str) -> bool:
         return False
 
 
+def parse_varchar_length(datatype: str) -> int | None:
+    """Parse the length of a varchar datatype."""
+    if datatype.lower().startswith("varchar"):
+        try:
+            return int(datatype[datatype.find("(") + 1 : datatype.find(")")])
+        except (ValueError, IndexError):
+            return None
+    return None
+
+
 def generate_table_yaml_params(table_container: OmopTableDocumentationContainer) -> dict[str, str | list[dict[str, dict[str, str]]]]:
     """Generate table-level YAML"""
+
+    # TODO: This should be a class.
     table_params: dict[str, str | list[dict[str, dict[str, str]]]] = {
         "name": table_container.table_name,
         "description": table_container.description,
@@ -221,6 +234,8 @@ def create_table_dict(
     table_container: OmopTableDocumentationContainer,
 ) -> dict[str, list[dict[str, str | list[dict[str, str | list[str | dict[str, dict[str, str]]]]]]]]:
     """Create a table dictionary to mimic the dbt yaml format"""
+
+    # TODO: Look at turning this structure into a dataclass or pydantic BaseModel class.
     table_dict: dict[
         str,
         list[
@@ -232,7 +247,6 @@ def create_table_dict(
         "models": [generate_table_yaml_params(table_container)]
     }
     return table_dict
-
 
 def omop_docs_to_dbt_config(
     table: str,
@@ -332,6 +346,14 @@ def omop_docs_to_dbt_config(
                 "column_type_list": "{{ get_equivalent_types('varchar') }}"
             }
         })
+        if doc_container.varchar_length != None and doc_container.cdm_field != "offset":  
+            tests.append({
+                "dbt_expectations.expect_column_value_lengths_to_be_between": {
+                    "max_value": doc_container.varchar_length,
+                    "row_condition": f"{doc_container.cdm_field} is not null",
+                    "strictly": False  # less than or equal to
+                }
+            })
 
     if doc_container.cdm_field.endswith("_concept_id") and not doc_container.cdm_field.endswith("_source_concept_id"):
         if table.lower() not in VOCABULARY_TABLES:
@@ -404,7 +426,7 @@ def parse_field_containers(
                 "source_concept_record_completeness_threshold": row["sourceConceptRecordCompletenessThreshold"].strip(),
             }
 
-    # Parse CDM file and enrich containers
+    # Parse CDM file and enrich with DQD info
     with open(cdm_file_path, mode="r", encoding="utf-8-sig") as cdm_csv_file:
         cdm_reader = csv.DictReader(cdm_csv_file)
         for row in cdm_reader:
@@ -416,6 +438,7 @@ def parse_field_containers(
                     "cdm_field": row["cdmFieldName"].strip().lower().replace('"', ''),
                     "user_guide": '' if row["userGuidance"].strip() == 'NA' else row["userGuidance"].strip().replace('\n', ' '),
                     "datatype": row["cdmDatatype"].strip(),
+                    "varchar_length": parse_varchar_length(row["cdmDatatype"].strip()),
                     "required": sentinel_to_bool(row["isRequired"].strip()),
                     "primary_key": sentinel_to_bool(row["isPrimaryKey"].strip()),
                     "foreign_key": sentinel_to_bool(row["isForeignKey"].strip()),
@@ -447,7 +470,7 @@ def parse_table_info(
                 "person_completeness_threshold": row["measurePersonCompletenessThreshold"].strip()
             }
     
-    # Parse CDM table file
+    # Parse CDM table file and enrich with DQD info
     with open(cdm_file_path, mode="r", encoding="utf-8-sig") as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:

@@ -66,3 +66,13 @@ macros:
       - name: standard_types
         type: list[str]
         description: A list of standard data types to find equivalents for.
+  
+  - name: string_truncate
+    description: This macro truncates a string to a specified length.
+    arguments:
+      - name: expression
+        type: str
+        description: The string to truncate.
+      - name: length
+        type: int
+        description: The maximum length of the truncated string.

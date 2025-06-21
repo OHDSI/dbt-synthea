@@ -16,6 +16,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: concept_class_id is not null
+              strictly: false
       - name: concept_class_name
         description: The name describing the Concept Class, e.g. Clinical Finding, Ingredient, etc.
         data_type: varchar(255)
@@ -24,6 +28,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: concept_class_name is not null
+              strictly: false
       - name: concept_class_concept_id
         description: A Concept that represents the Concept Class.
         data_type: integer

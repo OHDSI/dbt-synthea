@@ -13,7 +13,7 @@ SELECT
     , vd.provider_id
     , vd.visit_occurrence_id
     , vd.visit_detail_id
-    , d.device_code AS device_source_value
+    , {{ string_truncate("d.device_code", 50) }} AS device_source_value
     , srctosrcvm.source_concept_id AS device_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS unit_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS unit_source_value

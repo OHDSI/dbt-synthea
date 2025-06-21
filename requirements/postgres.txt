@@ -144,8 +144,9 @@ pluggy==1.5.0
     #   pytest
 pre-commit==3.8.0
     # via -r requirements/common.in
-protobuf==4.25.5
+protobuf==4.25.8
     # via
+    #   -r requirements/common.in
     #   dbt-adapters
     #   dbt-common
     #   dbt-core

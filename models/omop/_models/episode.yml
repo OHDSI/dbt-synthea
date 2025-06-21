@@ -142,6 +142,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: episode_source_value is not null
+              strictly: false
       - name: episode_source_concept_id
         description: A foreign key to a Episode Concept that refers to the code used in the source.
         data_type: integer
