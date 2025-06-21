@@ -3,9 +3,12 @@ models:
     description: 'This table contains records which define spans of time during which two conditions are
       expected to hold: (i) Clinical Events that happened to the Person are recorded in the Event tables,
       and (ii) absence of records indicate such Events did not occur during this span of time.'
+    tests:
+      - person_completeness:
+          threshold: '0'
     columns:
       - name: observation_period_id
-        description: A Person can have multiple discrete Observation Periods which areidentified by the
+        description: A Person can have multiple discrete Observation Periods which are identified by the
           Observation_Period_Id.
         data_type: integer
         tests:
@@ -15,7 +18,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
-        description: The Person ID of the PERSON record for which the Observation Period isrecorded.
+        description: The Person ID of the PERSON record for which the Observation Period is recorded.
         data_type: integer
         tests:
           - not_null
@@ -34,7 +37,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: observation_period_end_date
-        description: Use this date to determine the end date of the period for which we canassume that
+        description: Use this date to determine the end date of the period for which we can assume that
           all events for a Person are recorded.
         data_type: date
         tests:
@@ -43,8 +46,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: period_type_concept_id
-        description: This field can be used to determine the provenance of the ObservationPeriod as in
-          whether the period was determined from an insuranceenrollment file, EHR healthcare encounters,
+        description: This field can be used to determine the provenance of the Observation Period as in
+          whether the period was determined from an insurance enrollment file, EHR healthcare encounters,
           or other sources.
         data_type: integer
         tests:
@@ -54,6 +57,13 @@ models:
               field: concept_id
               from_condition: period_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: period_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL

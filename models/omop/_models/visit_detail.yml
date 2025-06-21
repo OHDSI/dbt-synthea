@@ -6,10 +6,13 @@ models:
       every record in the VISIT_OCCURRENCE table there may be 0 or more records in the VISIT_DETAIL table
       with a 1:n relationship where n may be 0. The VISIT_DETAIL table is structurally very similar to
       VISIT_OCCURRENCE table and belongs to the visit domain.
+    tests:
+      - person_completeness:
+          threshold: '100'
     columns:
       - name: visit_detail_id
-        description: Use this to identify unique interactions between a person and the healthcare system.
-          This identifier links across the other CDM event tables toassociate events with a visit detail.
+        description: Use this to identify unique interactions between a person and the health care system.
+          This identifier links across the other CDM event tables to associate events with a visit detail.
         data_type: integer
         tests:
           - not_null
@@ -29,8 +32,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_concept_id
-        description: This field contains a concept id representing the kind of visit detail,like inpatient
-          or outpatient. All concepts in this field should bestandard and belong to the Visit domain.
+        description: This field contains a concept id representing the kind of visit detail, like inpatient
+          or outpatient. All concepts in this field should be standard and belong to the Visit domain.
         data_type: integer
         tests:
           - not_null
@@ -39,11 +42,18 @@ models:
               field: concept_id
               from_condition: visit_detail_concept_id <> 0
               to_condition: domain_id = 'Visit'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_detail_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: visit_detail_start_date
-        description: This is the date of the start of the encounter. This may or may not beequal to the
+        description: This is the date of the start of the encounter. This may or may not be equal to the
           date of the Visit the Visit Detail is associated with.
         data_type: date
         tests:
@@ -59,9 +69,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: visit_detail_end_date
-        description: This the end date of the patient-provider interaction. If a Person isstill an inpatient
-          in the hospital at the time of the data extract anddoes not have a visit_end_date, then set
-          the visit_end_date to the dateof the data pull.
+        description: This the end date of the patient-provider interaction.  If a Person is still an inpatient
+          in the hospital at the time of the data extract and does not have a visit_end_date, then set
+          the visit_end_date to the date of the data pull.
         data_type: date
         tests:
           - not_null
@@ -69,8 +79,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: visit_detail_end_datetime
-        description: If a Person is still an inpatient in the hospital at the time of thedata extract
-          and does not have a visit_end_datetime, then set thevisit_end_datetime to the datetime of the
+        description: If a Person is still an inpatient in the hospital at the time of the data extract
+          and does not have a visit_end_datetime, then set the visit_end_datetime to the datetime of the
           data pull.
         data_type: datetime
         tests:
@@ -78,8 +88,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: visit_detail_type_concept_id
-        description: Use this field to understand the provenance of the visit detail record,or where the
-          record comes from.
+        description: Use this field to understand the provenance of the visit detail record, or where
+          the record comes from.
         data_type: integer
         tests:
           - not_null
@@ -88,15 +98,22 @@ models:
               field: concept_id
               from_condition: visit_detail_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: visit_detail_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: provider_id
-        description: There will only be one provider per visit record andthe ETL document should clearly
-          state how they were chosen (attending,admitting, etc.). This is a typical reason for leveraging
-          theVISIT_DETAIL table as even though each VISIT_DETAIL record can only haveone provider, there
-          is no limit to the number of VISIT_DETAIL recordsthat can be associated to a VISIT_OCCURRENCE
-          record.
+        description: There will only be one provider per  **visit** record and the ETL document should
+          clearly state how they were chosen (attending, admitting, etc.). This is a typical reason for
+          leveraging the VISIT_DETAIL table as even though each VISIT_DETAIL record can only have one
+          provider, there is no limit to the number of VISIT_DETAIL records that can be associated to
+          a VISIT_OCCURRENCE record.
         data_type: integer
         tests:
           - relationships:
@@ -106,7 +123,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: care_site_id
-        description: This field provides information about the Care Site where the VisitDetail took place.
+        description: This field provides information about the Care Site where the Visit Detail took place.
         data_type: integer
         tests:
           - relationships:
@@ -116,13 +133,17 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_source_value
-        description: This field houses the verbatim value from the source data representingthe kind of
-          visit detail that took place (inpatient, outpatient,emergency, etc.)
+        description: This field houses the verbatim value from the source data representing the kind of
+          visit detail that took place (inpatient, outpatient, emergency, etc.)
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: visit_detail_source_value is not null
+              strictly: false
       - name: visit_detail_source_concept_id
         description: ''
         data_type: integer
@@ -130,12 +151,14 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '100'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: admitted_from_concept_id
-        description: Use this field to determine where the patient was admitted from. Thisconcept is part
-          of the visit domain and can indicate if a patient wasadmitted to the hospital from a long-term
+        description: Use this field to determine where the patient was admitted from. This concept is
+          part of the visit domain and can indicate if a patient was admitted to the hospital from a long-term
           care facility, for example.
         data_type: integer
         tests:
@@ -144,9 +167,16 @@ models:
               field: concept_id
               from_condition: admitted_from_concept_id <> 0
               to_condition: domain_id = 'Visit'
+          - concept_record_completeness:
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: admitted_from_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: admitted_from_source_value
         description: ''
         data_type: varchar(50)
@@ -154,6 +184,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: admitted_from_source_value is not null
+              strictly: false
       - name: discharged_to_source_value
         description: ''
         data_type: varchar(50)
@@ -161,12 +195,16 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: discharged_to_source_value is not null
+              strictly: false
       - name: discharged_to_concept_id
-        description: Use this field to determine where the patient was discharged to after avisit. This
-          concept is part of the visit domain and can indicate if apatient was transferred to another
-          hospital or sent to a long-term carefacility, for example. It is assumed that a person is discharged
-          to hometherefore there is not a standard concept id for home. Use concept id= 0 when a person
-          is discharged to home.
+        description: Use this field to determine where the patient was discharged to after a visit. This
+          concept is part of the visit domain and can indicate if a patient was transferred to another
+          hospital or sent to a long-term care facility, for example.  It is assumed that a person is
+          discharged to home therefore there is not a standard concept id for "home".  Use concept id
+          = 0 when a person is discharged to home.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -174,12 +212,19 @@ models:
               field: concept_id
               from_condition: discharged_to_concept_id <> 0
               to_condition: domain_id = 'Visit'
+          - concept_record_completeness:
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: discharged_to_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: preceding_visit_detail_id
-        description: Use this field to find the visit detail that occurred for the personprior to the
-          given visit detail record. There could be a few days or afew years in between.
+        description: Use this field to find the visit detail that occurred for the person prior to the
+          given visit detail record. There could be a few days or a few years in between.
         data_type: integer
         tests:
           - relationships:
@@ -189,8 +234,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: parent_visit_detail_id
-        description: Use this field to find the visit detail that subsumes the given visitdetail record.
-          This is used in the case that a visit detail record needsto be nested beyond the VISIT_OCCURRENCE/VISIT_DETAIL
+        description: Use this field to find the visit detail that subsumes the given visit detail record.
+          This is used in the case that a visit detail record needs to be nested beyond the VISIT_OCCURRENCE/VISIT_DETAIL
           relationship.
         data_type: integer
         tests:

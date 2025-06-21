@@ -20,20 +20,31 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: care_site_name is not null
+              strictly: false
       - name: place_of_service_concept_id
-        description: This is a high-level way of characterizing a Care Site. Typically,however, Care Sites
-          can provide care in multiple settings (inpatient,outpatient, etc.) and this granularity should
-          be reflected in the visit.
+        description: This is a high-level way of characterizing a Care Site. Typically, however, Care
+          Sites can provide care in multiple settings (inpatient, outpatient, etc.) and this granularity
+          should be reflected in the visit.
         data_type: integer
         tests:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '100'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: place_of_service_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: location_id
-        description: The location_id from the LOCATION table representing the physicallocation of the
+        description: The location_id from the LOCATION table representing the physical location of the
           care_site.
         data_type: integer
         tests:
@@ -44,13 +55,17 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: care_site_source_value
-        description: The identifier of the care_site as it appears in the source data. Thiscould be an
+        description: The identifier of the care_site as it appears in the source data. This could be an
           identifier separate from the name of the care_site.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: care_site_source_value is not null
+              strictly: false
       - name: place_of_service_source_value
         description: ''
         data_type: varchar(50)
@@ -58,3 +73,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: place_of_service_source_value is not null
+              strictly: false

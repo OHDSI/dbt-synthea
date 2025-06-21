@@ -6,10 +6,10 @@ SELECT
     , pt.coverage_start_date AS payer_plan_period_start_date
     , pt.coverage_end_date AS payer_plan_period_end_date
     , 0 AS payer_concept_id
-    , pt.payer_id AS payer_source_value
+    , {{ string_truncate("pt.payer_id", 50) }} AS payer_source_value
     , 0 AS payer_source_concept_id
     , 0 AS plan_concept_id
-    , pay.payer_name AS plan_source_value
+    , {{ string_truncate("pay.payer_name", 50) }} AS plan_source_value
     , 0 AS plan_source_concept_id
     , 0 AS sponsor_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS sponsor_source_value
