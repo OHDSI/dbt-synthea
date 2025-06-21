@@ -21,7 +21,7 @@ SELECT
     , provider_id
     , visit_occurrence_id
     , visit_detail_id
-    , observation_source_value
+    , {{ string_truncate("observation_source_value", 50) }} AS observation_source_value
     , observation_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS unit_source_value
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS qualifier_source_value

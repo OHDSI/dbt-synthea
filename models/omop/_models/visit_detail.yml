@@ -140,6 +140,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: visit_detail_source_value is not null
+              strictly: false
       - name: visit_detail_source_concept_id
         description: ''
         data_type: integer
@@ -180,6 +184,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: admitted_from_source_value is not null
+              strictly: false
       - name: discharged_to_source_value
         description: ''
         data_type: varchar(50)
@@ -187,6 +195,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: discharged_to_source_value is not null
+              strictly: false
       - name: discharged_to_concept_id
         description: Use this field to determine where the patient was discharged to after a visit. This
           concept is part of the visit domain and can indicate if a patient was transferred to another

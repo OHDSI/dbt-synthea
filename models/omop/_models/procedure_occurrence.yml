@@ -167,6 +167,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: procedure_source_value is not null
+              strictly: false
       - name: procedure_source_concept_id
         description: This is the concept representing the procedure source value and may not necessarily
           be standard. This field is discouraged from use in analysis because it is not required to contain
@@ -192,3 +196,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: modifier_source_value is not null
+              strictly: false

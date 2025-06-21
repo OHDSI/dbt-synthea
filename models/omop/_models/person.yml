@@ -144,6 +144,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: person_source_value is not null
+              strictly: false
       - name: gender_source_value
         description: This field is used to store the biological sex of the person from the source data.
           It is not intended for use in standard analytics but for reference only.
@@ -152,6 +156,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: gender_source_value is not null
+              strictly: false
       - name: gender_source_concept_id
         description: Due to the small number of options, this tends to be zero.
         data_type: integer
@@ -170,6 +178,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: race_source_value is not null
+              strictly: false
       - name: race_source_concept_id
         description: Due to the small number of options, this tends to be zero.
         data_type: integer
@@ -188,6 +200,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: ethnicity_source_value is not null
+              strictly: false
       - name: ethnicity_source_concept_id
         description: Due to the small number of options, this tends to be zero.
         data_type: integer

@@ -38,15 +38,10 @@ SELECT
         ELSE 0
     END AS ethnicity_concept_id
     , loc.location_id
-    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS provider_id
-    , {{ dbt.cast("NULL", api.Column.translate_type("integer")) }}  AS care_site_id
     , p.patient_id AS person_source_value
     , p.patient_gender AS gender_source_value
-    , 0 AS gender_source_concept_id
     , p.race AS race_source_value
-    , 0 AS race_source_concept_id
     , p.ethnicity AS ethnicity_source_value
-    , 0 AS ethnicity_source_concept_id
 FROM {{ ref('stg_synthea__patients') }} AS p
 LEFT JOIN {{ ref('stg_map__states') }} AS s ON p.patient_state = s.state_name
 LEFT JOIN {{ ref('int__location') }} AS loc

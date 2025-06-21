@@ -138,3 +138,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 1
+              row_condition: invalid_reason is not null
+              strictly: false

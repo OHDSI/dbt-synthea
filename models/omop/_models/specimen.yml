@@ -139,6 +139,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: specimen_source_id is not null
+              strictly: false
       - name: specimen_source_value
         description: ''
         data_type: varchar(50)
@@ -146,6 +150,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: specimen_source_value is not null
+              strictly: false
       - name: unit_source_value
         description: ''
         data_type: varchar(50)
@@ -153,6 +161,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: unit_source_value is not null
+              strictly: false
       - name: anatomic_site_source_value
         description: ''
         data_type: varchar(50)
@@ -160,6 +172,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: anatomic_site_source_value is not null
+              strictly: false
       - name: disease_status_source_value
         description: ''
         data_type: varchar(50)
@@ -167,3 +183,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: disease_status_source_value is not null
+              strictly: false

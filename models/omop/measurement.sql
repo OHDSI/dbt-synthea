@@ -21,10 +21,10 @@ SELECT
     , provider_id
     , visit_occurrence_id
     , visit_detail_id
-    , measurement_source_value
+    , {{ string_truncate("measurement_source_value", 50) }} AS measurement_source_value
     , measurement_source_concept_id
-    , unit_source_value
-    , value_source_value
+    , {{ string_truncate("unit_source_value", 50) }} AS unit_source_value
+    , {{ string_truncate("value_source_value", 50) }} AS value_source_value
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS unit_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("bigint")) }} AS measurement_event_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS meas_event_field_concept_id

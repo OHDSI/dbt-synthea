@@ -13,8 +13,6 @@ SELECT
     , {{ dbt.cast("i.immunization_date", api.Column.translate_type("date")) }} AS verbatim_end_date
     , 32827 AS drug_type_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS days_supply
-    , 0 AS route_concept_id
-    , '0' AS lot_number
     , i.immunization_code AS drug_source_value
     , srctosrcvm.source_concept_id AS drug_source_concept_id
     , i.immunization_base_cost AS drug_base_cost

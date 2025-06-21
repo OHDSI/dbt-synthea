@@ -11,6 +11,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: cdm_source_name is not null
+              strictly: false
       - name: cdm_source_abbreviation
         description: The abbreviation of the CDM instance.
         data_type: varchar(25)
@@ -19,6 +23,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 25
+              row_condition: cdm_source_abbreviation is not null
+              strictly: false
       - name: cdm_holder
         description: The holder of the CDM instance.
         data_type: varchar(255)
@@ -27,6 +35,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: cdm_holder is not null
+              strictly: false
       - name: source_description
         description: The description of the CDM instance.
         data_type: varchar(MAX)
@@ -41,6 +53,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: source_documentation_reference is not null
+              strictly: false
       - name: cdm_etl_reference
         description: ''
         data_type: varchar(255)
@@ -48,6 +64,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: cdm_etl_reference is not null
+              strictly: false
       - name: source_release_date
         description: The date the data was extracted from the source system. In some systems that is the
           same as the date the ETL was run. Typically the latest even date in the source is on the source_release_date.
@@ -72,6 +92,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 10
+              row_condition: cdm_version is not null
+              strictly: false
       - name: cdm_version_concept_id
         description: The Concept Id representing the version of the CDM.
         data_type: integer
@@ -96,3 +120,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: vocabulary_version is not null
+              strictly: false

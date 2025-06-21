@@ -82,6 +82,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 10
+              row_condition: measurement_time is not null
+              strictly: false
       - name: measurement_type_concept_id
         description: This field can be used to determine the provenance of the Measurement record, as
           in whether the measurement was from an EHR system, insurance claim, registry, or other sources.
@@ -225,6 +229,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: measurement_source_value is not null
+              strictly: false
       - name: measurement_source_concept_id
         description: This is the concept representing the MEASUREMENT_SOURCE_VALUE and may not necessarily
           be standard. This field is discouraged from use in analysis because it is not required to contain
@@ -250,6 +258,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: unit_source_value is not null
+              strictly: false
       - name: unit_source_concept_id
         description: '"This is the concept representing the UNIT_SOURCE_VALUE and may not necessarily
           be standard. This field is discouraged from use in analysis because it is not required to contain
@@ -275,6 +287,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: value_source_value is not null
+              strictly: false
       - name: measurement_event_id
         description: If the Measurement record is related to another record in the database, this field
           is the primary key of the linked record.

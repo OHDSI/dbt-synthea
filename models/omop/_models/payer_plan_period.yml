@@ -73,6 +73,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: payer_source_value is not null
+              strictly: false
       - name: payer_source_concept_id
         description: ''
         data_type: integer
@@ -105,6 +109,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: plan_source_value is not null
+              strictly: false
       - name: plan_source_concept_id
         description: ''
         data_type: integer
@@ -138,6 +146,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: sponsor_source_value is not null
+              strictly: false
       - name: sponsor_source_concept_id
         description: ''
         data_type: integer
@@ -155,6 +167,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: family_source_value is not null
+              strictly: false
       - name: stop_reason_concept_id
         description: This field represents the reason the Person left the Plan, if known.
         data_type: integer
@@ -177,6 +193,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: stop_reason_source_value is not null
+              strictly: false
       - name: stop_reason_source_concept_id
         description: ''
         data_type: integer
