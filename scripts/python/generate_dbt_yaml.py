@@ -248,6 +248,7 @@ def create_table_dict(
     }
     return table_dict
 
+
 def omop_docs_to_dbt_config(
     table: str,
     doc_container: OmopFieldDocumentationContainer,
