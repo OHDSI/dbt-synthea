@@ -10,7 +10,7 @@ The quality of the OMOP CDM output by dbt-synthea is monitored using `dbt test`,
 
 To ensure our quality bar and definition of data quality are consistent with the standards enforced by the OHDSI community, we have implemented the [DataQualityDashboard](https://github.com/OHDSI/DataQualityDashboard) quality checks as dbt tests here in the dbt-synthea project.
 
-The OMOP CDM v5.4 specifications and DQD thresholds are parsed directly from their respective GitHub repositories and transformed into yaml using [generate_dbt_yaml.py](.scripts/python/generate_dbt_yaml.py).
+The OMOP CDM v5.4 specifications and DQD thresholds are parsed directly from their respective GitHub repositories and transformed into yaml using [generate_dbt_yaml.py](./scripts/python/generate_dbt_yaml.py).
 
 Implementation of the DQD checks is still in progress; so far the following checks are included in `dbt test`:
 
