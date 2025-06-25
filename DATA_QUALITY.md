@@ -33,14 +33,14 @@ Implementation of the DQD checks is still in progress; so far the following chec
 
 The `generate_dbt_yaml` Python script may be used to generate the OMOP model schema files for *any* OMOP ETL implemented using dbt.  It is agnostic to data source and database system.  Given the right combination of input files, it supports OMOP CDM v5.4 (the default) as well as v5.3.
 
-The script can be found at [scripts/python/generate_dbt_yaml.py](.scripts/python/generate_dbt_yaml.py).  Its dependencies include:
+The script can be found at [scripts/python/generate_dbt_yaml.py](./scripts/python/generate_dbt_yaml.py).  Its dependencies include:
 
 * Python >=3.12
   * ruamel-yaml
   * requests
 * [dbt_expectations](https://hub.getdbt.com/metaplane/dbt_expectations/latest/)
 * The macros stored in [macros/generate_dbt_yaml](./macros/generate_dbt_yaml)
-* The generic data tests stored in [tests/generic](.tests/generic)
+* The generic data tests stored in [tests/generic](./tests/generic)
 
 ## Source Data Quality
 
