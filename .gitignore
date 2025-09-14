@@ -12,3 +12,4 @@ data/
 .dbt/
 profiles.yml
 .vscode/mcp.json
+.cursor/mcp.json

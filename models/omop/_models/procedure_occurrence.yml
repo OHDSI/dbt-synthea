@@ -2,9 +2,12 @@ models:
   - name: procedure_occurrence
     description: This table contains records of activities or processes ordered by, or carried out by,
       a healthcare provider on the patient with a diagnostic or therapeutic purpose.
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: procedure_occurrence_id
-        description: The unique key given to a procedure record for a person. Refer to theETL for how
+        description: The unique key given to a procedure record for a person. Refer to the ETL for how
           duplicate procedures during the same visit were handled.
         data_type: integer
         tests:
@@ -14,7 +17,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
-        description: The PERSON_ID of the PERSON for whom the procedure is recorded. This maybe a system
+        description: The PERSON_ID of the PERSON for whom the procedure is recorded. This may be a system
           generated code.
         data_type: integer
         tests:
@@ -26,8 +29,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: procedure_concept_id
-        description: The PROCEDURE_CONCEPT_ID field is recommended for primary use inanalyses, and must
-          be used for network studies. This is the standardconcept mapped from the source value which
+        description: The PROCEDURE_CONCEPT_ID field is recommended for primary use in analyses, and must
+          be used for network studies. This is the standard concept mapped from the source value which
           represents a procedure
         data_type: integer
         tests:
@@ -37,9 +40,16 @@ models:
               field: concept_id
               from_condition: procedure_concept_id <> 0
               to_condition: domain_id = 'Procedure'
+          - concept_record_completeness:
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: procedure_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: procedure_date
         description: Use this date to determine the date the procedure started.
         data_type: date
@@ -70,8 +80,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: procedure_type_concept_id
-        description: This field can be used to determine the provenance of the Procedurerecord, as in
-          whether the procedure was from an EHR system, insuranceclaim, registry, or other sources.
+        description: This field can be used to determine the provenance of the Procedure record, as in
+          whether the procedure was from an EHR system, insurance claim, registry, or other sources.
         data_type: integer
         tests:
           - not_null
@@ -80,20 +90,34 @@ models:
               field: concept_id
               from_condition: procedure_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: procedure_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: modifier_concept_id
-        description: The modifiers are intended to give additional information about theprocedure but
+        description: The modifiers are intended to give additional information about the procedure but
           as of now the vocabulary is under review.
         data_type: integer
         tests:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '100'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: modifier_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: quantity
         description: If the quantity value is omitted, a single procedure is assumed.
         data_type: integer
@@ -102,7 +126,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: provider_id
-        description: The provider associated with the procedure record, e.g. the provider whoperformed
+        description: The provider associated with the procedure record, e.g. the provider who performed
           the Procedure.
         data_type: integer
         tests:
@@ -123,9 +147,10 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_id
-        description: The VISIT_DETAIL record during which the Procedure occurred. Forexample, if the Person
-          was in the ICU at the time of the Procedure theVISIT_OCCURRENCE record would reflect the overall
-          hospital stay and theVISIT_DETAIL record would reflect the ICU stay during the hospitalvisit.
+        description: The VISIT_DETAIL record during which the Procedure occurred. For example, if the
+          Person was in the ICU at the time of the Procedure the VISIT_OCCURRENCE record would reflect
+          the overall hospital stay and the VISIT_DETAIL record would reflect the ICU stay during the
+          hospital visit.
         data_type: integer
         tests:
           - relationships:
@@ -135,33 +160,43 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: procedure_source_value
-        description: This field houses the verbatim value from the source data representingthe procedure
-          that occurred. For example, this could be an CPT4 or OPCS4code.
+        description: This field houses the verbatim value from the source data representing the procedure
+          that occurred. For example, this could be an CPT4 or OPCS4 code.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: procedure_source_value is not null
+              strictly: false
       - name: procedure_source_concept_id
-        description: This is the concept representing the procedure source value and may notnecessarily
-          be standard. This field is discouraged from use in analysisbecause it is not required to contain
-          Standard Concepts that are usedacross the OHDSI community, and should only be used when StandardConcepts
-          do not adequately represent the source detail for the Procedurenecessary for a given analytic
-          use case. Consider usingPROCEDURE_CONCEPT_ID instead to enable standardized analytics that canbe
-          consistent across the network.
+        description: This is the concept representing the procedure source value and may not necessarily
+          be standard. This field is discouraged from use in analysis because it is not required to contain
+          Standard Concepts that are used across the OHDSI community, and should only be used when Standard
+          Concepts do not adequately represent the source detail for the Procedure necessary for a given
+          analytic use case. Consider using PROCEDURE_CONCEPT_ID instead to enable standardized analytics
+          that can be consistent across the network.
         data_type: integer
         tests:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '10'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: modifier_source_value
-        description: This field houses the verbatim value from the source data representingthe modifier
+        description: This field houses the verbatim value from the source data representing the modifier
           code for the procedure that occurred.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: modifier_source_value is not null
+              strictly: false

@@ -5,8 +5,8 @@ SELECT
     , pr.procedure_start_datetime AS measurement_datetime
     , {{ dbt.cast("pr.procedure_start_datetime", api.Column.translate_type("time")) }} AS measurement_time
     , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS value_as_number
-    , 0 AS value_as_concept_id
-    , 0 AS unit_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS value_as_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS unit_concept_id
     , vd.provider_id
     , vd.visit_occurrence_id
     , vd.visit_detail_id

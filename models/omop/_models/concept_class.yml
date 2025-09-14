@@ -1,8 +1,8 @@
 models:
   - name: concept_class
     description: The CONCEPT_CLASS table includes semantic categories that reference the source structure
-      of each Vocabulary. Concept Classes represent so-called horizontal (e.g. MedDRA, RxNorm) or vertical
-      levels (e.g. SNOMED) of the vocabulary structure. Vocabularies without any Concept Classes, such
+      of each Vocabulary. Concept Classes represent so-called horizontal (e.g. MedDRA, RxNorm) or vertical
+      levels (e.g. SNOMED) of the vocabulary structure. Vocabularies without any Concept Classes, such
       as HCPCS, use the vocabulary_id as the Concept Class. This reference table is populated with a single
       record for each Concept Class, which includes a Concept Class ID and a fully specified Concept Class
       name.
@@ -16,14 +16,22 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: concept_class_id is not null
+              strictly: false
       - name: concept_class_name
-        description: The name describing the Concept Class, e.g. Clinical Finding,Ingredient, etc.
+        description: The name describing the Concept Class, e.g. Clinical Finding, Ingredient, etc.
         data_type: varchar(255)
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 255
+              row_condition: concept_class_name is not null
+              strictly: false
       - name: concept_class_concept_id
         description: A Concept that represents the Concept Class.
         data_type: integer

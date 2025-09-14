@@ -12,7 +12,7 @@ SELECT
     , observation_concept_id
     , observation_date
     , observation_datetime
-    , observation_type_concept_id
+    , 32817 AS observation_type_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS value_as_number
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS value_as_string
     , 0 AS value_as_concept_id
@@ -21,7 +21,7 @@ SELECT
     , provider_id
     , visit_occurrence_id
     , visit_detail_id
-    , observation_source_value
+    , {{ string_truncate("observation_source_value", 50) }} AS observation_source_value
     , observation_source_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS unit_source_value
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS qualifier_source_value

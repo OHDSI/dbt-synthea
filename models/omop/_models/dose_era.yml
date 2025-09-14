@@ -2,6 +2,9 @@ models:
   - name: dose_era
     description: A Dose Era is defined as a span of time when the Person is assumed to be exposed to a
       constant dose of a specific active ingredient.
+    tests:
+      - person_completeness:
+          threshold: '100'
     columns:
       - name: dose_era_id
         description: ''
@@ -33,9 +36,21 @@ models:
               field: concept_id
               from_condition: drug_concept_id <> 0
               to_condition: domain_id = 'Drug'
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_concept_id <> 0
+              to_condition: concept_class_id = 'Ingredient'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unit_concept_id
         description: The Concept Id representing the unit of the specific drug ingredient.
         data_type: integer
@@ -46,9 +61,16 @@ models:
               field: concept_id
               from_condition: unit_concept_id <> 0
               to_condition: domain_id = 'Unit'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: unit_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: dose_value
         description: The numeric value of the dosage of the drug_ingredient.
         data_type: float
@@ -58,7 +80,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: dose_era_start_date
-        description: The date the Person started on the specific dosage, with at least 31days since any
+        description: The date the Person started on the specific dosage, with at least 31 days since any
           prior exposure.
         data_type: date
         tests:

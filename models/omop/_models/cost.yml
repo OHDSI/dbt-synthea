@@ -2,7 +2,13 @@ models:
   - name: cost
     description: The COST table captures records containing the cost of any medical event recorded in
       one of the OMOP clinical event tables such as DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, VISIT_OCCURRENCE,
-      VISIT_DETAIL, DEVICE_OCCURRENCE, OBSERVATION or MEASUREMENT.
+      VISIT_DETAIL, DEVICE_OCCURRENCE, OBSERVATION or MEASUREMENT.  Each record in the cost table account
+      for the amount of money transacted for the clinical event. So, the COST table may be used to represent
+      both receivables (charges) and payments (paid), each transaction type represented by its COST_CONCEPT_ID.
+      The COST_TYPE_CONCEPT_ID field will use concepts in the Standardized Vocabularies to designate the
+      source (provenance) of the cost data. A reference to the health plan information in the PAYER_PLAN_PERIOD
+      table is stored in the record for information used for the adjudication system to determine the
+      persons benefit for the clinical event.
     columns:
       - name: cost_id
         description: ''
@@ -32,6 +38,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: cost_domain_id is not null
+              strictly: false
       - name: cost_type_concept_id
         description: ''
         data_type: integer
@@ -40,9 +50,16 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: cost_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: currency_concept_id
         description: ''
         data_type: integer
@@ -53,6 +70,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: currency_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: total_charge
         description: ''
         data_type: float
@@ -154,14 +176,23 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: revenue_code_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: revenue_code_source_value
-        description: Revenue codes are a method to charge for a class of procedures andconditions in the
-          U.S. hospital system.
+        description: Revenue codes are a method to charge for a class of procedures and conditions in
+          the U.S. hospital system.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: revenue_code_source_value is not null
+              strictly: false
       - name: drg_concept_id
         description: ''
         data_type: integer
@@ -172,11 +203,20 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drg_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: drg_source_value
-        description: Diagnosis Related Groups are US codes used to classify hospital casesinto one of
+        description: Diagnosis Related Groups are US codes used to classify hospital cases into one of
           approximately 500 groups.
         data_type: varchar(3)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 3
+              row_condition: drg_source_value is not null
+              strictly: false

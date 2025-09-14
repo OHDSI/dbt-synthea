@@ -17,8 +17,6 @@ SELECT
     , verbatim_end_date
     , drug_type_concept_id
     , days_supply
-    , route_concept_id
-    , lot_number
     , provider_id
     , visit_occurrence_id
     , visit_detail_id

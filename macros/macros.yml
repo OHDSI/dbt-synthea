@@ -52,17 +52,13 @@ macros:
       - name: columns
         type: list[str]
         description: A list of column names
-
-  - name: get_equivalent_types
-    description: This macro returns a list of equivalent data types for a given standard type.
+  
+  - name: string_truncate
+    description: This macro truncates a string to a specified length.
     arguments:
-      - name: standard_type
+      - name: expression
         type: str
-        description: The standard data type to find equivalents for.
-
-  - name: get_type_variants
-    description: This macro returns all equivalent types for a list of standard types.
-    arguments:
-      - name: standard_types
-        type: list[str]
-        description: A list of standard data types to find equivalents for.
+        description: The string to truncate.
+      - name: length
+        type: int
+        description: The maximum length of the truncated string.

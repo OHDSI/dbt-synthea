@@ -16,9 +16,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: event_id
-        description: This field is the primary key of the linked record in the database. Forexample, if
-          the Episode Event is a Condition Occurrence, then theCONDITION_OCCURRENCE_ID of the linked record
-          goes in this field.
+        description: This field is the primary key of the linked record in the database. For example,
+          if the Episode Event is a Condition Occurrence, then the CONDITION_OCCURRENCE_ID of the linked
+          record goes in this field.
         data_type: integer
         tests:
           - not_null
@@ -26,7 +26,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: episode_event_field_concept_id
-        description: This field is the CONCEPT_ID that identifies which table the primary keyof the linked
+        description: This field is the CONCEPT_ID that identifies which table the primary key of the linked
           record came from.
         data_type: integer
         tests:
@@ -39,3 +39,8 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: episode_event_field_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL

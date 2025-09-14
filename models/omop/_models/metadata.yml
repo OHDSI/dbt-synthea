@@ -23,6 +23,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: metadata_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: metadata_type_concept_id
         description: ''
         data_type: integer
@@ -34,6 +39,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: metadata_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: name
         description: ''
         data_type: varchar(250)
@@ -42,6 +52,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 250
+              row_condition: name is not null
+              strictly: false
       - name: value_as_string
         description: ''
         data_type: varchar(250)
@@ -49,6 +63,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 250
+              row_condition: value_as_string is not null
+              strictly: false
       - name: value_as_concept_id
         description: ''
         data_type: integer
@@ -59,9 +77,14 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: value_as_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: value_as_number
-        description: This is the numerical value of the result of the Metadata, if applicableand available.
-          It is not expected that all Metadata will have numericresults, rather, this field is here to
+        description: This is the numerical value of the result of the Metadata, if applicable and available.
+          It is not expected that all Metadata will have numeric results, rather, this field is here to
           house values should they exist.
         data_type: float
         tests:

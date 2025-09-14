@@ -19,6 +19,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: address_1 is not null
+              strictly: false
       - name: address_2
         description: This is the second line of the address
         data_type: varchar(50)
@@ -26,6 +30,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: address_2 is not null
+              strictly: false
       - name: city
         description: ''
         data_type: varchar(50)
@@ -33,6 +41,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: city is not null
+              strictly: false
       - name: state
         description: ''
         data_type: varchar(2)
@@ -40,6 +52,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 2
+              row_condition: state is not null
+              strictly: false
       - name: zip
         description: ''
         data_type: varchar(9)
@@ -47,6 +63,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 9
+              row_condition: zip is not null
+              strictly: false
       - name: county
         description: ''
         data_type: varchar(20)
@@ -54,6 +74,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: county is not null
+              strictly: false
       - name: location_source_value
         description: ''
         data_type: varchar(50)
@@ -61,16 +85,29 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: location_source_value is not null
+              strictly: false
       - name: country_concept_id
-        description: The Concept Id representing the country. Values should conform to the Geographydomain.
+        description: The Concept Id representing the country. Values should conform to the 
+          [Geography](https://athena.ohdsi.org/search-terms/terms?domain=Geography&standardConcept=Standard&page=1&pageSize=15&query=&boosts)
+          domain.
         data_type: integer
         tests:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '100'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: country_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: country_source_value
         description: The name of the country.
         data_type: varchar(80)
@@ -78,6 +115,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 80
+              row_condition: country_source_value is not null
+              strictly: false
       - name: latitude
         description: ''
         data_type: float

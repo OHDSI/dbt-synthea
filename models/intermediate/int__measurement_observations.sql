@@ -9,8 +9,8 @@ SELECT
             THEN {{ dbt.cast("o.observation_value", api.Column.translate_type("float")) }}
         ELSE {{ dbt.cast("null", api.Column.translate_type("float")) }}
     END AS value_as_number
-    , coalesce(srcmap2.target_concept_id, 0) AS value_as_concept_id
-    , coalesce(srcmap1.target_concept_id, 0) AS unit_concept_id
+    , srcmap2.target_concept_id AS value_as_concept_id
+    , srcmap1.target_concept_id AS unit_concept_id
     , vd.provider_id
     , vd.visit_occurrence_id
     , vd.visit_detail_id

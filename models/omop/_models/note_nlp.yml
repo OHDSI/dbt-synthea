@@ -30,6 +30,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: section_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: snippet
         description: A small window of text surrounding the term
         data_type: varchar(250)
@@ -37,6 +42,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 250
+              row_condition: snippet is not null
+              strictly: false
       - name: offset
         description: Character offset of the extracted term in the input note
         data_type: varchar(50)
@@ -52,6 +61,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 250
+              row_condition: lexical_variant is not null
+              strictly: false
       - name: note_nlp_concept_id
         description: ''
         data_type: integer
@@ -62,6 +75,11 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: note_nlp_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: note_nlp_source_concept_id
         description: ''
         data_type: integer
@@ -79,6 +97,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 250
+              row_condition: nlp_system is not null
+              strictly: false
       - name: nlp_date
         description: The date of the note processing.
         data_type: date
@@ -101,6 +123,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 1
+              row_condition: term_exists is not null
+              strictly: false
       - name: term_temporal
         description: ''
         data_type: varchar(50)
@@ -108,6 +134,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: term_temporal is not null
+              strictly: false
       - name: term_modifiers
         description: ''
         data_type: varchar(2000)
@@ -115,3 +145,7 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 2000
+              row_condition: term_modifiers is not null
+              strictly: false

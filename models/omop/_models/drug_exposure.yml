@@ -5,10 +5,13 @@ models:
       to a Person it will exert a certain biochemical effect on the metabolism. Drugs include prescription
       and over-the-counter medicines, vaccines, and large-molecule biologic therapies. Radiological devices
       ingested or applied locally do not count as Drugs.
+    tests:
+      - person_completeness:
+          threshold: '95'
     columns:
       - name: drug_exposure_id
-        description: The unique key given to records of drug dispensings or administrationsfor a person.
-          Refer to the ETL for how duplicate drugs during the samevisit were handled.
+        description: The unique key given to records of drug dispensings or administrations for a person.
+          Refer to the ETL for how duplicate drugs during the same visit were handled.
         data_type: integer
         tests:
           - not_null
@@ -17,7 +20,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
-        description: The PERSON_ID of the PERSON for whom the drug dispensing oradministration is recorded.
+        description: The PERSON_ID of the PERSON for whom the drug dispensing or administration is recorded.
           This may be a system generated code.
         data_type: integer
         tests:
@@ -29,12 +32,12 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: drug_concept_id
-        description: The DRUG_CONCEPT_ID field is recommended for primary use in analyses,and must be
-          used for network studies. This is the standard conceptmapped from the source concept id which
-          represents a drug product ormolecule otherwise introduced to the body. The drug concepts can
-          have avarying degree of information about drug strength and dose. Thisinformation is relevant
-          in the context of quantity and administrationinformation in the subsequent fields plus strength
-          information from theDRUG_STRENGTH table, provided as part of the standard vocabularydownload.
+        description: The DRUG_CONCEPT_ID field is recommended for primary use in analyses, and must be
+          used for network studies. This is the standard concept mapped from the source concept id which
+          represents a drug product or molecule otherwise introduced to the body. The drug concepts can
+          have a varying degree of information about drug strength and dose. This information is relevant
+          in the context of quantity and administration information in the subsequent fields plus strength
+          information from the DRUG_STRENGTH table, provided as part of the standard vocabulary download.
         data_type: integer
         tests:
           - not_null
@@ -43,9 +46,16 @@ models:
               field: concept_id
               from_condition: drug_concept_id <> 0
               to_condition: domain_id = 'Drug'
+          - concept_record_completeness:
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: drug_exposure_start_date
         description: Use this date to determine the start date of the drug record.
         data_type: date
@@ -62,7 +72,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: drug_exposure_end_date
-        description: The DRUG_EXPOSURE_END_DATE denotes the day the drug exposure ended forthe patient.
+        description: The DRUG_EXPOSURE_END_DATE denotes the day the drug exposure ended for the patient.
         data_type: date
         tests:
           - not_null
@@ -77,7 +87,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: verbatim_end_date
-        description: This is the end date of the drug exposure as it appears in the sourcedata, if it
+        description: This is the end date of the drug exposure as it appears in the source data, if it
           is given
         data_type: date
         tests:
@@ -85,8 +95,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: drug_type_concept_id
-        description: You can use the TYPE_CONCEPT_ID to delineate between prescriptionswritten vs. prescriptions
-          dispensed vs. medication historyvs. patient-reported exposure, etc.
+        description: You can use the TYPE_CONCEPT_ID to delineate between prescriptions written vs. prescriptions
+          dispensed vs. medication history vs. patient-reported exposure, etc.
         data_type: integer
         tests:
           - not_null
@@ -95,20 +105,31 @@ models:
               field: concept_id
               from_condition: drug_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: drug_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: stop_reason
-        description: The reason a person stopped a medication as it is represented in thesource. Reasons
-          include regimen completed, changed, removed, etc. Thisfield will be retired in v6.0.
+        description: The reason a person stopped a medication as it is represented in the source. Reasons
+          include regimen completed, changed, removed, etc. This field will be retired in v6.0.
         data_type: varchar(20)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 20
+              row_condition: stop_reason is not null
+              strictly: false
       - name: refills
-        description: This is only filled in when the record is coming from a prescriptionwritten this
-          field is meant to represent intended refills at time of theprescription.
+        description: This is only filled in when the record is coming from a prescription written this
+          field is meant to represent intended refills at time of the prescription.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -129,7 +150,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: sig
-        description: This is the verbatim instruction for the drug as written by theprovider.
+        description: This is the verbatim instruction for the drug as written by the provider.
         data_type: varchar(MAX)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -144,9 +165,16 @@ models:
               field: concept_id
               from_condition: route_concept_id <> 0
               to_condition: domain_id = 'Route'
+          - concept_record_completeness:
+              threshold: '100'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: route_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: lot_number
         description: ''
         data_type: varchar(50)
@@ -154,8 +182,12 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: lot_number is not null
+              strictly: false
       - name: provider_id
-        description: The Provider associated with drug record, e.g. the provider who wrotethe prescription
+        description: The Provider associated with drug record, e.g. the provider who wrote the prescription
           or the provider who administered the drug.
         data_type: integer
         tests:
@@ -166,7 +198,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_occurrence_id
-        description: The Visit during which the drug was prescribed, administered ordispensed.
+        description: The Visit during which the drug was prescribed, administered or dispensed.
         data_type: integer
         tests:
           - relationships:
@@ -176,10 +208,10 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_id
-        description: The VISIT_DETAIL record during which the drug exposure occurred. Forexample, if the
-          person was in the ICU at the time of the drugadministration the VISIT_OCCURRENCE record would
-          reflect the overallhospital stay and the VISIT_DETAIL record would reflect the ICU stayduring
-          the hospital visit.
+        description: The VISIT_DETAIL record during which the drug exposure occurred. For example, if
+          the person was in the ICU at the time of the drug administration the VISIT_OCCURRENCE record
+          would reflect the overall hospital stay and the VISIT_DETAIL record would reflect the ICU stay
+          during the hospital visit.
         data_type: integer
         tests:
           - relationships:
@@ -189,40 +221,54 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: drug_source_value
-        description: This field houses the verbatim value from the source data representingthe drug exposure
-          that occurred. For example, this could be an NDC orGemscript code.
+        description: This field houses the verbatim value from the source data representing the drug exposure
+          that occurred. For example, this could be an NDC or Gemscript code.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: drug_source_value is not null
+              strictly: false
       - name: drug_source_concept_id
-        description: This is the concept representing the drug source value and may notnecessarily be
-          standard. This field is discouraged from use in analysisbecause it is not required to contain
-          Standard Concepts that are usedacross the OHDSI community, and should only be used when StandardConcepts
-          do not adequately represent the source detail for the Drugnecessary for a given analytic use
-          case. Consider using DRUG_CONCEPT_IDinstead to enable standardized analytics that can be consistent
-          acrossthe network.
+        description: This is the concept representing the drug source value and may not necessarily be
+          standard. This field is discouraged from use in analysis because it is not required to contain
+          Standard Concepts that are used across the OHDSI community, and should only be used when Standard
+          Concepts do not adequately represent the source detail for the Drug necessary for a given analytic
+          use case. Consider using DRUG_CONCEPT_ID instead to enable standardized analytics that can be
+          consistent across the network.
         data_type: integer
         tests:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '10'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: route_source_value
-        description: This field houses the verbatim value from the source data representingthe drug route.
+        description: This field houses the verbatim value from the source data representing the drug route.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: route_source_value is not null
+              strictly: false
       - name: dose_unit_source_value
-        description: This field houses the verbatim value from the source data representingthe dose unit
+        description: This field houses the verbatim value from the source data representing the dose unit
           of the drug given.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: dose_unit_source_value is not null
+              strictly: false

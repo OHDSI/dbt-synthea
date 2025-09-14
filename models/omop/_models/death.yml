@@ -3,6 +3,9 @@ models:
     description: 'The death domain contains the clinical event for how and when a Person dies. A person
       can have up to one record if the source system contains evidence about the Death, such as: Condition
       in an administrative claim, status of enrollment into a health plan, or explicit record in EHR data.'
+    tests:
+      - person_completeness:
+          threshold: '100'
     columns:
       - name: person_id
         description: ''
@@ -31,9 +34,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: death_type_concept_id
-        description: This is the provenance of the death record, i.e., where it came from. Itis possible
-          that an administrative claims database would source deathinformation from a government file
-          so do not assume the Death Type isthe same as the Visit Type, etc.
+        description: This is the provenance of the death record, i.e., where it came from. It is possible
+          that an administrative claims database would source death information from a government file
+          so do not assume the Death Type is the same as the Visit Type, etc.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -41,19 +44,33 @@ models:
               field: concept_id
               from_condition: death_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - concept_record_completeness:
+              threshold: '0'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: death_type_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: cause_concept_id
-        description: This is the Standard Concept representing the Person’s cause of death,if available.
+        description: This is the Standard Concept representing the Person's cause of death, if available.
         data_type: integer
         tests:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
+          - dbt_utils.relationships_where:
+              to: ref('concept')
+              field: concept_id
+              from_condition: cause_concept_id != 0
+              to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: cause_source_value
         description: ''
         data_type: varchar(50)
@@ -61,6 +78,10 @@ models:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              max_value: 50
+              row_condition: cause_source_value is not null
+              strictly: false
       - name: cause_source_concept_id
         description: ''
         data_type: integer
@@ -68,6 +89,8 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - concept_record_completeness:
+              threshold: '10'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"

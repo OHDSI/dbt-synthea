@@ -8,12 +8,8 @@ SELECT
     , pr.procedure_start_datetime AS procedure_datetime
     , pr.procedure_stop_date AS procedure_end_date
     , pr.procedure_stop_datetime AS procedure_end_datetime
-    , 32827 AS procedure_type_concept_id
-    , 0 AS modifier_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS quantity
     , pr.procedure_code AS procedure_source_value
     , srctosrcvm.source_concept_id AS procedure_source_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS modifier_source_value
 FROM {{ ref( 'stg_synthea__procedures') }} AS pr
 INNER JOIN {{ ref( 'int__source_to_standard_vocab_map') }} AS srctostdvm
     ON

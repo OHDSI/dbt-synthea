@@ -1,63 +1,84 @@
 #!/usr/bin/env  -S uv run --script
 # /// script
 # requires-python = ">=3.12"
-# dependencies = [ "beautifulsoup4", "ruamel-yaml", "requests" ]
+# dependencies = [ "ruamel-yaml", "requests" ]
 # ///
 
 """
 A script to generate dbt YAML files from the OMOP CDM documentation
-Requires `BeautifulSoup4`, `ruamel.yaml`, and `requests` to be installed.
+Requires `ruamel.yaml`, and `requests` to be installed.
 If you have uv installed this will be done automatically.
 
 If you make this file executable you should also be able to run it directly using
 just the file path/name and the output directory path. e.g:
 ./generate_dbt_yaml.py <output_dir>
 
-CDM version used is CDM 5.4 which corresponds to the url below.
-https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/docs/cdm54.html
+CDM version used is CDM 5.4 which corresponds to the default URLs in the script. 
+This is the only CDM version currently supported by this dbt project.
+These URLs point to the field-level and table-level CSV files from the OMOP CDM
+documentation, and the Data Quality Dashboard (DQD) CSV threshold files.
 
-If you wish to use a different version, either pass the url in as the --source argument
-or download the html file and pass the path in as --source.
+The script generates dbt YAML files for each OMOP table, including field-level details and table descriptions.
+
+You may optionally download the html files and pass in their paths as arguments.
 For example using wget <url>.
 """
 
 import argparse
+import csv
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import ParseResult, urlparse
 
 import requests
-from bs4 import BeautifulSoup
-from bs4._typing import _AtMostOneElement  # pyright: ignore[reportPrivateUsage]
-from bs4.element import NavigableString, Tag
 from ruamel.yaml import YAML
-from ruamel.yaml.comments import CommentedSeq
 
-default_source_url = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/docs/cdm54.html"
+DEFAULT_FIELD_SOURCE_URL = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
+DEFAULT_TABLE_SOURCE_URL = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Table_Level.csv"
+DEFAULT_DATA_QUALITY_FIELD_CONFIG_URL = "https://raw.githubusercontent.com/OHDSI/DataQualityDashboard/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
+DEFAULT_DATA_QUALITY_TABLE_CONFIG_URL = "https://raw.githubusercontent.com/OHDSI/DataQualityDashboard/refs/heads/main/inst/csv/OMOP_CDMv5.4_Table_Level.csv"
+
+EXCLUDED_TABLES: set[str] = {"cohort", "cohort_definition", "cohort_attribute"}
+VOCABULARY_TABLES: set[str] = {"concept", "concept_ancestor", "concept_relationship", "concept_synonym", "concept_class", "domain", "relationship", "vocabulary"}
 
 
 @dataclass
-class OmopDocumentationContainer:
+class OmopFieldDocumentationContainer:
     """Object to store how the CDM docs express each column"""
 
+    table_name: str
     cdm_field: str
     user_guide: str
-    etl_conventions: str
     datatype: str
+    varchar_length: int | None
     required: bool
     primary_key: bool
     foreign_key: bool
     foreign_key_table: str
     foreign_key_domain: str
+    foreign_key_class: str
+    standard_concept_record_completeness_threshold: str
+    source_concept_record_completeness_threshold: str
 
+@dataclass
+class OmopTableDocumentationContainer:
+    """Object to store how the CDM docs express each table"""
+
+    table_name: str
+    description: str
+    person_completeness_threshold: str
+    fields: list[OmopFieldDocumentationContainer]
 
 @dataclass
 class CliArgs:
     """A dataclass to ensure correct typing of command line arguments"""
 
     output_dir: Path = Path()
-    source: str = default_source_url
+    field_source: str = DEFAULT_FIELD_SOURCE_URL
+    table_source: str = DEFAULT_TABLE_SOURCE_URL
+    dqd_field_source: str = DEFAULT_DATA_QUALITY_FIELD_CONFIG_URL
+    dqd_table_source: str = DEFAULT_DATA_QUALITY_TABLE_CONFIG_URL
     overwrite: bool = False
 
 
@@ -69,7 +90,7 @@ def is_url(value: str) -> bool:
 
 def download_url_to_temp_file(url: str, output_dir: Path) -> Path:
     """Download a URL to a .tmp file in the output directory and return the local Path."""
-    response = requests.get(url)
+    response: requests.Response = requests.get(url)
     response.raise_for_status()  # raises if e.g. 404 or timeout
 
     with tempfile.NamedTemporaryFile(
@@ -79,7 +100,7 @@ def download_url_to_temp_file(url: str, output_dir: Path) -> Path:
         return Path(tmp_file.name)
 
 
-def parse_cli_arguments() -> tuple[Path, Path]:
+def parse_cli_arguments() -> tuple[Path, str, str, str, str]:
     """
     Parse command line arguments.
 
@@ -98,12 +119,36 @@ def parse_cli_arguments() -> tuple[Path, Path]:
         "output_dir", type=Path, help="Path to the output directory"
     )
 
-    # Common data model url.
+    # Common data model field-level source url.
     _ = parser.add_argument(
-        "--source",
-        "-s",
+        "--field-source",
+        "-fs",
         type=str,
-        help=f'Path or url to source html. If none provided defaults to:\n"{default_source_url}"',
+        help=f'Path or url to field-level source csv. If none provided defaults to:\n"{DEFAULT_FIELD_SOURCE_URL}"',
+    )
+
+    # Common data model table-level source url.
+    _ = parser.add_argument(
+        "--table-source",
+        "-ts",
+        type=str,
+        help=f'Path or url to table-level source csv. If none provided defaults to:\n"{DEFAULT_TABLE_SOURCE_URL}"',
+    )
+
+    # DQD field-level source url.
+    _ = parser.add_argument(
+        "--dqd-source-field",
+        "-dsf",
+        type=str,
+        help=f'Path or url to DQD field-level source csv. If none provided defaults to:\n"{DEFAULT_DATA_QUALITY_FIELD_CONFIG_URL}"',
+    )
+
+    # DQD table-level source url.
+    _ = parser.add_argument(
+        "--dqd-source-table",
+        "-dst",
+        type=str,
+        help=f'Path or url to DQD table-level source csv. If none provided defaults to:\n"{DEFAULT_DATA_QUALITY_TABLE_CONFIG_URL}"',
     )
 
     _ = parser.add_argument(
@@ -133,65 +178,7 @@ def parse_cli_arguments() -> tuple[Path, Path]:
     else:
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Check on url.
-    if is_url(args.source):
-        try:
-            source_path: Path = download_url_to_temp_file(args.source, args.output_dir)
-        except Exception as e:
-            parser.exit(1, f"Failed to download from {args.source}: {e}")
-    else:
-        source_path = Path(args.source)
-        if not source_path.exists():
-            parser.exit(1, f"Source file does not exist: {source_path}")
-
-    return source_path, output_dir
-
-
-def table_handler(table: Tag) -> list[OmopDocumentationContainer]:
-    """Take a table and returns a list of objects that represent the tables in the table."""
-    rows: list[Tag] = [_ensure_tag(div) for div in table.find_all("tr")]
-
-    return [row_handler(row) for row in rows]
-
-
-def row_handler(row: Tag) -> OmopDocumentationContainer:
-    """
-    Parses a row from a CDM documentation table into an OmopDocumentationContainer instance.
-
-    Take each row from a table and handle it, resulting in a object that can neatly
-    store how the CDM docs express each column.
-    """
-    cell_tags: list[Tag] = [_ensure_tag(cell) for cell in row.find_all("td")]
-
-    cells_raw: dict[str, str] = {
-        "cdm_field": cell_tags[0].get_text(),
-        "user_guide": cell_tags[1].get_text(),
-        "etl_conventions": cell_tags[2].get_text(),
-        "datatype": cell_tags[3].get_text(),
-        "required": cell_tags[4].get_text(),
-        "primary_key": cell_tags[5].get_text(),
-        "foreign_key": cell_tags[6].get_text(),
-        "foreign_key_table": cell_tags[7].get_text(),
-        "foreign_key_domain": cell_tags[8].get_text(),
-    }
-
-    # Remove dangling whitespace and newlines from parsed HTML
-    cells_stripped: dict[str, str] = {
-        k: v.replace("\n", "").strip().replace("“", "").replace("”", "") for k, v in cells_raw.items()
-    }
-
-    # Convert sentinels to booleans. Assign values to omop_documentation_container DataClass.
-    return OmopDocumentationContainer(
-        cdm_field=cells_stripped["cdm_field"],
-        user_guide=cells_stripped["user_guide"],
-        etl_conventions=cells_stripped["etl_conventions"],
-        datatype=cells_stripped["datatype"],
-        required=sentinel_to_bool(cells_stripped["required"]),
-        primary_key=sentinel_to_bool(cells_stripped["primary_key"]),
-        foreign_key=sentinel_to_bool(cells_stripped["foreign_key"]),
-        foreign_key_table=cells_stripped["foreign_key_table"],
-        foreign_key_domain=cells_stripped["foreign_key_domain"],
-    )
+    return output_dir, args.field_source, args.table_source, args.dqd_field_source, args.dqd_table_source
 
 
 def sentinel_to_bool(text: str) -> bool:
@@ -202,15 +189,53 @@ def sentinel_to_bool(text: str) -> bool:
         return False
 
 
+def parse_varchar_length(datatype: str) -> int | None:
+    """Parse the length of a varchar datatype."""
+    if datatype.lower().startswith("varchar"):
+        try:
+            return int(datatype[datatype.find("(") + 1 : datatype.find(")")])
+        except (ValueError, IndexError):
+            return None
+    return None
+
+
+def generate_table_yaml_params(table_container: OmopTableDocumentationContainer) -> dict[str, str | list[dict[str, dict[str, str]]]]:
+    """Generate table-level YAML"""
+
+    # TODO: This should be a class.
+    table_params: dict[str, str | list[dict[str, dict[str, str]]]] = {
+        "name": table_container.table_name,
+        "description": table_container.description,
+    }
+
+    # Dynamically build the 'tests' section
+    tests = []
+    if table_container.person_completeness_threshold not in {"NA", ""}:
+        tests.append({
+            "person_completeness": {
+                "threshold": table_container.person_completeness_threshold
+            }
+        })
+
+    # Add 'tests' only if there are valid tests
+    if tests:
+        table_params["tests"] = tests
+
+    # Add 'columns' after 'tests'
+    table_params["columns"] = [
+        omop_docs_to_dbt_config(table_container.table_name, field_container)
+        for field_container in table_container.fields
+    ]
+
+    return table_params
+
+
 def create_table_dict(
-    table: str,
-    table_description: str,
-    parsed_table: list[OmopDocumentationContainer],
-) -> dict[
-    str,
-    list[dict[str, str | list[dict[str, str | list[str | dict[str, dict[str, str]]]]]]],
-]:
+    table_container: OmopTableDocumentationContainer,
+) -> dict[str, list[dict[str, str | list[dict[str, str | list[str | dict[str, dict[str, str]]]]]]]]:
     """Create a table dictionary to mimic the dbt yaml format"""
+
+    # TODO: Look at turning this structure into a dataclass or pydantic BaseModel class.
     table_dict: dict[
         str,
         list[
@@ -219,38 +244,17 @@ def create_table_dict(
             ]
         ],
     ] = {
-        "models": [
-            {
-                "name": table,
-                "description": table_description,
-                "columns": [
-                    omop_docs_to_dbt_config(doc_container)
-                    for doc_container in parsed_table
-                ],
-            }
-        ]
+        "models": [generate_table_yaml_params(table_container)]
     }
     return table_dict
 
 
-def extract_table_description(table_handle: Tag) -> str:
-    """Get the table description"""
-    sibling_element: _AtMostOneElement = _ensure_tag(
-        table_handle.find("p", string="Table Description")
-    ).next_sibling
-    description_element: _AtMostOneElement = _ensure_navigable_string(
-        sibling_element
-    ).next_sibling
-    description: str = _ensure_tag(description_element).get_text()
-
-    return description.replace("\n", " ")
-
-
 def omop_docs_to_dbt_config(
-    doc_container: OmopDocumentationContainer,
+    table: str,
+    doc_container: OmopFieldDocumentationContainer,
 ) -> dict[str, str | list[str | dict[str, dict[str, str]]]]:
     """
-    Parse an OmopDocumentationContainer object into dbt-config yaml format.
+    Parse an OmopFieldDocumentationContainer object into dbt-config yaml format.
 
     With an OMOP documentation object, we can use some simple string parsing/heuristic
     to create dbt test configs.
@@ -271,8 +275,8 @@ def omop_docs_to_dbt_config(
         tests.append("unique")
 
     if doc_container.foreign_key:
-        if doc_container.foreign_key_domain == "":
-            # Handle simpler cases first, where a domain is not constrained
+        if doc_container.foreign_key_domain == "" and doc_container.foreign_key_class == "":
+            # Handle simpler cases first, where domain/class is not constrained
             test: dict[str, dict[str, str]] = {
                 "relationships": {
                     "to": f"ref('{doc_container.foreign_key_table.lower()}')",
@@ -280,19 +284,44 @@ def omop_docs_to_dbt_config(
                 }
             }
             tests.append(test)
-        else:
-            # Add constrained domain tests
-            specific_test: dict[str, dict[str, str]] = {
-                "dbt_utils.relationships_where": {
-                    "to": f"ref('{doc_container.foreign_key_table.lower()}')",
-                    "field": f"{doc_container.foreign_key_table.lower()}_id",
-                    "from_condition": f"{doc_container.cdm_field} <> 0",
-                    "to_condition": f"domain_id = '{doc_container.foreign_key_domain}'",
+        else: 
+            if doc_container.foreign_key_domain != "":
+                # Add constrained domain tests
+                specific_test: dict[str, dict[str, str]] = {
+                    "dbt_utils.relationships_where": {
+                        "to": f"ref('{doc_container.foreign_key_table.lower()}')",
+                        "field": f"{doc_container.foreign_key_table.lower()}_id",
+                        "from_condition": f"{doc_container.cdm_field} <> 0",
+                        "to_condition": f"domain_id = '{doc_container.foreign_key_domain}'",
+                    }
                 }
+                tests.append(specific_test)
+            if doc_container.foreign_key_class != "":
+                # Add constrained class tests
+                specific_test: dict[str, dict[str, str]] = {
+                    "dbt_utils.relationships_where": {
+                        "to": f"ref('{doc_container.foreign_key_table.lower()}')",
+                        "field": f"{doc_container.foreign_key_table.lower()}_id",
+                        "from_condition": f"{doc_container.cdm_field} <> 0",
+                        "to_condition": f"concept_class_id = '{doc_container.foreign_key_class}'",
+                    }
+                }
+                tests.append(specific_test)
+    
+    if doc_container.standard_concept_record_completeness_threshold != "":
+        tests.append({
+            "concept_record_completeness": {
+                "threshold": doc_container.standard_concept_record_completeness_threshold,
             }
-            tests.append(specific_test)
+        })
+    
+    if doc_container.source_concept_record_completeness_threshold != "":
+        tests.append({
+            "concept_record_completeness": {
+                "threshold": doc_container.source_concept_record_completeness_threshold,
+            }
+        })
 
-    # Add dbt_expectations tests
     tests.append("dbt_expectations.expect_column_to_exist")
     if doc_container.datatype.lower() == "integer":
         tests.append({
@@ -318,6 +347,25 @@ def omop_docs_to_dbt_config(
                 "column_type_list": "{{ get_equivalent_types('varchar') }}"
             }
         })
+        if doc_container.varchar_length != None and doc_container.cdm_field != "offset":  
+            tests.append({
+                "dbt_expectations.expect_column_value_lengths_to_be_between": {
+                    "max_value": doc_container.varchar_length,
+                    "row_condition": f"{doc_container.cdm_field} is not null",
+                    "strictly": False  # less than or equal to
+                }
+            })
+
+    if doc_container.cdm_field.endswith("_concept_id") and not doc_container.cdm_field.endswith("_source_concept_id"):
+        if table.lower() not in VOCABULARY_TABLES:
+            tests.append({
+                "dbt_utils.relationships_where": {
+                    "to": "ref('concept')",
+                    "field": "concept_id",
+                    "from_condition": f"{doc_container.cdm_field} != 0",
+                    "to_condition": "standard_concept = 'S' AND invalid_reason IS NULL",
+                }
+            })
 
     if tests:
         column_config["tests"] = tests
@@ -325,102 +373,190 @@ def omop_docs_to_dbt_config(
     return column_config
 
 
-def _ensure_tag(element: _AtMostOneElement) -> Tag:
-    """
-    Ensure that the given element is a BeautifulSoup Tag.
+def parse_and_create_table_containers(
+    cdm_field_file_path: Path,
+    dqd_field_file_path: Path,
+    cdm_table_file_path: Path,
+    dqd_table_file_path: Path,
+) -> list[OmopTableDocumentationContainer]:
+    """Parse all CSV files and create complete table containers with their fields."""
+    fields_by_table: dict[str, list[OmopFieldDocumentationContainer]] = {}
+    table_containers: list[OmopTableDocumentationContainer] = []
 
-    If the element is not a Tag, raises a ValueError.
-    """
-    if isinstance(element, Tag):
-        return element
-    raise ValueError(
-        f"No Tag returned from BeautifulSoup query.\nReturn type is {type(element)}"
-    )
-
-
-def _ensure_navigable_string(element: _AtMostOneElement) -> NavigableString:
-    """
-    Ensure that the given element is a BeautifulSoup NavigableString.
-
-    If the element is not a NavigableString, raises a ValueError.
-    """
-    if isinstance(element, NavigableString):
-        return element
-    raise ValueError(
-        f"No NavigableString returned from BeautifulSoup query.\nReturn type is {type(element)}"
-    )
-
-
-def extract_omop_table_names(soup_obj: BeautifulSoup) -> list[str]:
-    """Dynamically extract table names from the OMOP CDM documentation"""
-    headers: list[Tag] = [
-        _ensure_tag(div)
-        for div in soup_obj.find_all(
-            "div", attrs={"class": "section level3 tabset tabset-pills"}
+    field_containers = parse_field_containers(cdm_field_file_path, dqd_field_file_path)
+    
+    table_info = parse_table_info(cdm_table_file_path, dqd_table_file_path)
+    
+    for field_container in field_containers:
+        table_name = field_container.table_name
+        if table_name not in fields_by_table:
+            fields_by_table[table_name] = []
+        fields_by_table[table_name].append(field_container)
+    
+    for table_name, table_data in table_info.items():
+        if table_name.lower() in EXCLUDED_TABLES:
+            continue
+            
+        table_container = OmopTableDocumentationContainer(
+            table_name=table_name,
+            description=table_data["description"],
+            person_completeness_threshold=table_data["person_completeness_threshold"],
+            fields=fields_by_table.get(table_name, [])
         )
-    ]
+        table_containers.append(table_container)
+    
+    return table_containers
 
-    table_names: list[str] = []
-    for div in headers:
-        if div.h3:
-            table_names.append(div.h3.get_text())
 
-    # Exclude unwanted tables
-    unwanted_tables: set[str] = {"cohort", "cohort_definition"}
-    filtered_table_names: list[str] = [
-        table for table in table_names if table not in unwanted_tables
-    ]
-    return filtered_table_names
+def parse_field_containers(
+    cdm_file_path: Path,
+    dqd_file_path: Path,
+) -> list[OmopFieldDocumentationContainer]:
+    """Parse the CDM CSV file and enrich the OmopFieldDocumentationContainer objects with additional info from the DQD file."""
+    containers: list[OmopFieldDocumentationContainer] = []
+    dqd_mapping: dict[tuple[str, str], dict[str, str]] = {}
+
+    # Parse DQD file
+    with open(dqd_file_path, mode="r", encoding="utf-8-sig") as dqd_csv_file:
+        dqd_reader = csv.DictReader(dqd_csv_file)
+        for row in dqd_reader:
+            key = (row["cdmTableName"].strip().lower(), row["cdmFieldName"].strip().lower())
+            dqd_mapping[key] = {
+                "foreign_key_class": '' if row["fkClass"].strip() == 'NA' else row["fkClass"].strip(),
+                "standard_concept_record_completeness_threshold": row["standardConceptRecordCompletenessThreshold"].strip(),
+                "source_concept_record_completeness_threshold": row["sourceConceptRecordCompletenessThreshold"].strip(),
+            }
+
+    # Parse CDM file and enrich with DQD info
+    with open(cdm_file_path, mode="r", encoding="utf-8-sig") as cdm_csv_file:
+        cdm_reader = csv.DictReader(cdm_csv_file)
+        for row in cdm_reader:
+            key = (row["cdmTableName"].strip().lower(), row["cdmFieldName"].strip().lower().replace('"', ''))
+            dqd_data = dqd_mapping.get(key, {})
+            container = OmopFieldDocumentationContainer(
+                **{
+                    "table_name": row["cdmTableName"].strip().lower(),
+                    "cdm_field": row["cdmFieldName"].strip().lower().replace('"', ''),
+                    "user_guide": '' if row["userGuidance"].strip() == 'NA' else row["userGuidance"].strip().replace('\n', ' '),
+                    "datatype": row["cdmDatatype"].strip(),
+                    "varchar_length": parse_varchar_length(row["cdmDatatype"].strip()),
+                    "required": sentinel_to_bool(row["isRequired"].strip()),
+                    "primary_key": sentinel_to_bool(row["isPrimaryKey"].strip()),
+                    "foreign_key": sentinel_to_bool(row["isForeignKey"].strip()),
+                    "foreign_key_table": '' if row["fkTableName"].strip() == 'NA' else row["fkTableName"].strip().lower(),
+                    "foreign_key_domain": '' if row["fkDomain"].strip() == 'NA' else row["fkDomain"].strip(),
+                    "foreign_key_class": dqd_data.get("foreign_key_class", ""),
+                    "standard_concept_record_completeness_threshold": dqd_data.get("standard_concept_record_completeness_threshold", ""),
+                    "source_concept_record_completeness_threshold": dqd_data.get("source_concept_record_completeness_threshold", ""),
+                }
+            )
+            containers.append(container)
+    return containers
+
+
+def parse_table_info(
+    cdm_file_path: Path,
+    dqd_file_path: Path,
+) -> dict[str, dict[str, str]]:
+    """Parse the table-level CSV files and return table information."""
+    table_info: dict[str, dict[str, str]] = {}
+    dqd_mapping: dict[str, dict[str, str]] = {}
+
+    # Parse DQD file
+    with open(dqd_file_path, mode="r", encoding="utf-8-sig") as dqd_csv_file:
+        dqd_reader = csv.DictReader(dqd_csv_file)
+        for row in dqd_reader:
+            key = row["cdmTableName"].strip().lower()
+            dqd_mapping[key] = {
+                "person_completeness_threshold": row["measurePersonCompletenessThreshold"].strip()
+            }
+    
+    # Parse CDM table file and enrich with DQD info
+    with open(cdm_file_path, mode="r", encoding="utf-8-sig") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            table_name = row["cdmTableName"].strip().lower()
+            dqd_data = dqd_mapping.get(table_name, {})
+            table_info[table_name] = {
+                "description": '' if row["tableDescription"].strip() == 'NA' else row["tableDescription"].strip().replace('\n', ' '),
+                "person_completeness_threshold": dqd_data.get("person_completeness_threshold", ""),
+            }
+    
+    return table_info
+
+
+def resolve_source_path(source: str, output_dir: Path) -> Path:
+    """Resolve the source path by downloading if it's a URL or validating if it's a local file."""
+    source_path: Path
+    if is_url(source):
+        try:
+            return download_url_to_temp_file(source, output_dir)
+        except Exception as e:
+            raise ValueError(f"Failed to download from {source}: {e}")
+    else:
+        source_path = Path(source)
+        if not source_path.exists():
+            raise ValueError(f"Source file does not exist: {source_path}")
+        return source_path
+
+
+def cleanup_temp_files(*file_paths: Path) -> None:
+    """Clean up temporary files."""
+    for file_path in file_paths:
+        if file_path.suffix == ".tmp" and file_path.exists():
+            file_path.unlink()
 
 
 def main(
-    source_path: Path,
+    field_source: str,
+    table_source: str,
+    dqd_field_source: str,
+    dqd_table_source: str,
     output_dir: Path,
 ) -> None:
     """Main loop to generate dbt YAML files from the OMOP CDM documentation"""
-    with open(source_path) as file_handle:
-        file: str = file_handle.read()
+    
+    # Resolve all source paths
+    field_source_path = resolve_source_path(field_source, output_dir)
+    dqd_field_source_path = resolve_source_path(dqd_field_source, output_dir)
+    table_source_path = resolve_source_path(table_source, output_dir)
+    dqd_table_source_path = resolve_source_path(dqd_table_source, output_dir)
 
-    soup: BeautifulSoup = BeautifulSoup(file, features="html.parser")
+    # Parse and create complete table containers
+    table_containers = parse_and_create_table_containers(
+        cdm_field_file_path=field_source_path,
+        dqd_field_file_path=dqd_field_source_path,
+        cdm_table_file_path=table_source_path,
+        dqd_table_file_path=dqd_table_source_path
+    )
 
-    tables: list[str] = extract_omop_table_names(soup)
-    print(f" Found {len(tables)} tables in the OMOP CDM documentation")
+    print(f" Found {len(table_containers)} tables in the OMOP CDM documentation after excluding {len(EXCLUDED_TABLES)} excluded tables.")
 
-    for table in tables:
-        # For each table generate the desired dbt yaml
-        # Get desired div with table
-        div_handle: Tag = _ensure_tag(soup.find("div", attrs={"id": table}))
-
-        table_handle: Tag = _ensure_tag(div_handle.find("table"))
-        tbody_handle: Tag = _ensure_tag(table_handle.find("tbody"))
-        parsed_table: list[OmopDocumentationContainer] = table_handler(tbody_handle)
-
-        table_description: str = extract_table_description(div_handle)
-
-        # TODO: Look at turning this structure into a dataclass or pydantic BaseModel class.
-        table_dict: dict[
-            str,
-            list[
-                dict[
-                    str,
-                    str | list[dict[str, str | list[str | dict[str, dict[str, str]]]]],
-                ]
-            ],
-        ] = create_table_dict(table, table_description, parsed_table)
+    # Generate YAML files for each table
+    for table_container in table_containers:
+        table_dict = create_table_dict(table_container)
 
         yaml: YAML = YAML()
         yaml.indent(mapping=2, sequence=4, offset=2)  # pyright: ignore[reportUnknownMemberType]
         yaml.width = 100
-        yaml.dump(table_dict, open(f"{output_dir}/{table}.yml", "w"))  # pyright: ignore[reportUnknownMemberType]
-        yaml.allow_duplicate_keys
+        yaml.allow_duplicate_keys = True
+        
+        output_file = output_dir / f"{table_container.table_name.lower()}.yml"
+        with open(output_file, "w") as f:
+            yaml.dump(table_dict, f)
 
-        if source_path.suffix == ".tmp" and source_path.exists():
-            source_path.unlink()
+    # Clean up temporary files
+    cleanup_temp_files(
+        field_source_path,
+        dqd_field_source_path,
+        table_source_path,
+        dqd_table_source_path
+    )
 
     print(f" Exported to `{output_dir}`")
     print("  Done!")
 
 
 if __name__ == "__main__":
-    source, output_dir = parse_cli_arguments()
-    main(source, output_dir)
+    output_dir, field_source, table_source, dqd_field_source, dqd_table_source = parse_cli_arguments()
+    main(field_source, table_source, dqd_field_source, dqd_table_source, output_dir)

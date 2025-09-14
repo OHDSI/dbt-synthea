@@ -116,10 +116,10 @@ dbt run-operation load_data_duckdb --args "{file_dict: $file_dict, vocab_tables:
 dbt seed --select states
 ```
 
- 9. Build the OMOP tables:
+ 9. Build and test the OMOP tables:
 ```bash
-dbt build
-# or `dbt run`, `dbt test`
+dbt run
+dbt test
 ```
 
 ### Postgres Setup
@@ -176,8 +176,8 @@ dbt run-operation create_source_tables --args "{vocab_tables: false}"
 dbt seed --select states
 ```
 
- 11. Build the OMOP tables:
+ 11. Build and test the OMOP tables:
 ```bash
-dbt build
-# or `dbt run`, `dbt test`
+dbt run
+dbt test
 ```

@@ -12,7 +12,7 @@ models:
       and RELATIONSHIP tables.
     columns:
       - name: ancestor_concept_id
-        description: The Concept Id for the higher-level concept that forms the ancestor inthe relationship.
+        description: The Concept Id for the higher-level concept that forms the ancestor in the relationship.
         data_type: integer
         tests:
           - not_null
@@ -23,7 +23,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: descendant_concept_id
-        description: The Concept Id for the lower-level concept that forms the descendant inthe relationship.
+        description: The Concept Id for the lower-level concept that forms the descendant in the relationship.
         data_type: integer
         tests:
           - not_null
@@ -34,8 +34,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: min_levels_of_separation
-        description: The minimum separation in number of levels of hierarchy between ancestorand descendant
-          concepts. This is an attribute that is used to simplifyhierarchic analysis.
+        description: The minimum separation in number of levels of hierarchy between ancestor and descendant
+          concepts. This is an attribute that is used to simplify hierarchic analysis.
         data_type: integer
         tests:
           - not_null
@@ -43,8 +43,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: max_levels_of_separation
-        description: The maximum separation in number of levels of hierarchy between ancestorand descendant
-          concepts. This is an attribute that is used to simplifyhierarchic analysis.
+        description: The maximum separation in number of levels of hierarchy between ancestor and descendant
+          concepts. This is an attribute that is used to simplify hierarchic analysis.
         data_type: integer
         tests:
           - not_null
