@@ -10,6 +10,9 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
         description: ''
         data_type: integer
@@ -18,14 +21,24 @@ models:
           - relationships:
               to: ref('person')
               field: person_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: note_date
         description: The date the note was recorded.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: note_datetime
         description: ''
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: note_type_concept_id
         description: The provenance of the note. Most likely this will be EHR.
         data_type: integer
@@ -36,6 +49,9 @@ models:
               field: concept_id
               from_condition: note_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: note_class_concept_id
         description: A Standard Concept Id representing the HL7 LOINC Document TypeVocabulary classification
           of the note.
@@ -45,14 +61,24 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: note_title
         description: The title of the note.
         data_type: varchar(250)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: note_text
         description: The content of the note.
         data_type: varchar(MAX)
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: encoding_concept_id
         description: This is the Concept representing the character encoding type.
         data_type: integer
@@ -61,6 +87,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: language_concept_id
         description: The language of the note.
         data_type: integer
@@ -69,6 +98,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: provider_id
         description: The Provider who wrote the note.
         data_type: integer
@@ -76,6 +108,9 @@ models:
           - relationships:
               to: ref('provider')
               field: provider_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_occurrence_id
         description: The Visit during which the note was written.
         data_type: integer
@@ -83,6 +118,9 @@ models:
           - relationships:
               to: ref('visit_occurrence')
               field: visit_occurrence_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_id
         description: The Visit Detail during which the note was written.
         data_type: integer
@@ -90,13 +128,24 @@ models:
           - relationships:
               to: ref('visit_detail')
               field: visit_detail_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: note_source_value
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: note_event_id
         description: If the Note record is related to another record in the database, thisfield is the
           primary key of the linked record.
         data_type: integer
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: note_event_field_concept_id
         description: If the Note record is related to another record in the database, thisfield is the
           CONCEPT_ID that identifies which table the primary key ofthe linked record came from.
@@ -105,3 +154,6 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"

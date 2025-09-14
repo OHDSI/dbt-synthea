@@ -12,6 +12,9 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: ingredient_concept_id
         description: The Concept representing the active ingredient contained within the drugproduct.
         data_type: integer
@@ -20,9 +23,16 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: amount_value
         description: The numeric value or the amount of active ingredient contained withinthe drug product.
         data_type: float
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('float') }}"
       - name: amount_unit_concept_id
         description: The Concept representing the Unit of measure for the amount of activeingredient contained
           within the drug product.
@@ -31,9 +41,16 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: numerator_value
         description: The concentration of the active ingredient contained within the drugproduct.
         data_type: float
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('float') }}"
       - name: numerator_unit_concept_id
         description: The Concept representing the Unit of measure for the concentration ofactive ingredient.
         data_type: integer
@@ -41,10 +58,17 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: denominator_value
         description: The amount of total liquid (or other divisible product, such asointment, gel, spray,
           etc.).
         data_type: float
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('float') }}"
       - name: denominator_unit_concept_id
         description: The Concept representing the denominator unit for the concentration ofactive ingredient.
         data_type: integer
@@ -52,21 +76,38 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: box_size
         description: The number of units of Clinical Branded Drug or Quantified Clinical orBranded Drug
           contained in a box as dispensed to the patient.
         data_type: integer
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: valid_start_date
         description: The date when the Concept was first recorded. The default value is1-Jan-1970.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: valid_end_date
         description: The date when then Concept became invalid.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: invalid_reason
         description: Reason the concept was invalidated. Possible values are D (deleted), U(replaced with
           an update) or NULL when valid_end_date has the defaultvalue.
         data_type: varchar(1)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"

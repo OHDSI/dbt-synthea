@@ -11,7 +11,7 @@ WITH all_costs AS (
         procedure_occurrence_id AS cost_event_id
         , 'Procedure' AS cost_domain_id
         , procedure_base_cost AS total_cost
-        , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_by_payer
+        , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS paid_by_payer
     FROM {{ ref('int__procedure_occurrence') }}
     UNION ALL
     SELECT
@@ -29,19 +29,19 @@ SELECT
     , cost_domain_id
     , 32814 AS cost_type_concept_id
     , 44818668 AS currency_concept_id
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS total_charge
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS total_charge
     , total_cost
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS total_paid
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS total_paid
     , paid_by_payer
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_by_patient
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_copay
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_coinsurance
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_patient_deductible
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_by_primary
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_ingredient_cost
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS paid_dispensing_fee
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS paid_by_patient
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS paid_patient_copay
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS paid_patient_coinsurance
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS paid_patient_deductible
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS paid_by_primary
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS paid_ingredient_cost
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS paid_dispensing_fee
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS payer_plan_period_id
-    , {{ dbt.cast("null", api.Column.translate_type("numeric")) }} AS amount_allowed
+    , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS amount_allowed
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS revenue_code_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS revenue_code_source_value
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS drg_concept_id

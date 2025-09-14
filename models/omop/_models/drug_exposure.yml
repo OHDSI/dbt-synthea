@@ -13,6 +13,9 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
         description: The PERSON_ID of the PERSON for whom the drug dispensing oradministration is recorded.
           This may be a system generated code.
@@ -22,6 +25,9 @@ models:
           - relationships:
               to: ref('person')
               field: person_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: drug_concept_id
         description: The DRUG_CONCEPT_ID field is recommended for primary use in analyses,and must be
           used for network studies. This is the standard conceptmapped from the source concept id which
@@ -37,26 +43,47 @@ models:
               field: concept_id
               from_condition: drug_concept_id <> 0
               to_condition: domain_id = 'Drug'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: drug_exposure_start_date
         description: Use this date to determine the start date of the drug record.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: drug_exposure_start_datetime
         description: ''
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: drug_exposure_end_date
         description: The DRUG_EXPOSURE_END_DATE denotes the day the drug exposure ended forthe patient.
         data_type: date
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: drug_exposure_end_datetime
         description: ''
         data_type: datetime
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: verbatim_end_date
         description: This is the end date of the drug exposure as it appears in the sourcedata, if it
           is given
         data_type: date
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('date') }}"
       - name: drug_type_concept_id
         description: You can use the TYPE_CONCEPT_ID to delineate between prescriptionswritten vs. prescriptions
           dispensed vs. medication historyvs. patient-reported exposure, etc.
@@ -68,23 +95,46 @@ models:
               field: concept_id
               from_condition: drug_type_concept_id <> 0
               to_condition: domain_id = 'Type Concept'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: stop_reason
         description: The reason a person stopped a medication as it is represented in thesource. Reasons
           include regimen completed, changed, removed, etc. Thisfield will be retired in v6.0.
         data_type: varchar(20)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: refills
         description: This is only filled in when the record is coming from a prescriptionwritten this
           field is meant to represent intended refills at time of theprescription.
         data_type: integer
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: quantity
         description: ''
         data_type: float
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('float') }}"
       - name: days_supply
         description: ''
         data_type: integer
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: sig
         description: This is the verbatim instruction for the drug as written by theprovider.
         data_type: varchar(MAX)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: route_concept_id
         description: ''
         data_type: integer
@@ -94,9 +144,16 @@ models:
               field: concept_id
               from_condition: route_concept_id <> 0
               to_condition: domain_id = 'Route'
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: lot_number
         description: ''
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: provider_id
         description: The Provider associated with drug record, e.g. the provider who wrotethe prescription
           or the provider who administered the drug.
@@ -105,6 +162,9 @@ models:
           - relationships:
               to: ref('provider')
               field: provider_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_occurrence_id
         description: The Visit during which the drug was prescribed, administered ordispensed.
         data_type: integer
@@ -112,6 +172,9 @@ models:
           - relationships:
               to: ref('visit_occurrence')
               field: visit_occurrence_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_id
         description: The VISIT_DETAIL record during which the drug exposure occurred. Forexample, if the
           person was in the ICU at the time of the drugadministration the VISIT_OCCURRENCE record would
@@ -122,10 +185,17 @@ models:
           - relationships:
               to: ref('visit_detail')
               field: visit_detail_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: drug_source_value
         description: This field houses the verbatim value from the source data representingthe drug exposure
           that occurred. For example, this could be an NDC orGemscript code.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: drug_source_concept_id
         description: This is the concept representing the drug source value and may notnecessarily be
           standard. This field is discouraged from use in analysisbecause it is not required to contain
@@ -138,10 +208,21 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: route_source_value
         description: This field houses the verbatim value from the source data representingthe drug route.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: dose_unit_source_value
         description: This field houses the verbatim value from the source data representingthe dose unit
           of the drug given.
         data_type: varchar(50)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"

@@ -18,6 +18,358 @@ clean-targets: # directories to be removed by `dbt clean`
 
 vars:
   seed_source: true
+  synthea_tables: &synthea_config
+    +enabled: true
+    +schema: synthea_seeds    
+    +docs:
+      node_color: '#69AED5'
+    allergies:
+      +column_types:
+        START: date
+        STOP: date
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        CODE: varchar
+        SYSTEM: varchar
+        DESCRIPTION: varchar
+        TYPE: varchar
+        CATEGORY: varchar
+        REACTION1: varchar
+        DESCRIPTION1: varchar
+        SEVERITY1: varchar
+        REACTION2: varchar
+        DESCRIPTION2: varchar
+        SEVERITY2: varchar
+    careplans:
+      +column_types:
+        Id: varchar
+        START: date
+        STOP: date
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+        REASONCODE: varchar
+        REASONDESCRIPTION: varchar
+    claims:
+      +column_types:
+        Id: varchar
+        PATIENTID: varchar
+        PROVIDERID: varchar
+        PRIMARYPATIENTINSURANCEID: varchar
+        SECONDARYPATIENTINSURANCEID: varchar
+        DEPARTMENTID: varchar
+        PATIENTDEPARTMENTID: varchar
+        DIAGNOSIS1: varchar
+        DIAGNOSIS2: varchar
+        DIAGNOSIS3: varchar
+        DIAGNOSIS4: varchar
+        DIAGNOSIS5: varchar
+        DIAGNOSIS6: varchar
+        DIAGNOSIS7: varchar
+        DIAGNOSIS8: varchar
+        REFERRINGPROVIDERID: varchar
+        APPOINTMENTID: varchar
+        CURRENTILLNESSDATE: timestamptz
+        SERVICEDATE: timestamptz
+        SUPERVISINGPROVIDERID: varchar
+        STATUS1: varchar
+        STATUS2: varchar
+        STATUSP: varchar
+        OUTSTANDING1: float
+        OUTSTANDING2: float
+        OUTSTANDINGP: float
+        LASTBILLEDDATE1: timestamptz
+        LASTBILLEDDATE2: timestamptz
+        LASTBILLEDDATEP: timestamptz
+        HEALTHCARECLAIMTYPEID1: float
+        HEALTHCARECLAIMTYPEID2: float
+    claims_transactions:
+      +column_types:
+        Id: varchar
+        CLAIMID: varchar
+        CHARGEID: float
+        PATIENTID: varchar
+        TYPE: varchar
+        AMOUNT: float
+        METHOD: varchar
+        FROMDATE: timestamptz
+        TODATE: timestamptz
+        PLACEOFSERVICE: varchar
+        PROCEDURECODE: varchar
+        MODIFIER1: varchar
+        MODIFIER2: varchar
+        DIAGNOSISREF1: float
+        DIAGNOSISREF2: float
+        DIAGNOSISREF3: float
+        DIAGNOSISREF4: float
+        UNITS: float
+        DEPARTMENTID: float
+        NOTES: varchar
+        UNITAMOUNT: float
+        TRANSFEROUTID: float
+        TRANSFERTYPE: varchar
+        PAYMENTS: float
+        ADJUSTMENTS: float
+        TRANSFERS: float
+        OUTSTANDING: float
+        APPOINTMENTID: varchar
+        LINENOTE: varchar
+        PATIENTINSURANCEID: varchar
+        FEESCHEDULEID: float
+        PROVIDERID: varchar
+        SUPERVISINGPROVIDERID: varchar
+    conditions:
+      +column_types:
+        START: date
+        STOP: date
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+    devices:
+      +column_types:
+        START: timestamptz
+        STOP: timestamptz
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+        UDI: varchar
+    encounters:
+      +column_types:
+        Id: varchar
+        START: timestamptz
+        STOP: timestamptz
+        PATIENT: varchar
+        ORGANIZATION: varchar
+        PROVIDER: varchar
+        PAYER: varchar
+        ENCOUNTERCLASS: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+        BASE_ENCOUNTER_COST: float
+        TOTAL_CLAIM_COST: float
+        PAYER_COVERAGE: float
+        REASONCODE: varchar
+        REASONDESCRIPTION: varchar
+    imaging_studies:
+      +column_types:
+        Id: varchar
+        DATE: timestamptz
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        SERIES_UID: varchar
+        BODYSITE_CODE: varchar
+        BODYSITE_DESCRIPTION: varchar
+        MODALITY_CODE: varchar
+        MODALITY_DESCRIPTION: varchar
+        INSTANCE_UID: varchar
+        SOP_CODE: varchar
+        SOP_DESCRIPTION: varchar
+        PROCEDURE_CODE: varchar
+    immunizations:
+      +column_types:
+        DATE: timestamptz
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+        BASE_COST: float
+    medications:
+      +column_types:
+        START: timestamptz
+        STOP: timestamptz
+        PATIENT: varchar
+        PAYER: varchar
+        ENCOUNTER: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+        BASE_COST: float
+        PAYER_COVERAGE: float
+        DISPENSES: float
+        TOTALCOST: float
+        REASONCODE: varchar
+        REASONDESCRIPTION: varchar
+    observations:
+      +column_types:
+        DATE: timestamptz
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        CATEGORY: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+        VALUE: varchar
+        UNITS: varchar
+        TYPE: varchar
+    organizations:
+      +column_types:
+        Id: varchar
+        NAME: varchar
+        ADDRESS: varchar
+        CITY: varchar
+        STATE: varchar
+        ZIP: varchar
+        LAT: float
+        LON: float
+        PHONE: varchar
+        REVENUE: float
+        UTILIZATION: float
+    patients:
+      +column_types:
+        Id: varchar
+        BIRTHDATE: date
+        DEATHDATE: date
+        SSN: varchar
+        DRIVERS: varchar
+        PASSPORT: varchar
+        PREFIX: varchar
+        FIRST: varchar
+        LAST: varchar
+        SUFFIX: varchar
+        MAIDEN: varchar
+        MARITAL: varchar
+        RACE: varchar
+        ETHNICITY: varchar
+        GENDER: varchar
+        BIRTHPLACE: varchar
+        ADDRESS: varchar
+        CITY: varchar
+        STATE: varchar
+        COUNTY: varchar
+        ZIP: varchar
+        LAT: float
+        LON: float
+        HEALTHCARE_EXPENSES: float
+        HEALTHCARE_COVERAGE: float
+    payer_transitions:
+      +column_types:
+        PATIENT: varchar
+        MEMBERID: varchar
+        START_YEAR: timestamptz
+        END_YEAR: timestamptz
+        PAYER: varchar
+        SECONDARY_PAYER: varchar
+        OWNERSHIP: varchar
+        OWNERNAME: varchar
+    payers:
+      +column_types:
+        Id: varchar
+        NAME: varchar
+        ADDRESS: varchar
+        CITY: varchar
+        STATE_HEADQUARTERED: varchar
+        ZIP: varchar
+        PHONE: varchar
+        AMOUNT_COVERED: float
+        AMOUNT_UNCOVERED: float
+        REVENUE: float
+        COVERED_ENCOUNTERS: float
+        UNCOVERED_ENCOUNTERS: float
+        COVERED_MEDICATIONS: float
+        UNCOVERED_MEDICATIONS: float
+        COVERED_PROCEDURES: float
+        UNCOVERED_PROCEDURES: float
+        COVERED_IMMUNIZATIONS: float
+        UNCOVERED_IMMUNIZATIONS: float
+        UNIQUE_CUSTOMERS: float
+        QOLS_AVG: float
+        MEMBER_MONTHS: float
+    procedures:
+      +column_types:
+        START: timestamptz
+        STOP: timestamptz
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+        BASE_COST: float
+        REASONCODE: varchar
+        REASONDESCRIPTION: varchar
+    providers:
+      +column_types:
+        Id: varchar
+        ORGANIZATION: varchar
+        NAME: varchar
+        GENDER: varchar
+        SPECIALITY: varchar
+        ADDRESS: varchar
+        CITY: varchar
+        STATE: varchar
+        ZIP: varchar
+        LAT: float
+        LON: float
+        UTILIZATION: float
+    supplies:
+      +column_types:
+        DATE: date
+        PATIENT: varchar
+        ENCOUNTER: varchar
+        CODE: varchar
+        DESCRIPTION: varchar
+        QUANTITY: float
+  vocab_tables:
+    concept_ancestor: &concept_ancestor_columns
+      ancestor_concept_id: integer
+      descendant_concept_id: integer
+      min_levels_of_separation: integer
+      max_levels_of_separation: integer
+    concept_class: &concept_class_columns
+      concept_class_id: varchar
+      concept_class_name: varchar
+      concept_class_concept_id: integer
+    concept_relationship: &concept_relationship_columns
+      concept_id_1: integer
+      concept_id_2: integer
+      relationship_id: varchar
+      valid_start_date: date
+      valid_end_date: date
+      invalid_reason: varchar
+    concept: &concept_columns
+      concept_id: integer
+      concept_name: varchar
+      domain_id: varchar
+      vocabulary_id: varchar
+      concept_class_id: varchar
+      standard_concept: varchar
+      concept_code: varchar
+      valid_start_date: date
+      valid_end_date: date
+      invalid_reason: varchar
+    concept_synonym: &concept_synonym_columns
+      concept_id: integer
+      concept_synonym_name: varchar
+      language_concept_id: integer
+    domain: &domain_columns
+      domain_id: varchar
+      domain_name: varchar
+      domain_concept_id: integer
+    drug_strength: &drug_strength_columns
+      drug_concept_id: integer
+      ingredient_concept_id: integer
+      amount_value: float
+      amount_unit_concept_id: integer
+      numerator_value: float
+      numerator_unit_concept_id: integer
+      denominator_value: float
+      denominator_unit_concept_id: integer
+      box_size: integer
+      valid_start_date: date
+      valid_end_date: date
+      invalid_reason: varchar
+    relationship: &relationship_columns
+      relationship_id: varchar
+      relationship_name: varchar
+      is_hierarchical: varchar
+      defines_ancestry: varchar
+      reverse_relationship_id: varchar
+      relationship_concept_id: integer
+    vocabulary: &vocabulary_columns
+      vocabulary_id: varchar
+      vocabulary_name: varchar
+      vocabulary_reference: varchar
+      vocabulary_version: varchar
+      vocabulary_concept_id: integer
 
 models:
   synthea_omop_etl:
@@ -56,8 +408,22 @@ seeds:
       +schema: vocab_seeds
       +docs:
         node_color: '#69AED5'
-    synthea:
-      +enabled: true
-      +schema: synthea_seeds    
-      +docs:
-        node_color: '#69AED5'
+      concept_ancestor_seed: 
+        +column_types: *concept_ancestor_columns
+      concept_class_seed: 
+        +column_types: *concept_class_columns
+      concept_relationship_seed: 
+        +column_types: *concept_relationship_columns
+      concept_seed: 
+        +column_types: *concept_columns
+      concept_synonym_seed: 
+        +column_types: *concept_synonym_columns
+      domain_seed: 
+        +column_types: *domain_columns
+      drug_strength_seed: 
+        +column_types: *drug_strength_columns
+      relationship_seed: 
+        +column_types: *relationship_columns
+      vocabulary_seed: 
+        +column_types: *vocabulary_columns
+    synthea: *synthea_config

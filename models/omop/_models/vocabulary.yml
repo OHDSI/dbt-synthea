@@ -10,18 +10,32 @@ models:
         tests:
           - not_null
           - unique
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: vocabulary_name
         description: The name describing the vocabulary, for example, InternationalClassification of Diseases,
           Ninth Revision, Clinical Modification,Volume 1 and 2 (NCHS) etc.
         data_type: varchar(255)
         tests:
           - not_null
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: vocabulary_reference
         description: External reference to documentation or available download of the aboutthe vocabulary.
         data_type: varchar(255)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: vocabulary_version
         description: Version of the Vocabulary as indicated in the source.
         data_type: varchar(255)
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_equivalent_types('varchar') }}"
       - name: vocabulary_concept_id
         description: A Concept that represents the Vocabulary the VOCABULARY record belongsto.
         data_type: integer
@@ -30,3 +44,6 @@ models:
           - relationships:
               to: ref('concept')
               field: concept_id
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
