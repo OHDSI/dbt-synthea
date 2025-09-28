@@ -28,8 +28,8 @@ WITH cte_encounters_lower AS (
         , code AS encounter_code
         , description AS encounter_description
         , base_encounter_cost
-        , {{ dbt.cast("total_claim_cost", api.Column.translate_type("float")) }} AS total_encounter_cost
-        , {{ dbt.cast("payer_coverage", api.Column.translate_type("float")) }} AS encounter_payer_coverage
+        , total_claim_cost AS total_encounter_cost
+        , payer_coverage AS encounter_payer_coverage
         , reasoncode AS encounter_reason_code
         , reasondescription AS encounter_reason_description
     FROM cte_encounters_lower
@@ -39,26 +39,26 @@ WITH cte_encounters_lower AS (
 , cte_encounters_date_columns AS (
 
     SELECT
-            encounter_id
-            , encounter_start_datetime
-            , {{ dbt.cast("encounter_start_datetime", api.Column.translate_type("date")) }} AS encounter_start_date
-            , encounter_stop_datetime
-            , COALESCE(
-                {{ dbt.cast("encounter_start_datetime", api.Column.translate_type("date")) }},
-                {{ dbt.cast("encounter_stop_datetime", api.Column.translate_type("date")) }}
-            ) AS encounter_stop_date
-            , patient_id
-            , organization_id
-            , provider_id
-            , payer_id
-            , encounter_class
-            , encounter_code
-            , encounter_description
-            , base_encounter_cost
-            , total_encounter_cost
-            , encounter_payer_coverage
-            , encounter_reason_code
-            , encounter_reason_description
+        encounter_id
+        , encounter_start_datetime
+        , {{ dbt.cast("encounter_start_datetime", api.Column.translate_type("date")) }} AS encounter_start_date
+        , encounter_stop_datetime
+        , COALESCE(
+            {{ dbt.cast("encounter_start_datetime", api.Column.translate_type("date")) }},
+            {{ dbt.cast("encounter_stop_datetime", api.Column.translate_type("date")) }}
+        ) AS encounter_stop_date
+        , patient_id
+        , organization_id
+        , provider_id
+        , payer_id
+        , encounter_class
+        , encounter_code
+        , encounter_description
+        , base_encounter_cost
+        , total_encounter_cost
+        , encounter_payer_coverage
+        , encounter_reason_code
+        , encounter_reason_description
     FROM cte_encounters_rename
 
 )

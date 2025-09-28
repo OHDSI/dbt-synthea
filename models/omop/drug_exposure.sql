@@ -14,7 +14,7 @@ SELECT
     , days_supply
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS sig
     , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS route_concept_id
-    , '0' AS lot_number
+    , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS lot_number
     , provider_id
     , visit_occurrence_id
     , visit_detail_id

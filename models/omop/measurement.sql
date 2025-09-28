@@ -12,7 +12,7 @@ SELECT
     , measurement_datetime
     , {{ dbt.cast("measurement_time", api.Column.translate_type("varchar")) }} AS measurement_time -- for some reason CDM spec wants this as varchar
     , 32827 AS measurement_type_concept_id
-    , 0 AS operator_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS operator_concept_id
     , value_as_number
     , value_as_concept_id
     , unit_concept_id

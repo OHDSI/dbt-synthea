@@ -15,9 +15,9 @@ SELECT
     , 32817 AS observation_type_concept_id
     , {{ dbt.cast("null", api.Column.translate_type("float")) }} AS value_as_number
     , {{ dbt.cast("null", api.Column.translate_type("varchar")) }} AS value_as_string
-    , 0 AS value_as_concept_id
-    , 0 AS qualifier_concept_id
-    , 0 AS unit_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS value_as_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS qualifier_concept_id
+    , {{ dbt.cast("null", api.Column.translate_type("integer")) }} AS unit_concept_id
     , provider_id
     , visit_occurrence_id
     , visit_detail_id
