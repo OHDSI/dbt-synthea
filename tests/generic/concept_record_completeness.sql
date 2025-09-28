@@ -68,65 +68,66 @@ WITH validation AS (
         {% endif %}
 
     FROM {{ model }}
+    WHERE {{ column_name }} IS NOT NULL
     {% if model_name != 'dose_era' and (column_name == 'unit_concept_id' or column_name == 'unit_source_concept_id') %}
-    WHERE unit_source_value IS NOT NULL
+    OR unit_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'admitted_from_concept_id' %}
-    WHERE admitted_from_source_value IS NOT NULL
+    OR admitted_from_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'admitting_source_concept_id' %}
-    WHERE admitting_source_value IS NOT NULL
+    OR admitting_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'discharged_to_concept_id' %}
-    WHERE discharged_to_source_value IS NOT NULL
+    OR discharged_to_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'discharge_to_concept_id' %}
-    WHERE discharge_to_source_value IS NOT NULL
+    OR discharge_to_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'condition_status_concept_id' %}
-    WHERE condition_status_source_value IS NOT NULL
+    OR condition_status_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'route_concept_id' %}
-    WHERE route_source_value IS NOT NULL
+    OR route_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'modifier_concept_id' %}
-    WHERE modifier_source_value IS NOT NULL
+    OR modifier_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'qualifier_concept_id' %}
-    WHERE qualifier_source_value IS NOT NULL
+    OR qualifier_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'cause_concept_id' or column_name == 'cause_source_concept_id' %}
-    WHERE cause_source_value IS NOT NULL
+    OR cause_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'anatomic_site_concept_id' %}
-    WHERE anatomic_site_source_value IS NOT NULL
+    OR anatomic_site_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'disease_status_concept_id' %}
-    WHERE disease_status_source_value IS NOT NULL
+    OR disease_status_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'country_concept_id' %}
-    WHERE country_source_value IS NOT NULL
+    OR country_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'place_of_service_concept_id' %}
-    WHERE place_of_service_source_value IS NOT NULL
+    OR place_of_service_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'specialty_concept_id' or column_name == 'specialty_source_concept_id' %}
-    WHERE specialty_source_value IS NOT NULL
+    OR specialty_source_value IS NOT NULL
     {% endif %}
     {% if model_name == 'provider' and (column_name == 'gender_concept_id' or column_name == 'gender_source_concept_id') %}
-    WHERE gender_source_value IS NOT NULL
+    OR gender_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'payer_concept_id' or column_name == 'payer_source_concept_id' %}
-    WHERE payer_source_value IS NOT NULL
+    OR payer_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'plan_concept_id' or column_name == 'plan_source_concept_id' %}
-    WHERE plan_source_value IS NOT NULL
+    OR plan_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'sponsor_concept_id' or column_name == 'sponsor_source_concept_id' %}
-    WHERE sponsor_source_value IS NOT NULL
+    OR sponsor_source_value IS NOT NULL
     {% endif %}
     {% if column_name == 'stop_reason_concept_id' or column_name == 'stop_reason_source_concept_id' %}
-    WHERE stop_reason_source_value IS NOT NULL
+    OR stop_reason_source_value IS NOT NULL
     {% endif %}
 
 ),

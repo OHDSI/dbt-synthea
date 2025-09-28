@@ -32,7 +32,7 @@ LEFT JOIN {{ ref ('int__source_to_standard_vocab_map') }} AS srcmap1
     ON
         o.observation_units = srcmap1.source_code
         AND srcmap1.target_vocabulary_id = 'UCUM'
-        AND srcmap1.source_vocabulary_id = 'UCUM'
+        AND srcmap1.source_vocabulary_id IN ('UCUM', 'Synthea units')
         AND srcmap1.target_standard_concept = 'S'
         AND srcmap1.target_invalid_reason IS null
 LEFT JOIN {{ ref ('int__source_to_standard_vocab_map') }} AS srcmap2

@@ -30,3 +30,25 @@ INNER JOIN {{ ref( 'stg_vocabulary__concept') }} AS c1
     ON
         cr.concept_id_2 = c1.concept_id
         AND c1.invalid_reason IS null
+
+UNION ALL
+
+SELECT
+    source_code
+    , source_concept_id
+    , source_code_description
+    , source_vocabulary_id
+    , source_domain_id
+    , source_concept_class_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("date")) }} AS source_valid_start_date
+    , {{ dbt.cast("NULL", api.Column.translate_type("date")) }} AS source_valid_end_date
+    , {{ dbt.cast("NULL", api.Column.translate_type("varchar")) }} AS source_invalid_reason
+    , target_concept_id
+    , target_concept_name
+    , target_vocabulary_id
+    , target_domain_id
+    , target_concept_class_id
+    , {{ dbt.cast("NULL", api.Column.translate_type("date")) }} AS target_invalid_reason
+    , 'S' AS target_standard_concept
+
+FROM {{ ref( 'stg_vocabulary__source_to_concept_map') }}
