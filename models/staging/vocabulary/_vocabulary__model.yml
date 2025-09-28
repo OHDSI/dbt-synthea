@@ -351,4 +351,3 @@ models:
       - name: valid_start_date
       - name: valid_end_date
       - name: invalid_reason
-      - name: target_concept_name
