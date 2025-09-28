@@ -1,7 +1,7 @@
 WITH cte_dupes AS (
     /*
     some encounter IDs are duplicated due to a bug in the Synthea data generation process.
-    we flag duplicates here in order to remove them from downstream modesl, as there is no way to determine which encounter among duplicates is referenced by a foreign key to the encounters table.
+    we flag duplicates here in order to remove them from downstream models, as there is no way to determine which encounter among duplicates is referenced by a foreign key to the encounters table.
     */
     SELECT encounter_id AS dupe_encounter_id
     FROM {{ ref( 'stg_synthea__encounters') }}

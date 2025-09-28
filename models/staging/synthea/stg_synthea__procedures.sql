@@ -19,7 +19,7 @@ WITH cte_procedures_lower AS (
         , encounter AS encounter_id
         , code AS procedure_code
         , description AS procedure_description
-        , {{ dbt.cast("base_cost", api.Column.translate_type("float")) }} AS procedure_base_cost
+        , base_cost AS procedure_base_cost
         , reasoncode AS procedure_reason_code
         , reasondescription AS procedure_reason_description
     FROM cte_procedures_lower
