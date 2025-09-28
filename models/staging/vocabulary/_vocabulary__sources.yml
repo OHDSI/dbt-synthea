@@ -22,3 +22,4 @@ sources:
         identifier: "{% if var('seed_source', false) %}relationship_seed{% else %}relationship{% endif %}"
       - name: vocabulary
         identifier: "{% if var('seed_source', false) %}vocabulary_seed{% else %}vocabulary{% endif %}"
+      - name: source_to_concept_map_seed

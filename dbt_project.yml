@@ -370,6 +370,21 @@ vars:
       vocabulary_reference: varchar
       vocabulary_version: varchar
       vocabulary_concept_id: integer
+    source_to_concept_map_seed: &stcm_columns
+      source_code: varchar
+      source_concept_id: integer
+      source_vocabulary_id: varchar
+      source_code_description: varchar
+      source_domain_id: varchar
+      source_concept_class_id: varchar
+      target_concept_id: integer
+      target_concept_name: varchar
+      target_vocabulary_id: varchar
+      target_domain_id: varchar
+      target_concept_class_id: varchar
+      valid_start_date: date
+      valid_end_date: date
+      invalid_reason: varchar
 
 models:
   synthea_omop_etl:
@@ -403,6 +418,13 @@ seeds:
       +schema: map_seeds
       +docs:
         node_color: '#69AED5'
+    stcm:
+      +enabled: true
+      +schema: vocab_seeds
+      +docs:
+        node_color: '#69AED5'
+      source_to_concept_map_seed:
+        +column_types: *stcm_columns
     vocabulary:
       +enabled: true
       +schema: vocab_seeds
