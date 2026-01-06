@@ -66,8 +66,10 @@ distlib==0.3.8
     # via virtualenv
 duckdb==1.1.1
     # via dbt-duckdb
-filelock==3.16.1
-    # via virtualenv
+filelock==3.20.2
+    # via
+    #   -r requirements/common.in
+    #   virtualenv
 identify==2.6.1
     # via pre-commit
 idna==3.10
@@ -221,8 +223,10 @@ typing-extensions==4.12.2
     #   mashumaro
     #   pydantic
     #   pydantic-core
-urllib3==2.5.0
-    # via requests
+urllib3==2.6.2
+    # via
+    #   -r requirements/common.in
+    #   requests
 virtualenv==20.26.6
     # via pre-commit
 zipp==3.20.2
