@@ -1,18 +1,20 @@
 models:
   - name: concept_ancestor
-    description: The CONCEPT_ANCESTOR table is designed to simplify observational analysis by providing
-      the complete hierarchical relationships between Concepts. Only direct parent-child relationships
-      between Concepts are stored in the CONCEPT_RELATIONSHIP table. To determine higher-level ancestry
-      connections, all individual direct relationships would have to be navigated at analysis time. The
-      CONCEPT_ANCESTOR table includes records for all parent-child relationships, as well as grandparent-grandchild
-      relationships and those of any other level of lineage for Standard or Classification concepts. Using
-      the CONCEPT_ANCESTOR table allows for querying for all descendants of a hierarchical concept, and
-      the other way around. For example, drug ingredients and drug products, beneath them in the hierarchy,
-      are all descendants of a drug class ancestor. This table is entirely derived from the CONCEPT, CONCEPT_RELATIONSHIP,
+    description: The CONCEPT_ANCESTOR table is designed to simplify observational analysis by 
+      providing the complete hierarchical relationships between Concepts. Only direct parent-child 
+      relationships between Concepts are stored in the CONCEPT_RELATIONSHIP table. To determine 
+      higher-level ancestry connections, all individual direct relationships would have to be 
+      navigated at analysis time. The CONCEPT_ANCESTOR table includes records for all parent-child 
+      relationships, as well as grandparent-grandchild relationships and those of any other level of
+      lineage for Standard or Classification concepts. Using the CONCEPT_ANCESTOR table allows for 
+      querying for all descendants of a hierarchical concept, and the other way around. For example,
+      drug ingredients and drug products, beneath them in the hierarchy, are all descendants of a 
+      drug class ancestor. This table is entirely derived from the CONCEPT, CONCEPT_RELATIONSHIP, 
       and RELATIONSHIP tables.
     columns:
       - name: ancestor_concept_id
-        description: The Concept Id for the higher-level concept that forms the ancestor in the relationship.
+        description: The Concept Id for the higher-level concept that forms the ancestor in the 
+          relationship.
         data_type: integer
         tests:
           - not_null
@@ -23,7 +25,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: descendant_concept_id
-        description: The Concept Id for the lower-level concept that forms the descendant in the relationship.
+        description: The Concept Id for the lower-level concept that forms the descendant in the 
+          relationship.
         data_type: integer
         tests:
           - not_null
@@ -34,8 +37,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: min_levels_of_separation
-        description: The minimum separation in number of levels of hierarchy between ancestor and descendant
-          concepts. This is an attribute that is used to simplify hierarchic analysis.
+        description: The minimum separation in number of levels of hierarchy between ancestor and 
+          descendant concepts. This is an attribute that is used to simplify hierarchic analysis.
         data_type: integer
         tests:
           - not_null
@@ -43,8 +46,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: max_levels_of_separation
-        description: The maximum separation in number of levels of hierarchy between ancestor and descendant
-          concepts. This is an attribute that is used to simplify hierarchic analysis.
+        description: The maximum separation in number of levels of hierarchy between ancestor and 
+          descendant concepts. This is an attribute that is used to simplify hierarchic analysis.
         data_type: integer
         tests:
           - not_null

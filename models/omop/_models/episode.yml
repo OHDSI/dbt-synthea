@@ -1,11 +1,11 @@
 models:
   - name: episode
-    description: The EPISODE table aggregates lower-level clinical events (VISIT_OCCURRENCE, DRUG_EXPOSURE,
-      PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE) into a higher-level abstraction representing clinically and
-      analytically relevant disease phases,outcomes and treatments. The EPISODE_EVENT table connects qualifying
-      clinical events (VISIT_OCCURRENCE, DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE) to the
-      appropriate EPISODE entry. For example cancers including their development over time, their treatment,
-      and final resolution.
+    description: The EPISODE table aggregates lower-level clinical events (VISIT_OCCURRENCE, 
+      DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE) into a higher-level abstraction 
+      representing clinically and analytically relevant disease phases,outcomes and treatments. The 
+      EPISODE_EVENT table connects qualifying clinical events (VISIT_OCCURRENCE, DRUG_EXPOSURE, 
+      PROCEDURE_OCCURRENCE, DEVICE_EXPOSURE) to the appropriate EPISODE entry. For example cancers 
+      including their development over time, their treatment, and final resolution.
     columns:
       - name: episode_id
         description: A unique identifier for each Episode.
@@ -28,8 +28,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: episode_concept_id
-        description: The EPISODE_CONCEPT_ID represents the kind abstraction related to the disease phase,
-          outcome or treatment.
+        description: The EPISODE_CONCEPT_ID represents the kind abstraction related to the disease 
+          phase, outcome or treatment.
         data_type: integer
         tests:
           - not_null
@@ -78,25 +78,26 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: episode_parent_id
-        description: Use this field to find the Episode that subsumes the given Episode record. This is
-          used in the case that an Episode are nested into each other.
+        description: Use this field to find the Episode that subsumes the given Episode record. This
+          is used in the case that an Episode are nested into each other.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: episode_number
-        description: For sequences of episodes, this is used to indicate the order the episodes occurred.
-          For example, lines of treatment could be indicated here.
+        description: For sequences of episodes, this is used to indicate the order the episodes 
+          occurred. For example, lines of treatment could be indicated here.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: episode_object_concept_id
-        description: A Standard Concept representing the disease phase, outcome, or other abstraction
-          of which the episode consists.  For example, if the EPISODE_CONCEPT_ID is [treatment regimen](https://athena.ohdsi.org/search-terms/terms/32531)
-          then the EPISODE_OBJECT_CONCEPT_ID should contain the chemotherapy regimen concept, like [Afatinib
+        description: A Standard Concept representing the disease phase, outcome, or other 
+          abstraction of which the episode consists.  For example, if the EPISODE_CONCEPT_ID is 
+          [treatment regimen](https://athena.ohdsi.org/search-terms/terms/32531) then the 
+          EPISODE_OBJECT_CONCEPT_ID should contain the chemotherapy regimen concept, like [Afatinib 
           monotherapy](https://athena.ohdsi.org/search-terms/terms/35804392).
         data_type: integer
         tests:
@@ -115,8 +116,8 @@ models:
               from_condition: episode_object_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: episode_type_concept_id
-        description: This field can be used to determine the provenance of the Episode record, as in whether
-          the episode was from an EHR system, insurance claim, registry, or other sources.
+        description: This field can be used to determine the provenance of the Episode record, as in
+          whether the episode was from an EHR system, insurance claim, registry, or other sources.
         data_type: integer
         tests:
           - not_null
@@ -134,9 +135,9 @@ models:
               from_condition: episode_type_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: episode_source_value
-        description: The source code for the Episode as it appears in the source data. This code is mapped
-          to a Standard Condition Concept in the Standardized Vocabularies and the original code is stored
-          here for reference.
+        description: The source code for the Episode as it appears in the source data. This code is 
+          mapped to a Standard Condition Concept in the Standardized Vocabularies and the original 
+          code is stored here for reference.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist

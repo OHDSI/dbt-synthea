@@ -1,18 +1,19 @@
 models:
   - name: visit_occurrence
-    description: This table contains Events where Persons engage with the healthcare system for a duration
-      of time. They are often also called "Encounters". Visits are defined by a configuration of circumstances
-      under which they occur, such as (i) whether the patient comes to a healthcare institution, the other
-      way around, or the interaction is remote, (ii) whether and what kind of trained medical staff is
-      delivering the service during the Visit, and (iii) whether the Visit is transient or for a longer
-      period involving a stay in bed.
+    description: This table contains Events where Persons engage with the healthcare system for a 
+      duration of time. They are often also called "Encounters". Visits are defined by a 
+      configuration of circumstances under which they occur, such as (i) whether the patient comes 
+      to a healthcare institution, the other way around, or the interaction is remote, (ii) whether 
+      and what kind of trained medical staff is delivering the service during the Visit, and (iii) 
+      whether the Visit is transient or for a longer period involving a stay in bed.
     tests:
       - person_completeness:
           threshold: '95'
     columns:
       - name: visit_occurrence_id
-        description: Use this to identify unique interactions between a person and the health care system.
-          This identifier links across the other CDM event tables to associate events with a visit.
+        description: Use this to identify unique interactions between a person and the health care 
+          system. This identifier links across the other CDM event tables to associate events with a
+          visit.
         data_type: integer
         tests:
           - not_null
@@ -32,8 +33,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_concept_id
-        description: This field contains a concept id representing the kind of visit, like inpatient or
-          outpatient. All concepts in this field should be standard and belong to the Visit domain.
+        description: This field contains a concept id representing the kind of visit, like inpatient
+          or outpatient. All concepts in this field should be standard and belong to the Visit 
+          domain.
         data_type: integer
         tests:
           - not_null
@@ -53,8 +55,8 @@ models:
               from_condition: visit_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: visit_start_date
-        description: For inpatient visits, the start date is typically the admission date. For outpatient
-          visits the start date and end date will be the same.
+        description: For inpatient visits, the start date is typically the admission date. For 
+          outpatient visits the start date and end date will be the same.
         data_type: date
         tests:
           - not_null
@@ -69,9 +71,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: visit_end_date
-        description: For inpatient visits the end date is typically the discharge date.  If a Person is
-          still an inpatient in the hospital at the time of the data extract and does not have a visit_end_date,
-          then set the visit_end_date to the date of the data pull.
+        description: For inpatient visits the end date is typically the discharge date.  If a Person
+          is still an inpatient in the hospital at the time of the data extract and does not have a 
+          visit_end_date, then set the visit_end_date to the date of the data pull.
         data_type: date
         tests:
           - not_null
@@ -79,17 +81,17 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: visit_end_datetime
-        description: If a Person is still an inpatient in the hospital at the time of the data extract
-          and does not have a visit_end_datetime, then set the visit_end_datetime to the datetime of the
-          data pull.
+        description: If a Person is still an inpatient in the hospital at the time of the data 
+          extract and does not have a visit_end_datetime, then set the visit_end_datetime to the 
+          datetime of the data pull.
         data_type: datetime
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: visit_type_concept_id
-        description: Use this field to understand the provenance of the visit record, or where the record
-          comes from.
+        description: Use this field to understand the provenance of the visit record, or where the 
+          record comes from.
         data_type: Integer
         tests:
           - not_null
@@ -109,10 +111,10 @@ models:
               from_condition: visit_type_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: provider_id
-        description: There will only be one provider per visit record and the ETL document should clearly
-          state how they were chosen (attending, admitting, etc.). If there are multiple providers associated
-          with a visit in the source, this can be reflected in the event tables (CONDITION_OCCURRENCE,
-          PROCEDURE_OCCURRENCE, etc.) or in the VISIT_DETAIL table.
+        description: There will only be one provider per visit record and the ETL document should 
+          clearly state how they were chosen (attending, admitting, etc.). If there are multiple 
+          providers associated with a visit in the source, this can be reflected in the event tables
+          (CONDITION_OCCURRENCE, PROCEDURE_OCCURRENCE, etc.) or in the VISIT_DETAIL table.
         data_type: integer
         tests:
           - relationships:
@@ -132,8 +134,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_source_value
-        description: This field houses the verbatim value from the source data representing the kind of
-          visit that took place (inpatient, outpatient, emergency, etc.)
+        description: This field houses the verbatim value from the source data representing the kind
+          of visit that took place (inpatient, outpatient, emergency, etc.)
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -156,9 +158,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: admitted_from_concept_id
-        description: Use this field to determine where the patient was admitted from. This concept is
-          part of the visit domain and can indicate if a patient was admitted to the hospital from a long-term
-          care facility, for example.
+        description: Use this field to determine where the patient was admitted from. This concept 
+          is part of the visit domain and can indicate if a patient was admitted to the hospital 
+          from a long-term care facility, for example.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -188,11 +190,11 @@ models:
               row_condition: admitted_from_source_value is not null
               strictly: false
       - name: discharged_to_concept_id
-        description: Use this field to determine where the patient was discharged to after a visit. This
-          concept is part of the visit domain and can indicate if a patient was transferred to another
-          hospital or sent to a long-term care facility, for example.  It is assumed that a person is
-          discharged to home therefore there is not a standard concept id for "home".  Use concept id
-          = 0 when a person is discharged to home.
+        description: Use this field to determine where the patient was discharged to after a visit. 
+          This concept is part of the visit domain and can indicate if a patient was transferred to 
+          another hospital or sent to a long-term care facility, for example.  It is assumed that a 
+          person is discharged to home therefore there is not a standard concept id for "home".  Use
+          concept id = 0 when a person is discharged to home.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -222,8 +224,8 @@ models:
               row_condition: discharged_to_source_value is not null
               strictly: false
       - name: preceding_visit_occurrence_id
-        description: Use this field to find the visit that occurred for the person prior to the given
-          visit. There could be a few days or a few years in between.
+        description: Use this field to find the visit that occurred for the person prior to the 
+          given visit. There could be a few days or a few years in between.
         data_type: integer
         tests:
           - relationships:

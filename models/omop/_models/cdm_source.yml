@@ -1,7 +1,7 @@
 models:
   - name: cdm_source
-    description: The CDM_SOURCE table contains detail about the source database and the process used to
-      transform the data into the OMOP Common Data Model.
+    description: The CDM_SOURCE table contains detail about the source database and the process used
+      to transform the data into the OMOP Common Data Model.
     columns:
       - name: cdm_source_name
         description: The name of the CDM instance.
@@ -69,8 +69,9 @@ models:
               row_condition: cdm_etl_reference is not null
               strictly: false
       - name: source_release_date
-        description: The date the data was extracted from the source system. In some systems that is the
-          same as the date the ETL was run. Typically the latest even date in the source is on the source_release_date.
+        description: The date the data was extracted from the source system. In some systems that is
+          the same as the date the ETL was run. Typically the latest even date in the source is on 
+          the source_release_date.
         data_type: date
         tests:
           - not_null
@@ -78,7 +79,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: cdm_release_date
-        description: The date the ETL script was completed. Typically this is after the source_release_date.
+        description: The date the ETL script was completed. Typically this is after the 
+          source_release_date.
         data_type: date
         tests:
           - not_null

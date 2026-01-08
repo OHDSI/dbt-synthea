@@ -1,8 +1,9 @@
 models:
   - name: drug_strength
-    description: The DRUG_STRENGTH table contains structured content about the amount or concentration
-      and associated units of a specific ingredient contained within a particular drug product. This table
-      is supplemental information to support standardized analysis of drug utilization.
+    description: The DRUG_STRENGTH table contains structured content about the amount or 
+      concentration and associated units of a specific ingredient contained within a particular drug
+      product. This table is supplemental information to support standardized analysis of drug 
+      utilization.
     columns:
       - name: drug_concept_id
         description: The Concept representing the Branded Drug or Clinical Drug Product.
@@ -21,7 +22,8 @@ models:
               from_condition: drug_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: ingredient_concept_id
-        description: The Concept representing the active ingredient contained within the drug product.
+        description: The Concept representing the active ingredient contained within the drug 
+          product.
         data_type: integer
         tests:
           - not_null
@@ -39,15 +41,16 @@ models:
               from_condition: ingredient_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: amount_value
-        description: The numeric value or the amount of active ingredient contained within the drug product.
+        description: The numeric value or the amount of active ingredient contained within the drug 
+          product.
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: amount_unit_concept_id
-        description: The Concept representing the Unit of measure for the amount of active ingredient
-          contained within the drug product.
+        description: The Concept representing the Unit of measure for the amount of active 
+          ingredient contained within the drug product.
         data_type: integer
         tests:
           - relationships:
@@ -69,7 +72,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: numerator_unit_concept_id
-        description: The Concept representing the Unit of measure for the concentration of active ingredient.
+        description: The Concept representing the Unit of measure for the concentration of active 
+          ingredient.
         data_type: integer
         tests:
           - relationships:
@@ -84,15 +88,16 @@ models:
               from_condition: numerator_unit_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: denominator_value
-        description: The amount of total liquid (or other divisible product, such as ointment, gel, spray,
-          etc.).
+        description: The amount of total liquid (or other divisible product, such as ointment, gel, 
+          spray, etc.).
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: denominator_unit_concept_id
-        description: The Concept representing the denominator unit for the concentration of active ingredient.
+        description: The Concept representing the denominator unit for the concentration of active 
+          ingredient.
         data_type: integer
         tests:
           - relationships:
@@ -107,8 +112,8 @@ models:
               from_condition: denominator_unit_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: box_size
-        description: The number of units of Clinical Branded Drug or Quantified Clinical or Branded Drug
-          contained in a box as dispensed to the patient.
+        description: The number of units of Clinical Branded Drug or Quantified Clinical or Branded 
+          Drug contained in a box as dispensed to the patient.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -131,8 +136,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: invalid_reason
-        description: Reason the concept was invalidated. Possible values are D (deleted), U (replaced
-          with an update) or NULL when valid_end_date has the default value.
+        description: Reason the concept was invalidated. Possible values are D (deleted), U 
+          (replaced with an update) or NULL when valid_end_date has the default value.
         data_type: varchar(1)
         tests:
           - dbt_expectations.expect_column_to_exist

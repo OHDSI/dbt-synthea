@@ -1,11 +1,12 @@
 models:
   - name: person
-    description: This table serves as the central identity management for all Persons in the database.
-      It contains records that uniquely identify each person or patient, and some demographic information.
+    description: This table serves as the central identity management for all Persons in the 
+      database. It contains records that uniquely identify each person or patient, and some 
+      demographic information.
     columns:
       - name: person_id
-        description: It is assumed that every person with a different unique identifier is in fact a different
-          person and should be treated independently.
+        description: It is assumed that every person with a different unique identifier is in fact a
+          different person and should be treated independently.
         data_type: integer
         tests:
           - not_null
@@ -14,8 +15,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: gender_concept_id
-        description: This field is meant to capture the biological sex at birth of the Person. This field
-          should not be used to study gender identity issues.
+        description: This field is meant to capture the biological sex at birth of the Person. This 
+          field should not be used to study gender identity issues.
         data_type: integer
         tests:
           - not_null
@@ -106,8 +107,8 @@ models:
               from_condition: ethnicity_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: location_id
-        description: The location refers to the physical address of the person. This field should capture
-          the last known location of the person.
+        description: The location refers to the physical address of the person. This field should 
+          capture the last known location of the person.
         data_type: integer
         tests:
           - relationships:
@@ -117,7 +118,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: provider_id
-        description: The Provider refers to the last known primary care provider (General Practitioner).
+        description: The Provider refers to the last known primary care provider (General 
+          Practitioner).
         data_type: integer
         tests:
           - relationships:
@@ -137,8 +139,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_source_value
-        description: Use this field to link back to persons in the source data. This is typically used
-          for error checking of ETL logic.
+        description: Use this field to link back to persons in the source data. This is typically 
+          used for error checking of ETL logic.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -149,8 +151,8 @@ models:
               row_condition: person_source_value is not null
               strictly: false
       - name: gender_source_value
-        description: This field is used to store the biological sex of the person from the source data.
-          It is not intended for use in standard analytics but for reference only.
+        description: This field is used to store the biological sex of the person from the source 
+          data. It is not intended for use in standard analytics but for reference only.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -171,8 +173,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: race_source_value
-        description: This field is used to store the race of the person from the source data. It is not
-          intended for use in standard analytics but for reference only.
+        description: This field is used to store the race of the person from the source data. It is 
+          not intended for use in standard analytics but for reference only.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -193,8 +195,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: ethnicity_source_value
-        description: This field is used to store the ethnicity of the person from the source data. It
-          is not intended for use in standard analytics but for reference only.
+        description: This field is used to store the ethnicity of the person from the source data. 
+          It is not intended for use in standard analytics but for reference only.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist

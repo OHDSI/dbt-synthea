@@ -1,11 +1,11 @@
 models:
   - name: concept_class
-    description: The CONCEPT_CLASS table includes semantic categories that reference the source structure
-      of each Vocabulary. Concept Classes represent so-called horizontal (e.g. MedDRA, RxNorm) or vertical
-      levels (e.g. SNOMED) of the vocabulary structure. Vocabularies without any Concept Classes, such
-      as HCPCS, use the vocabulary_id as the Concept Class. This reference table is populated with a single
-      record for each Concept Class, which includes a Concept Class ID and a fully specified Concept Class
-      name.
+    description: The CONCEPT_CLASS table includes semantic categories that reference the source 
+      structure of each Vocabulary. Concept Classes represent so-called horizontal (e.g. MedDRA, 
+      RxNorm) or vertical levels (e.g. SNOMED) of the vocabulary structure. Vocabularies without any
+      Concept Classes, such as HCPCS, use the vocabulary_id as the Concept Class. This reference 
+      table is populated with a single record for each Concept Class, which includes a Concept Class
+      ID and a fully specified Concept Class name.
     columns:
       - name: concept_class_id
         description: A unique key for each class.

@@ -1,18 +1,19 @@
 models:
   - name: device_exposure
-    description: The Device domain captures information about a person's exposure to a foreign physical
-      object or instrument which is used for diagnostic or therapeutic purposes through a mechanism beyond
-      chemical action. Devices include implantable objects (e.g. pacemakers, stents, artificial joints),
-      medical equipment and supplies (e.g. bandages, crutches, syringes), other instruments used in medical
-      procedures (e.g. sutures, defibrillators) and material used in clinical care (e.g. adhesives, body
-      material, dental material, surgical material).
+    description: The Device domain captures information about a person's exposure to a foreign 
+      physical object or instrument which is used for diagnostic or therapeutic purposes through a 
+      mechanism beyond chemical action. Devices include implantable objects (e.g. pacemakers, 
+      stents, artificial joints), medical equipment and supplies (e.g. bandages, crutches, 
+      syringes), other instruments used in medical procedures (e.g. sutures, defibrillators) and 
+      material used in clinical care (e.g. adhesives, body material, dental material, surgical 
+      material).
     tests:
       - person_completeness:
           threshold: '100'
     columns:
       - name: device_exposure_id
-        description: The unique key given to records a person's exposure to a foreign physical object
-          or instrument.
+        description: The unique key given to records a person's exposure to a foreign physical 
+          object or instrument.
         data_type: integer
         tests:
           - not_null
@@ -32,9 +33,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: device_concept_id
-        description: The DEVICE_CONCEPT_ID field is recommended for primary use in analyses, and must
-          be used for network studies. This is the standard concept mapped from the source concept id
-          which represents a foreign object or instrument the person was exposed to.
+        description: The DEVICE_CONCEPT_ID field is recommended for primary use in analyses, and 
+          must be used for network studies. This is the standard concept mapped from the source 
+          concept id which represents a foreign object or instrument the person was exposed to.
         data_type: integer
         tests:
           - not_null
@@ -69,8 +70,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: device_exposure_end_date
-        description: The DEVICE_EXPOSURE_END_DATE denotes the day the device exposure ended for the patient,
-          if given.
+        description: The DEVICE_EXPOSURE_END_DATE denotes the day the device exposure ended for the 
+          patient, if given.
         data_type: date
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -84,8 +85,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: device_type_concept_id
-        description: You can use the TYPE_CONCEPT_ID to denote the provenance of the record, as in whether
-          the record is from administrative claims or EHR.
+        description: You can use the TYPE_CONCEPT_ID to denote the provenance of the record, as in 
+          whether the record is from administrative claims or EHR.
         data_type: integer
         tests:
           - not_null
@@ -105,8 +106,8 @@ models:
               from_condition: device_type_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unique_device_id
-        description: This is the Unique Device Identification (UDI-DI) number for devices regulated by
-          the FDA, if given.
+        description: This is the Unique Device Identification (UDI-DI) number for devices regulated 
+          by the FDA, if given.
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -117,7 +118,8 @@ models:
               row_condition: unique_device_id is not null
               strictly: false
       - name: production_id
-        description: This is the Production Identifier (UDI-PI) portion of the Unique Device Identification.
+        description: This is the Production Identifier (UDI-PI) portion of the Unique Device 
+          Identification.
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -135,8 +137,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: provider_id
-        description: The Provider associated with device record, e.g. the provider who wrote the prescription
-          or the provider who implanted the device.
+        description: The Provider associated with device record, e.g. the provider who wrote the 
+          prescription or the provider who implanted the device.
         data_type: integer
         tests:
           - relationships:
@@ -166,8 +168,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: device_source_value
-        description: This field houses the verbatim value from the source data representing the device
-          exposure that occurred. For example, this could be an NDC or Gemscript code.
+        description: This field houses the verbatim value from the source data representing the 
+          device exposure that occurred. For example, this could be an NDC or Gemscript code.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -178,12 +180,12 @@ models:
               row_condition: device_source_value is not null
               strictly: false
       - name: device_source_concept_id
-        description: This is the concept representing the device source value and may not necessarily
-          be standard. This field is discouraged from use in analysis because it is not required to contain
-          Standard Concepts that are used across the OHDSI community, and should only be used when Standard
-          Concepts do not adequately represent the source detail for the Device necessary for a given
-          analytic use case. Consider using DEVICE_CONCEPT_ID instead to enable standardized analytics
-          that can be consistent across the network.
+        description: This is the concept representing the device source value and may not 
+          necessarily be standard. This field is discouraged from use in analysis because it is not 
+          required to contain Standard Concepts that are used across the OHDSI community, and should
+          only be used when Standard Concepts do not adequately represent the source detail for the 
+          Device necessary for a given analytic use case. Consider using DEVICE_CONCEPT_ID instead 
+          to enable standardized analytics that can be consistent across the network.
         data_type: integer
         tests:
           - relationships:
@@ -195,8 +197,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: unit_concept_id
-        description: UNIT_SOURCE_VALUES should be mapped to a Standard Concept in the Unit domain that
-          best represents the unit as given in the source data.
+        description: UNIT_SOURCE_VALUES should be mapped to a Standard Concept in the Unit domain 
+          that best represents the unit as given in the source data.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -215,8 +217,9 @@ models:
               from_condition: unit_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unit_source_value
-        description: This field houses the verbatim value from the source data representing the unit of
-          the Device. For example, blood transfusions are considered devices and can be given in mL quantities.
+        description: This field houses the verbatim value from the source data representing the unit
+          of the Device. For example, blood transfusions are considered devices and can be given in 
+          mL quantities.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -227,12 +230,12 @@ models:
               row_condition: unit_source_value is not null
               strictly: false
       - name: unit_source_concept_id
-        description: This is the concept representing the UNIT_SOURCE_VALUE and may not necessarily be
-          standard. This field is discouraged from use in analysis because it is not required to contain
-          Standard Concepts that are used across the OHDSI community, and should only be used when Standard
-          Concepts do not adequately represent the source detail for the Unit necessary for a given analytic
-          use case. Consider using UNIT_CONCEPT_ID instead to enable standardized analytics that can be
-          consistent across the network.
+        description: This is the concept representing the UNIT_SOURCE_VALUE and may not necessarily 
+          be standard. This field is discouraged from use in analysis because it is not required to 
+          contain Standard Concepts that are used across the OHDSI community, and should only be 
+          used when Standard Concepts do not adequately represent the source detail for the Unit 
+          necessary for a given analytic use case. Consider using UNIT_CONCEPT_ID instead to enable 
+          standardized analytics that can be consistent across the network.
         data_type: integer
         tests:
           - relationships:

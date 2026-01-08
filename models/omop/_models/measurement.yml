@@ -1,24 +1,24 @@
 models:
   - name: measurement
-    description: The MEASUREMENT table contains records of Measurements, i.e. structured values (numerical
-      or categorical) obtained through systematic and standardized examination or testing of a Person
-      or Person's sample. The MEASUREMENT table contains both orders and results of such Measurements
-      as laboratory tests, vital signs, quantitative findings from pathology reports, etc. Measurements
-      are stored as attribute value pairs, with the attribute as the Measurement Concept and the value
-      representing the result. The value can be a Concept (stored in VALUE_AS_CONCEPT), or a numerical
-      value (VALUE_AS_NUMBER) with a Unit (UNIT_CONCEPT_ID). The Procedure for obtaining the sample is
-      housed in the PROCEDURE_OCCURRENCE table, though it is unnecessary to create a PROCEDURE_OCCURRENCE
-      record for each measurement if one does not exist in the source data. Measurements differ from Observations
-      in that they require a standardized test or some other activity to generate a quantitative or qualitative
-      result. If there is no result, it is assumed that the lab test was conducted but the result was
-      not captured.
+    description: The MEASUREMENT table contains records of Measurements, i.e. structured values 
+      (numerical or categorical) obtained through systematic and standardized examination or testing
+      of a Person or Person's sample. The MEASUREMENT table contains both orders and results of such
+      Measurements as laboratory tests, vital signs, quantitative findings from pathology reports, 
+      etc. Measurements are stored as attribute value pairs, with the attribute as the Measurement 
+      Concept and the value representing the result. The value can be a Concept (stored in 
+      VALUE_AS_CONCEPT), or a numerical value (VALUE_AS_NUMBER) with a Unit (UNIT_CONCEPT_ID). The 
+      Procedure for obtaining the sample is housed in the PROCEDURE_OCCURRENCE table, though it is 
+      unnecessary to create a PROCEDURE_OCCURRENCE record for each measurement if one does not exist
+      in the source data. Measurements differ from Observations in that they require a standardized 
+      test or some other activity to generate a quantitative or qualitative result. If there is no 
+      result, it is assumed that the lab test was conducted but the result was not captured.
     tests:
       - person_completeness:
           threshold: '95'
     columns:
       - name: measurement_id
-        description: The unique key given to a Measurement record for a Person. Refer to the ETL for how
-          duplicate Measurements during the same Visit were handled.
+        description: The unique key given to a Measurement record for a Person. Refer to the ETL for
+          how duplicate Measurements during the same Visit were handled.
         data_type: integer
         tests:
           - not_null
@@ -27,8 +27,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
-        description: The PERSON_ID of the Person for whom the Measurement is recorded. This may be a system
-          generated code.
+        description: The PERSON_ID of the Person for whom the Measurement is recorded. This may be a
+          system generated code.
         data_type: integer
         tests:
           - not_null
@@ -39,9 +39,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: measurement_concept_id
-        description: The MEASUREMENT_CONCEPT_ID field is recommended for primary use in analyses, and
-          must be used for network studies. This is the standard concept mapped from the source value
-          which represents a measurement.
+        description: The MEASUREMENT_CONCEPT_ID field is recommended for primary use in analyses, 
+          and must be used for network studies. This is the standard concept mapped from the source 
+          value which represents a measurement.
         data_type: integer
         tests:
           - not_null
@@ -87,8 +87,9 @@ models:
               row_condition: measurement_time is not null
               strictly: false
       - name: measurement_type_concept_id
-        description: This field can be used to determine the provenance of the Measurement record, as
-          in whether the measurement was from an EHR system, insurance claim, registry, or other sources.
+        description: This field can be used to determine the provenance of the Measurement record, 
+          as in whether the measurement was from an EHR system, insurance claim, registry, or other 
+          sources.
         data_type: integer
         tests:
           - not_null
@@ -108,10 +109,11 @@ models:
               from_condition: measurement_type_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: operator_concept_id
-        description: The meaning of Concept [4172703](https://athena.ohdsi.org/search-terms/terms/4172703)
-          for '=' is identical to omission of a OPERATOR_CONCEPT_ID value. Since the use of this field
-          is rare, it's important when devising analyses to not to forget testing for the content of this
-          field for values different from =.
+        description: The meaning of Concept 
+          [4172703](https://athena.ohdsi.org/search-terms/terms/4172703) for '=' is identical to 
+          omission of a OPERATOR_CONCEPT_ID value. Since the use of this field is rare, it's 
+          important when devising analyses to not to forget testing for the content of this field 
+          for values different from =.
         data_type: integer
         tests:
           - relationships:
@@ -126,17 +128,17 @@ models:
               from_condition: operator_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: value_as_number
-        description: This is the numerical value of the Result of the Measurement, if available. Note
-          that measurements such as blood pressures will be split into their component parts i.e. one
-          record for systolic, one record for diastolic.
+        description: This is the numerical value of the Result of the Measurement, if available. 
+          Note that measurements such as blood pressures will be split into their component parts 
+          i.e. one record for systolic, one record for diastolic.
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: value_as_concept_id
-        description: If the raw data gives a categorial result for measurements those values are captured
-          and mapped to standard concepts in the 'Meas Value' domain.
+        description: If the raw data gives a categorial result for measurements those values are 
+          captured and mapped to standard concepts in the 'Meas Value' domain.
         data_type: integer
         tests:
           - relationships:
@@ -151,10 +153,10 @@ models:
               from_condition: value_as_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unit_concept_id
-        description: At present, there isn't a prescribed unit for individual measurements, such as Hemoglobin
-          A1C, meaning it's not obligatory to express these measurements as a percentage. UNIT_SOURCE_VALUES
-          should be linked to a Standard Concept within the Unit domain that most accurately reflects
-          the unit provided in the source data.
+        description: At present, there isn't a prescribed unit for individual measurements, such as 
+          Hemoglobin A1C, meaning it's not obligatory to express these measurements as a percentage.
+          UNIT_SOURCE_VALUES should be linked to a Standard Concept within the Unit domain that most
+          accurately reflects the unit provided in the source data.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -163,7 +165,7 @@ models:
               from_condition: unit_concept_id <> 0
               to_condition: domain_id = 'Unit'
           - concept_record_completeness:
-              threshold: '7' # increased from default of 5 to 7 to account for unmappable units in Synthea
+              threshold: '5'
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -173,24 +175,24 @@ models:
               from_condition: unit_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: range_low
-        description: Ranges have the same unit as the VALUE_AS_NUMBER. These ranges are provided by the
-          source and should remain NULL if not given.
+        description: Ranges have the same unit as the VALUE_AS_NUMBER. These ranges are provided by 
+          the source and should remain NULL if not given.
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: range_high
-        description: Ranges have the same unit as the VALUE_AS_NUMBER. These ranges are provided by the
-          source and should remain NULL if not given.
+        description: Ranges have the same unit as the VALUE_AS_NUMBER. These ranges are provided by 
+          the source and should remain NULL if not given.
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: provider_id
-        description: The provider associated with measurement record, e.g. the provider who ordered the
-          test or the provider who recorded the result.
+        description: The provider associated with measurement record, e.g. the provider who ordered 
+          the test or the provider who recorded the result.
         data_type: integer
         tests:
           - relationships:
@@ -210,9 +212,10 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_id
-        description: The VISIT_DETAIL record during which the Measurement occurred. For example, if the
-          Person was in the ICU at the time the VISIT_OCCURRENCE record would reflect the overall hospital
-          stay and the VISIT_DETAIL record would reflect the ICU stay during the hospital visit.
+        description: The VISIT_DETAIL record during which the Measurement occurred. For example, if 
+          the Person was in the ICU at the time the VISIT_OCCURRENCE record would reflect the 
+          overall hospital stay and the VISIT_DETAIL record would reflect the ICU stay during the 
+          hospital visit.
         data_type: integer
         tests:
           - relationships:
@@ -222,8 +225,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: measurement_source_value
-        description: This field contains the exact value from the source data that represents the measurement
-          that occurred.
+        description: This field contains the exact value from the source data that represents the 
+          measurement that occurred.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -234,12 +237,12 @@ models:
               row_condition: measurement_source_value is not null
               strictly: false
       - name: measurement_source_concept_id
-        description: This is the concept representing the MEASUREMENT_SOURCE_VALUE and may not necessarily
-          be standard. This field is discouraged from use in analysis because it is not required to contain
-          Standard Concepts that are used across the OHDSI community, and should only be used when Standard
-          Concepts do not adequately represent the source detail for the Measurement necessary for a given
-          analytic use case. Consider using MEASUREMENT_CONCEPT_ID instead to enable standardized analytics
-          that can be consistent across the network.
+        description: This is the concept representing the MEASUREMENT_SOURCE_VALUE and may not 
+          necessarily be standard. This field is discouraged from use in analysis because it is not 
+          required to contain Standard Concepts that are used across the OHDSI community, and should
+          only be used when Standard Concepts do not adequately represent the source detail for the 
+          Measurement necessary for a given analytic use case. Consider using MEASUREMENT_CONCEPT_ID
+          instead to enable standardized analytics that can be consistent across the network.
         data_type: integer
         tests:
           - relationships:
@@ -251,8 +254,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: unit_source_value
-        description: This field contains the exact value from the source data that represents the unit
-          of measurement used.
+        description: This field contains the exact value from the source data that represents the 
+          unit of measurement used.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -280,8 +283,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: value_source_value
-        description: This field houses the verbatim result value of the Measurement from the source data
-          .
+        description: This field houses the verbatim result value of the Measurement from the source 
+          data .
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -292,16 +295,17 @@ models:
               row_condition: value_source_value is not null
               strictly: false
       - name: measurement_event_id
-        description: If the Measurement record is related to another record in the database, this field
-          is the primary key of the linked record.
+        description: If the Measurement record is related to another record in the database, this 
+          field is the primary key of the linked record.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: meas_event_field_concept_id
-        description: If the Measurement record is related to another record in the database, this field
-          is the CONCEPT_ID that identifies which table the primary key of the linked record came from.
+        description: If the Measurement record is related to another record in the database, this 
+          field is the CONCEPT_ID that identifies which table the primary key of the linked record 
+          came from.
         data_type: integer
         tests:
           - relationships:

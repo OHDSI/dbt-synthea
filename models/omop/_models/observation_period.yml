@@ -8,8 +8,8 @@ models:
           threshold: '0'
     columns:
       - name: observation_period_id
-        description: A Person can have multiple discrete Observation Periods which are identified by the
-          Observation_Period_Id.
+        description: A Person can have multiple discrete Observation Periods which are identified by
+          the Observation_Period_Id.
         data_type: integer
         tests:
           - not_null
@@ -18,7 +18,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
-        description: The Person ID of the PERSON record for which the Observation Period is recorded.
+        description: The Person ID of the PERSON record for which the Observation Period is 
+          recorded.
         data_type: integer
         tests:
           - not_null
@@ -37,8 +38,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: observation_period_end_date
-        description: Use this date to determine the end date of the period for which we can assume that
-          all events for a Person are recorded.
+        description: Use this date to determine the end date of the period for which we can assume 
+          that all events for a Person are recorded.
         data_type: date
         tests:
           - not_null
@@ -46,9 +47,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: period_type_concept_id
-        description: This field can be used to determine the provenance of the Observation Period as in
-          whether the period was determined from an insurance enrollment file, EHR healthcare encounters,
-          or other sources.
+        description: This field can be used to determine the provenance of the Observation Period as
+          in whether the period was determined from an insurance enrollment file, EHR healthcare 
+          encounters, or other sources.
         data_type: integer
         tests:
           - not_null

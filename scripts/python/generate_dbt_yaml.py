@@ -1,12 +1,12 @@
 #!/usr/bin/env  -S uv run --script
 # /// script
 # requires-python = ">=3.12"
-# dependencies = [ "ruamel-yaml", "requests" ]
+# dependencies = [ "ruamel-yaml", "httpx" ]
 # ///
 
 """
 A script to generate dbt YAML files from the OMOP CDM documentation
-Requires `ruamel.yaml`, and `requests` to be installed.
+Requires `ruamel.yaml`, and `httpx` to be installed.
 If you have uv installed this will be done automatically.
 
 If you make this file executable you should also be able to run it directly using
@@ -31,7 +31,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import ParseResult, urlparse
 
-import requests
+import httpx
 from ruamel.yaml import YAML
 
 DEFAULT_FIELD_SOURCE_URL = "https://raw.githubusercontent.com/OHDSI/CommonDataModel/refs/heads/main/inst/csv/OMOP_CDMv5.4_Field_Level.csv"
@@ -90,14 +90,15 @@ def is_url(value: str) -> bool:
 
 def download_url_to_temp_file(url: str, output_dir: Path) -> Path:
     """Download a URL to a .tmp file in the output directory and return the local Path."""
-    response: requests.Response = requests.get(url)
-    response.raise_for_status()  # raises if e.g. 404 or timeout
+    with httpx.Client() as client:
+        response = client.get(url)
+        response.raise_for_status()  # raises if e.g. 404 or timeout
 
-    with tempfile.NamedTemporaryFile(
-        delete=False, dir=output_dir, suffix=".tmp"
-    ) as tmp_file:
-        _ = tmp_file.write(response.content)
-        return Path(tmp_file.name)
+        with tempfile.NamedTemporaryFile(
+            delete=False, dir=output_dir, suffix=".tmp"
+        ) as tmp_file:
+            _ = tmp_file.write(response.content)
+            return Path(tmp_file.name)
 
 
 def parse_cli_arguments() -> tuple[Path, str, str, str, str]:

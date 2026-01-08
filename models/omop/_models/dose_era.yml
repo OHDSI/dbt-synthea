@@ -1,7 +1,7 @@
 models:
   - name: dose_era
-    description: A Dose Era is defined as a span of time when the Person is assumed to be exposed to a
-      constant dose of a specific active ingredient.
+    description: A Dose Era is defined as a span of time when the Person is assumed to be exposed to
+      a constant dose of a specific active ingredient.
     tests:
       - person_completeness:
           threshold: '100'
@@ -80,8 +80,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: dose_era_start_date
-        description: The date the Person started on the specific dosage, with at least 31 days since any
-          prior exposure.
+        description: The date the Person started on the specific dosage, with at least 31 days since
+          any prior exposure.
         data_type: date
         tests:
           - not_null

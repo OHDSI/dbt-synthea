@@ -1,15 +1,15 @@
 models:
   - name: condition_occurrence
-    description: This table contains records of Events of a Person suggesting the presence of a disease
-      or medical condition stated as a diagnosis, a sign, or a symptom, which is either observed by a
-      Provider or reported by the patient.
+    description: This table contains records of Events of a Person suggesting the presence of a 
+      disease or medical condition stated as a diagnosis, a sign, or a symptom, which is either 
+      observed by a Provider or reported by the patient.
     tests:
       - person_completeness:
           threshold: '95'
     columns:
       - name: condition_occurrence_id
-        description: The unique key given to a condition record for a person. Refer to the ETL for how
-          duplicate conditions during the same visit were handled.
+        description: The unique key given to a condition record for a person. Refer to the ETL for 
+          how duplicate conditions during the same visit were handled.
         data_type: integer
         tests:
           - not_null
@@ -29,9 +29,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: condition_concept_id
-        description: The CONDITION_CONCEPT_ID field is recommended for primary use in analyses, and must
-          be used for network studies. This is the standard concept mapped from the source value which
-          represents a condition
+        description: The CONDITION_CONCEPT_ID field is recommended for primary use in analyses, and 
+          must be used for network studies. This is the standard concept mapped from the source 
+          value which represents a condition
         data_type: integer
         tests:
           - not_null
@@ -80,8 +80,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: condition_type_concept_id
-        description: This field can be used to determine the provenance of the Condition record, as in
-          whether the condition was from an EHR system, insurance claim, registry, or other sources.
+        description: This field can be used to determine the provenance of the Condition record, as 
+          in whether the condition was from an EHR system, insurance claim, registry, or other 
+          sources.
         data_type: integer
         tests:
           - not_null
@@ -101,9 +102,10 @@ models:
               from_condition: condition_type_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: condition_status_concept_id
-        description: This concept represents the point during the visit the diagnosis was given (admitting
-          diagnosis, final diagnosis), whether the diagnosis was determined due to laboratory findings,
-          if the diagnosis was exclusionary, or if it was a preliminary diagnosis, among others.
+        description: This concept represents the point during the visit the diagnosis was given 
+          (admitting diagnosis, final diagnosis), whether the diagnosis was determined due to 
+          laboratory findings, if the diagnosis was exclusionary, or if it was a preliminary 
+          diagnosis, among others.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -122,9 +124,9 @@ models:
               from_condition: condition_status_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: stop_reason
-        description: The Stop Reason indicates why a Condition is no longer valid with respect to the
-          purpose within the source data. Note that a Stop Reason does not necessarily imply that the
-          condition is no longer occurring.
+        description: The Stop Reason indicates why a Condition is no longer valid with respect to 
+          the purpose within the source data. Note that a Stop Reason does not necessarily imply 
+          that the condition is no longer occurring.
         data_type: varchar(20)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -135,8 +137,8 @@ models:
               row_condition: stop_reason is not null
               strictly: false
       - name: provider_id
-        description: The provider associated with condition record, e.g. the provider who made the diagnosis
-          or the provider who recorded the symptom.
+        description: The provider associated with condition record, e.g. the provider who made the 
+          diagnosis or the provider who recorded the symptom.
         data_type: integer
         tests:
           - relationships:
@@ -156,10 +158,10 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_id
-        description: The VISIT_DETAIL record during which the condition occurred. For example, if the
-          person was in the ICU at the time of the diagnosis the VISIT_OCCURRENCE record would reflect
-          the overall hospital stay and the VISIT_DETAIL record would reflect the ICU stay during the
-          hospital visit.
+        description: The VISIT_DETAIL record during which the condition occurred. For example, if 
+          the person was in the ICU at the time of the diagnosis the VISIT_OCCURRENCE record would 
+          reflect the overall hospital stay and the VISIT_DETAIL record would reflect the ICU stay 
+          during the hospital visit.
         data_type: integer
         tests:
           - relationships:
@@ -169,8 +171,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: condition_source_value
-        description: This field houses the verbatim value from the source data representing the condition
-          that occurred. For example, this could be an ICD10 or Read code.
+        description: This field houses the verbatim value from the source data representing the 
+          condition that occurred. For example, this could be an ICD10 or Read code.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -181,12 +183,12 @@ models:
               row_condition: condition_source_value is not null
               strictly: false
       - name: condition_source_concept_id
-        description: This is the concept representing the condition source value and may not necessarily
-          be standard. This field is discouraged from use in analysis because it is not required to contain
-          Standard Concepts that are used across the OHDSI community, and should only be used when Standard
-          Concepts do not adequately represent the source detail for the Condition necessary for a given
-          analytic use case. Consider using CONDITION_CONCEPT_ID instead to enable standardized analytics
-          that can be consistent across the network.
+        description: This is the concept representing the condition source value and may not 
+          necessarily be standard. This field is discouraged from use in analysis because it is not 
+          required to contain Standard Concepts that are used across the OHDSI community, and should
+          only be used when Standard Concepts do not adequately represent the source detail for the 
+          Condition necessary for a given analytic use case. Consider using CONDITION_CONCEPT_ID 
+          instead to enable standardized analytics that can be consistent across the network.
         data_type: integer
         tests:
           - relationships:
@@ -198,8 +200,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: condition_status_source_value
-        description: This field houses the verbatim value from the source data representing the condition
-          status.
+        description: This field houses the verbatim value from the source data representing the 
+          condition status.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist

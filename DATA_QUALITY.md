@@ -37,7 +37,7 @@ The script can be found at [scripts/python/generate_dbt_yaml.py](./scripts/pytho
 
 * Python >=3.12
   * ruamel-yaml
-  * requests
+  * httpx
 * [dbt_expectations](https://hub.getdbt.com/metaplane/dbt_expectations/latest/)
 * The macros stored in [macros/generate_dbt_yaml](./macros/generate_dbt_yaml)
 * The generic data tests stored in [tests/generic](./tests/generic)

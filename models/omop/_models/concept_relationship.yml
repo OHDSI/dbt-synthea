@@ -1,10 +1,10 @@
 models:
   - name: concept_relationship
-    description: The CONCEPT_RELATIONSHIP table contains records that define relationships between any
-      two Concepts and the nature or type of the relationship. This table captures various types of relationships,
-      including hierarchical, associative, and other semantic connections, enabling comprehensive analysis
-      and interpretation of clinical concepts. Every kind of relationship is defined in the RELATIONSHIP
-      table.
+    description: The CONCEPT_RELATIONSHIP table contains records that define relationships between 
+      any two Concepts and the nature or type of the relationship. This table captures various types
+      of relationships, including hierarchical, associative, and other semantic connections, 
+      enabling comprehensive analysis and interpretation of clinical concepts. Every kind of 
+      relationship is defined in the RELATIONSHIP table.
     columns:
       - name: concept_id_1
         description: ''
@@ -29,7 +29,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: relationship_id
-        description: The relationship between CONCEPT_ID_1 and CONCEPT_ID_2. Please see the [Vocabulary
+        description: The relationship between CONCEPT_ID_1 and CONCEPT_ID_2. Please see the 
+          [Vocabulary 
           Conventions](https://ohdsi.github.io/CommonDataModel/dataModelConventions.html#concept_relationships).
           for more information.
         data_type: varchar(20)
@@ -62,8 +63,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: invalid_reason
-        description: Reason the relationship was invalidated. Possible values are 'D' (deleted), 'U' (updated)
-          or NULL.
+        description: Reason the relationship was invalidated. Possible values are 'D' (deleted), 'U'
+          (updated) or NULL.
         data_type: varchar(1)
         tests:
           - dbt_expectations.expect_column_to_exist

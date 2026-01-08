@@ -1,8 +1,8 @@
 models:
   - name: vocabulary
-    description: The VOCABULARY table includes a list of the Vocabularies integrated from various sources
-      or created de novo in OMOP CDM. This reference table contains a single record for each Vocabulary
-      and includes a descriptive name and other associated attributes for the Vocabulary.
+    description: The VOCABULARY table includes a list of the Vocabularies integrated from various 
+      sources or created de novo in OMOP CDM. This reference table contains a single record for each
+      Vocabulary and includes a descriptive name and other associated attributes for the Vocabulary.
     columns:
       - name: vocabulary_id
         description: A unique identifier for each Vocabulary, such as ICD9CM, SNOMED, Visit.
@@ -18,8 +18,8 @@ models:
               row_condition: vocabulary_id is not null
               strictly: false
       - name: vocabulary_name
-        description: The name describing the vocabulary, for example, International Classification of
-          Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS) etc.
+        description: The name describing the vocabulary, for example, International Classification 
+          of Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS) etc.
         data_type: varchar(255)
         tests:
           - not_null
@@ -31,7 +31,8 @@ models:
               row_condition: vocabulary_name is not null
               strictly: false
       - name: vocabulary_reference
-        description: External reference to documentation or available download of the about the vocabulary.
+        description: External reference to documentation or available download of the about the 
+          vocabulary.
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist

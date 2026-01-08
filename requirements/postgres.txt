@@ -188,7 +188,6 @@ regex==2024.9.11
     # via sqlfluff
 requests==2.32.5
     # via
-    #   -r requirements/common.in
     #   dbt-common
     #   dbt-core
     #   minimal-snowplow-tracker
@@ -225,9 +224,7 @@ typing-extensions==4.12.2
     #   pydantic
     #   pydantic-core
 urllib3==2.6.2
-    # via
-    #   -r requirements/common.in
-    #   requests
+    # via requests
 virtualenv==20.26.6
     # via pre-commit
 zipp==3.20.2

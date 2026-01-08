@@ -1,8 +1,9 @@
 models:
   - name: episode_event
-    description: The EPISODE_EVENT table connects qualifying clinical events (such as CONDITION_OCCURRENCE,
-      DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, MEASUREMENT) to the appropriate EPISODE entry. For example,
-      linking the precise location of the metastasis (cancer modifier in MEASUREMENT) to the disease episode.
+    description: The EPISODE_EVENT table connects qualifying clinical events (such as 
+      CONDITION_OCCURRENCE, DRUG_EXPOSURE, PROCEDURE_OCCURRENCE, MEASUREMENT) to the appropriate 
+      EPISODE entry. For example, linking the precise location of the metastasis (cancer modifier in
+      MEASUREMENT) to the disease episode.
     columns:
       - name: episode_id
         description: Use this field to link the EPISODE_EVENT record to its EPISODE.
@@ -16,9 +17,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: event_id
-        description: This field is the primary key of the linked record in the database. For example,
-          if the Episode Event is a Condition Occurrence, then the CONDITION_OCCURRENCE_ID of the linked
-          record goes in this field.
+        description: This field is the primary key of the linked record in the database. For 
+          example, if the Episode Event is a Condition Occurrence, then the CONDITION_OCCURRENCE_ID 
+          of the linked record goes in this field.
         data_type: integer
         tests:
           - not_null
@@ -26,8 +27,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: episode_event_field_concept_id
-        description: This field is the CONCEPT_ID that identifies which table the primary key of the linked
-          record came from.
+        description: This field is the CONCEPT_ID that identifies which table the primary key of the
+          linked record came from.
         data_type: integer
         tests:
           - not_null

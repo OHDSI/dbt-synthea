@@ -1,21 +1,22 @@
 models:
   - name: payer_plan_period
-    description: The PAYER_PLAN_PERIOD table captures details of the period of time that a Person is continuously
-      enrolled under a specific health Plan benefit structure from a given Payer. Each Person receiving
-      healthcare is typically covered by a health benefit plan, which pays for (fully or partially), or
-      directly provides, the care. These benefit plans are provided by payers, such as health insurances
-      or state or government agencies. In each plan the details of the health benefits are defined for
-      the Person or her family, and the health benefit Plan might change over time typically with increasing
-      utilization (reaching certain cost thresholds such as deductibles), plan availability and purchasing
-      choices of the Person. The unique combinations of Payer organizations, health benefit Plans and
-      time periods in which they are valid for a Person are recorded in this table.
+    description: The PAYER_PLAN_PERIOD table captures details of the period of time that a Person is
+      continuously enrolled under a specific health Plan benefit structure from a given Payer. Each 
+      Person receiving healthcare is typically covered by a health benefit plan, which pays for 
+      (fully or partially), or directly provides, the care. These benefit plans are provided by 
+      payers, such as health insurances or state or government agencies. In each plan the details of
+      the health benefits are defined for the Person or her family, and the health benefit Plan 
+      might change over time typically with increasing utilization (reaching certain cost thresholds
+      such as deductibles), plan availability and purchasing choices of the Person. The unique 
+      combinations of Payer organizations, health benefit Plans and time periods in which they are 
+      valid for a Person are recorded in this table.
     tests:
       - person_completeness:
           threshold: '100'
     columns:
       - name: payer_plan_period_id
-        description: A unique identifier for each unique combination of a Person, Payer, Plan, and Period
-          of time.
+        description: A unique identifier for each unique combination of a Person, Payer, Plan, and 
+          Period of time.
         data_type: integer
         tests:
           - not_null
@@ -51,8 +52,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: payer_concept_id
-        description: This field represents the organization who reimburses the provider which administers
-          care to the Person.
+        description: This field represents the organization who reimburses the provider which 
+          administers care to the Person.
         data_type: integer
         tests:
           - relationships:
@@ -88,7 +89,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: plan_concept_id
-        description: This field represents the specific health benefit Plan the Person is enrolled in.
+        description: This field represents the specific health benefit Plan the Person is enrolled 
+          in.
         data_type: integer
         tests:
           - relationships:
@@ -124,8 +126,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: sponsor_concept_id
-        description: This field represents the sponsor of the Plan who finances the Plan. This includes
-          self-insured, small group health plan and large group health plan.
+        description: This field represents the sponsor of the Plan who finances the Plan. This 
+          includes self-insured, small group health plan and large group health plan.
         data_type: integer
         tests:
           - relationships:
@@ -161,7 +163,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: family_source_value
-        description: The common identifier for all people (often a family) that covered by the same policy.
+        description: The common identifier for all people (often a family) that covered by the same 
+          policy.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist

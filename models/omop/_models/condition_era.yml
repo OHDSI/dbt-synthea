@@ -56,9 +56,10 @@ models:
               from_condition: condition_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: condition_era_start_date
-        description: The start date for the Condition Era constructed from the individual instances of
-          Condition Occurrences. It is the start date of the very first chronologically recorded instance
-          of the condition with at least 31 days since any prior record of the same Condition.
+        description: The start date for the Condition Era constructed from the individual instances 
+          of Condition Occurrences. It is the start date of the very first chronologically recorded 
+          instance of the condition with at least 31 days since any prior record of the same 
+          Condition.
         data_type: date
         tests:
           - not_null
@@ -66,8 +67,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: condition_era_end_date
-        description: The end date for the Condition Era constructed from the individual instances of Condition
-          Occurrences. It is the end date of the final continuously recorded instance of the Condition.
+        description: The end date for the Condition Era constructed from the individual instances of
+          Condition Occurrences. It is the end date of the final continuously recorded instance of 
+          the Condition.
         data_type: date
         tests:
           - not_null
@@ -75,7 +77,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: condition_occurrence_count
-        description: The number of individual Condition Occurrences used to construct the condition era.
+        description: The number of individual Condition Occurrences used to construct the condition 
+          era.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist

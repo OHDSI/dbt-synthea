@@ -1,18 +1,19 @@
 models:
   - name: concept
-    description: The Standardized Vocabularies contains records, or Concepts, that uniquely identify each
-      fundamental unit of meaning used to express clinical information in all domain tables of the CDM.
-      Concepts are derived from vocabularies, which represent clinical information across a domain (e.g.
-      conditions, drugs, procedures) through the use of codes and associated descriptions. Some Concepts
-      are designated Standard Concepts, meaning these Concepts can be used as normative expressions of
-      a clinical entity within the OMOP Common Data Model and standardized analytics. Each Standard Concept
-      belongs to one Domain, which defines the location where the Concept would be expected to occur within
-      the data tables of the CDM. Concepts can represent broad categories ('Cardiovascular disease'),
-      detailed clinical elements ('Myocardial infarction of the anterolateral wall'), or modifying characteristics
-      and attributes that define Concepts at various levels of detail (severity of a disease, associated
-      morphology, etc.). Records in the Standardized Vocabularies tables are derived from national or
-      international vocabularies such as SNOMED-CT, RxNorm, and LOINC, or custom OMOP Concepts defined
-      to cover various aspects of observational data analysis.
+    description: The Standardized Vocabularies contains records, or Concepts, that uniquely identify
+      each fundamental unit of meaning used to express clinical information in all domain tables of 
+      the CDM. Concepts are derived from vocabularies, which represent clinical information across a
+      domain (e.g. conditions, drugs, procedures) through the use of codes and associated 
+      descriptions. Some Concepts are designated Standard Concepts, meaning these Concepts can be 
+      used as normative expressions of a clinical entity within the OMOP Common Data Model and 
+      standardized analytics. Each Standard Concept belongs to one Domain, which defines the 
+      location where the Concept would be expected to occur within the data tables of the CDM. 
+      Concepts can represent broad categories ('Cardiovascular disease'), detailed clinical elements
+      ('Myocardial infarction of the anterolateral wall'), or modifying characteristics and 
+      attributes that define Concepts at various levels of detail (severity of a disease, associated
+      morphology, etc.). Records in the Standardized Vocabularies tables are derived from national 
+      or international vocabularies such as SNOMED-CT, RxNorm, and LOINC, or custom OMOP Concepts 
+      defined to cover various aspects of observational data analysis.
     columns:
       - name: concept_id
         description: A unique identifier for each Concept across all domains.
@@ -36,8 +37,9 @@ models:
               row_condition: concept_name is not null
               strictly: false
       - name: domain_id
-        description: A foreign key to the [DOMAIN](https://ohdsi.github.io/CommonDataModel/cdm54.html#domain)
-          table the Concept belongs to.
+        description: A foreign key to the 
+          [DOMAIN](https://ohdsi.github.io/CommonDataModel/cdm54.html#domain) table the Concept 
+          belongs to.
         data_type: varchar(20)
         tests:
           - not_null
@@ -52,8 +54,9 @@ models:
               row_condition: domain_id is not null
               strictly: false
       - name: vocabulary_id
-        description: A foreign key to the [VOCABULARY](https://ohdsi.github.io/CommonDataModel/cdm54.html#vocabulary)
-          table indicating from which source the Concept has been adapted.
+        description: A foreign key to the 
+          [VOCABULARY](https://ohdsi.github.io/CommonDataModel/cdm54.html#vocabulary) table 
+          indicating from which source the Concept has been adapted.
         data_type: varchar(20)
         tests:
           - not_null
@@ -68,8 +71,8 @@ models:
               row_condition: vocabulary_id is not null
               strictly: false
       - name: concept_class_id
-        description: The attribute or concept class of the Concept. Examples are 'Clinical Drug', 'Ingredient',
-          'Clinical Finding' etc.
+        description: The attribute or concept class of the Concept. Examples are 'Clinical Drug', 
+          'Ingredient', 'Clinical Finding' etc.
         data_type: varchar(20)
         tests:
           - not_null
@@ -84,9 +87,9 @@ models:
               row_condition: concept_class_id is not null
               strictly: false
       - name: standard_concept
-        description: This flag determines where a Concept is a Standard Concept, i.e. is used in the data,
-          a Classification Concept, or a non-standard Source Concept. The allowable values are 'S' (Standard
-          Concept) and 'C' (Classification Concept), otherwise the content is NULL.
+        description: This flag determines where a Concept is a Standard Concept, i.e. is used in the
+          data, a Classification Concept, or a non-standard Source Concept. The allowable values are
+          'S' (Standard Concept) and 'C' (Classification Concept), otherwise the content is NULL.
         data_type: varchar(1)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -97,9 +100,9 @@ models:
               row_condition: standard_concept is not null
               strictly: false
       - name: concept_code
-        description: The concept code represents the identifier of the Concept in the source vocabulary,
-          such as SNOMED-CT concept IDs, RxNorm RXCUIs etc. Note that concept codes are not unique across
-          vocabularies.
+        description: The concept code represents the identifier of the Concept in the source 
+          vocabulary, such as SNOMED-CT concept IDs, RxNorm RXCUIs etc. Note that concept codes are 
+          not unique across vocabularies.
         data_type: varchar(50)
         tests:
           - not_null
@@ -111,8 +114,8 @@ models:
               row_condition: concept_code is not null
               strictly: false
       - name: valid_start_date
-        description: The date when the Concept was first recorded. The default value is 1-Jan-1970, meaning,
-          the Concept has no (known) date of inception.
+        description: The date when the Concept was first recorded. The default value is 1-Jan-1970, 
+          meaning, the Concept has no (known) date of inception.
         data_type: date
         tests:
           - not_null
@@ -120,9 +123,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: valid_end_date
-        description: The date when the Concept became invalid because it was deleted or superseded (updated)
-          by a new concept. The default value is 31-Dec-2099, meaning, the Concept is valid until it becomes
-          deprecated.
+        description: The date when the Concept became invalid because it was deleted or superseded 
+          (updated) by a new concept. The default value is 31-Dec-2099, meaning, the Concept is 
+          valid until it becomes deprecated.
         data_type: date
         tests:
           - not_null
@@ -130,8 +133,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: invalid_reason
-        description: Reason the Concept was invalidated. Possible values are D (deleted), U (replaced
-          with an update) or NULL when valid_end_date has the default value.
+        description: Reason the Concept was invalidated. Possible values are D (deleted), U 
+          (replaced with an update) or NULL when valid_end_date has the default value.
         data_type: varchar(1)
         tests:
           - dbt_expectations.expect_column_to_exist

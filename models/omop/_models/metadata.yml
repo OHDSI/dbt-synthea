@@ -1,7 +1,7 @@
 models:
   - name: metadata
-    description: The METADATA table contains metadata information about a dataset that has been transformed
-      to the OMOP Common Data Model.
+    description: The METADATA table contains metadata information about a dataset that has been 
+      transformed to the OMOP Common Data Model.
     columns:
       - name: metadata_id
         description: The unique key given to a Metadata record.
@@ -83,9 +83,9 @@ models:
               from_condition: value_as_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: value_as_number
-        description: This is the numerical value of the result of the Metadata, if applicable and available.
-          It is not expected that all Metadata will have numeric results, rather, this field is here to
-          house values should they exist.
+        description: This is the numerical value of the result of the Metadata, if applicable and 
+          available. It is not expected that all Metadata will have numeric results, rather, this 
+          field is here to house values should they exist.
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist

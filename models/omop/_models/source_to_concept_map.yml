@@ -1,12 +1,13 @@
 models:
   - name: source_to_concept_map
-    description: The source to concept map table is recommended for use in ETL processes to maintain local
-      source codes which are not available as Concepts in the Standardized Vocabularies, and to establish
-      mappings for each source code into a Standard Concept as target_concept_ids that can be used to
-      populate the Common Data Model tables. The SOURCE_TO_CONCEPT_MAP table is no longer populated with
-      content within the Standardized Vocabularies published to the OMOP community. **There are OHDSI
-      tools to help you populate this table; [Usagi](https://github.com/OHDSI/Usagi) and [Perseus](https://github.com/ohdsi/Perseus).
-      You can read more about OMOP vocabulary mapping in [The Book of OHDSI Chapter 
+    description: The source to concept map table is recommended for use in ETL processes to maintain
+      local source codes which are not available as Concepts in the Standardized Vocabularies, and 
+      to establish mappings for each source code into a Standard Concept as target_concept_ids that 
+      can be used to populate the Common Data Model tables. The SOURCE_TO_CONCEPT_MAP table is no 
+      longer populated with content within the Standardized Vocabularies published to the OMOP 
+      community. **There are OHDSI tools to help you populate this table; 
+      [Usagi](https://github.com/OHDSI/Usagi) and [Perseus](https://github.com/ohdsi/Perseus). You 
+      can read more about OMOP vocabulary mapping in [The Book of OHDSI Chapter 
       6.3](https://ohdsi.github.io/TheBookOfOhdsi/ExtractTransformLoad.html#step-2-create-the-code-mappings).**
     columns:
       - name: source_code
@@ -22,7 +23,8 @@ models:
               row_condition: source_code is not null
               strictly: false
       - name: source_concept_id
-        description: A foreign key to the Source Concept that is being translated into a Standard Concept.
+        description: A foreign key to the Source Concept that is being translated into a Standard 
+          Concept.
         data_type: integer
         tests:
           - not_null
@@ -38,8 +40,8 @@ models:
               from_condition: source_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: source_vocabulary_id
-        description: A foreign key to the VOCABULARY table defining the vocabulary of the source code
-          that is being translated to a Standard Concept.
+        description: A foreign key to the VOCABULARY table defining the vocabulary of the source 
+          code that is being translated to a Standard Concept.
         data_type: varchar(20)
         tests:
           - not_null
@@ -51,8 +53,8 @@ models:
               row_condition: source_vocabulary_id is not null
               strictly: false
       - name: source_code_description
-        description: An optional description for the source code. This is included as a convenience to
-          compare the description of the source code to the name of the concept.
+        description: An optional description for the source code. This is included as a convenience 
+          to compare the description of the source code to the name of the concept.
         data_type: varchar(255)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -102,8 +104,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: valid_end_date
-        description: The date when the mapping instance became invalid because it was deleted or superseded
-          (updated) by a new relationship. Default value is 31-Dec-2099.
+        description: The date when the mapping instance became invalid because it was deleted or 
+          superseded (updated) by a new relationship. Default value is 31-Dec-2099.
         data_type: date
         tests:
           - not_null
@@ -111,8 +113,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
       - name: invalid_reason
-        description: Reason the mapping instance was invalidated. Possible values are D (deleted), U (replaced
-          with an update) or NULL when valid_end_date has the default value.
+        description: Reason the mapping instance was invalidated. Possible values are D (deleted), U
+          (replaced with an update) or NULL when valid_end_date has the default value.
         data_type: varchar(1)
         tests:
           - dbt_expectations.expect_column_to_exist

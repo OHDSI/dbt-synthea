@@ -1,7 +1,7 @@
 models:
   - name: note_nlp
-    description: The NOTE_NLP table encodes all output of NLP on clinical notes. Each row represents a
-      single extracted term from a note.
+    description: The NOTE_NLP table encodes all output of NLP on clinical notes. Each row represents
+      a single extracted term from a note.
     columns:
       - name: note_nlp_id
         description: A unique identifier for the NLP record.

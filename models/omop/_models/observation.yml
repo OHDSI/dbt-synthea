@@ -1,15 +1,16 @@
 models:
   - name: observation
-    description: The OBSERVATION table captures clinical facts about a Person obtained in the context
-      of examination, questioning or a procedure. Any data that cannot be represented by any other domains,
-      such as social and lifestyle facts, medical history, family history, etc. are recorded here.
+    description: The OBSERVATION table captures clinical facts about a Person obtained in the 
+      context of examination, questioning or a procedure. Any data that cannot be represented by any
+      other domains, such as social and lifestyle facts, medical history, family history, etc. are 
+      recorded here.
     tests:
       - person_completeness:
           threshold: '95'
     columns:
       - name: observation_id
-        description: The unique key given to an Observation record for a Person. Refer to the ETL for
-          how duplicate Observations during the same Visit were handled.
+        description: The unique key given to an Observation record for a Person. Refer to the ETL 
+          for how duplicate Observations during the same Visit were handled.
         data_type: integer
         tests:
           - not_null
@@ -18,8 +19,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: person_id
-        description: The PERSON_ID of the Person for whom the Observation is recorded. This may be a system
-          generated code.
+        description: The PERSON_ID of the Person for whom the Observation is recorded. This may be a
+          system generated code.
         data_type: integer
         tests:
           - not_null
@@ -30,8 +31,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: observation_concept_id
-        description: The OBSERVATION_CONCEPT_ID field is recommended for primary use in analyses, and
-          must be used for network studies.
+        description: The OBSERVATION_CONCEPT_ID field is recommended for primary use in analyses, 
+          and must be used for network studies.
         data_type: integer
         tests:
           - not_null
@@ -49,9 +50,9 @@ models:
               from_condition: observation_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: observation_date
-        description: The date of when the Observation was obtained. Depending on what the Observation
-          represents this could be the date of a lab test, the date of a survey, or the date a patient's
-          family history was taken.
+        description: The date of when the Observation was obtained. Depending on what the 
+          Observation represents this could be the date of a lab test, the date of a survey, or the 
+          date a patient's family history was taken.
         data_type: date
         tests:
           - not_null
@@ -66,8 +67,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
       - name: observation_type_concept_id
-        description: This field can be used to determine the provenance of the Observation record, as
-          in whether the measurement was from an EHR system, insurance claim, registry, or other sources.
+        description: This field can be used to determine the provenance of the Observation record, 
+          as in whether the measurement was from an EHR system, insurance claim, registry, or other 
+          sources.
         data_type: integer
         tests:
           - not_null
@@ -87,17 +89,17 @@ models:
               from_condition: observation_type_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: value_as_number
-        description: This is the numerical value of the Result of the Observation, if applicable and available.
-          It is not expected that all Observations will have numeric results, rather, this field is here
-          to house values should they exist.
+        description: This is the numerical value of the Result of the Observation, if applicable and
+          available. It is not expected that all Observations will have numeric results, rather, 
+          this field is here to house values should they exist.
         data_type: float
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
       - name: value_as_string
-        description: This is the categorical value of the Result of the Observation, if applicable and
-          available.
+        description: This is the categorical value of the Result of the Observation, if applicable 
+          and available.
         data_type: varchar(60)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -108,12 +110,13 @@ models:
               row_condition: value_as_string is not null
               strictly: false
       - name: value_as_concept_id
-        description: It is possible that some records destined for the Observation table have two clinical
-          ideas represented in one source code. This is common with ICD10 codes that describe a family
-          history of some Condition, for example. In OMOP the Vocabulary breaks these two clinical ideas
-          into two codes; one becomes the OBSERVATION_CONCEPT_ID and the other becomes the VALUE_AS_CONCEPT_ID.
-          It is important when using the Observation table to keep this possibility in mind and to examine
-          the VALUE_AS_CONCEPT_ID field for relevant information.
+        description: It is possible that some records destined for the Observation table have two 
+          clinical ideas represented in one source code. This is common with ICD10 codes that 
+          describe a family history of some Condition, for example. In OMOP the Vocabulary breaks 
+          these two clinical ideas into two codes; one becomes the OBSERVATION_CONCEPT_ID and the 
+          other becomes the VALUE_AS_CONCEPT_ID. It is important when using the Observation table to
+          keep this possibility in mind and to examine the VALUE_AS_CONCEPT_ID field for relevant 
+          information.
         data_type: integer
         tests:
           - relationships:
@@ -128,8 +131,8 @@ models:
               from_condition: value_as_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: qualifier_concept_id
-        description: This field contains all attributes specifying the clinical fact further, such as
-          as degrees, severities, drug-drug interaction alerts etc.
+        description: This field contains all attributes specifying the clinical fact further, such 
+          as as degrees, severities, drug-drug interaction alerts etc.
         data_type: integer
         tests:
           - relationships:
@@ -144,9 +147,9 @@ models:
               from_condition: qualifier_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: unit_concept_id
-        description: There is currently no recommended unit for individual observation concepts. UNIT_SOURCE_VALUES
-          should be mapped to a Standard Concept in the Unit domain that best represents the unit as given
-          in the source data.
+        description: There is currently no recommended unit for individual observation concepts. 
+          UNIT_SOURCE_VALUES should be mapped to a Standard Concept in the Unit domain that best 
+          represents the unit as given in the source data.
         data_type: integer
         tests:
           - dbt_utils.relationships_where:
@@ -165,8 +168,8 @@ models:
               from_condition: unit_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: provider_id
-        description: The provider associated with the observation record, e.g. the provider who ordered
-          the test or the provider who recorded the result.
+        description: The provider associated with the observation record, e.g. the provider who 
+          ordered the test or the provider who recorded the result.
         data_type: integer
         tests:
           - relationships:
@@ -186,9 +189,10 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: visit_detail_id
-        description: The VISIT_DETAIL record during which the Observation occurred. For example, if the
-          Person was in the ICU at the time the VISIT_OCCURRENCE record would reflect the overall hospital
-          stay and the VISIT_DETAIL record would reflect the ICU stay during the hospital visit.
+        description: The VISIT_DETAIL record during which the Observation occurred. For example, if 
+          the Person was in the ICU at the time the VISIT_OCCURRENCE record would reflect the 
+          overall hospital stay and the VISIT_DETAIL record would reflect the ICU stay during the 
+          hospital visit.
         data_type: integer
         tests:
           - relationships:
@@ -198,8 +202,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: observation_source_value
-        description: This field houses the verbatim value from the source data representing the Observation
-          that occurred. For example, this could be an ICD10 or Read code.
+        description: This field houses the verbatim value from the source data representing the 
+          Observation that occurred. For example, this could be an ICD10 or Read code.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -210,12 +214,12 @@ models:
               row_condition: observation_source_value is not null
               strictly: false
       - name: observation_source_concept_id
-        description: This is the concept representing the OBSERVATION_SOURCE_VALUE and may not necessarily
-          be standard. This field is discouraged from use in analysis because it is not required to contain
-          Standard Concepts that are used across the OHDSI community, and should only be used when Standard
-          Concepts do not adequately represent the source detail for the Observation necessary for a given
-          analytic use case. Consider using OBSERVATION_CONCEPT_ID instead to enable standardized analytics
-          that can be consistent across the network.
+        description: This is the concept representing the OBSERVATION_SOURCE_VALUE and may not 
+          necessarily be standard. This field is discouraged from use in analysis because it is not 
+          required to contain Standard Concepts that are used across the OHDSI community, and should
+          only be used when Standard Concepts do not adequately represent the source detail for the 
+          Observation necessary for a given analytic use case. Consider using OBSERVATION_CONCEPT_ID
+          instead to enable standardized analytics that can be consistent across the network.
         data_type: integer
         tests:
           - relationships:
@@ -227,8 +231,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: unit_source_value
-        description: This field houses the verbatim value from the source data representing the unit of
-          the Observation that occurred.
+        description: This field houses the verbatim value from the source data representing the unit
+          of the Observation that occurred.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -239,8 +243,8 @@ models:
               row_condition: unit_source_value is not null
               strictly: false
       - name: qualifier_source_value
-        description: This field houses the verbatim value from the source data representing the qualifier
-          of the Observation that occurred.
+        description: This field houses the verbatim value from the source data representing the 
+          qualifier of the Observation that occurred.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -251,9 +255,10 @@ models:
               row_condition: qualifier_source_value is not null
               strictly: false
       - name: value_source_value
-        description: This field houses the verbatim result value of the Observation from the source data.  Do
-          not get confused with the Observation_source_value which captures source value of the observation
-          mapped to observation_concept_id. This field is the observation result value from the source.
+        description: This field houses the verbatim result value of the Observation from the source 
+          data.  Do not get confused with the Observation_source_value which captures source value 
+          of the observation mapped to observation_concept_id. This field is the observation result 
+          value from the source.
         data_type: varchar(50)
         tests:
           - dbt_expectations.expect_column_to_exist
@@ -264,16 +269,17 @@ models:
               row_condition: value_source_value is not null
               strictly: false
       - name: observation_event_id
-        description: If the Observation record is related to another record in the database, this field
-          is the primary key of the linked record.
+        description: If the Observation record is related to another record in the database, this 
+          field is the primary key of the linked record.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: obs_event_field_concept_id
-        description: If the Observation record is related to another record in the database, this field
-          is the CONCEPT_ID that identifies which table the primary key of the linked record came from.
+        description: If the Observation record is related to another record in the database, this 
+          field is the CONCEPT_ID that identifies which table the primary key of the linked record 
+          came from.
         data_type: integer
         tests:
           - relationships:

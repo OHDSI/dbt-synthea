@@ -1,8 +1,8 @@
 models:
   - name: note
-    description: The NOTE table captures unstructured information that was recorded by a provider about
-      a patient in free text (in ASCII, or preferably in UTF8 format) notes on a given date. The type
-      of note_text is CLOB or varchar(MAX) depending on RDBMS.
+    description: The NOTE table captures unstructured information that was recorded by a provider 
+      about a patient in free text (in ASCII, or preferably in UTF8 format) notes on a given date. 
+      The type of note_text is CLOB or varchar(MAX) depending on RDBMS.
     tests:
       - person_completeness:
           threshold: '100'
@@ -61,8 +61,8 @@ models:
               from_condition: note_type_concept_id != 0
               to_condition: standard_concept = 'S' AND invalid_reason IS NULL
       - name: note_class_concept_id
-        description: A Standard Concept Id representing the HL7 LOINC Document Type Vocabulary classification
-          of the note.
+        description: A Standard Concept Id representing the HL7 LOINC Document Type Vocabulary 
+          classification of the note.
         data_type: integer
         tests:
           - not_null
@@ -170,16 +170,16 @@ models:
               row_condition: note_source_value is not null
               strictly: false
       - name: note_event_id
-        description: If the Note record is related to another record in the database, this field is the
-          primary key of the linked record.
+        description: If the Note record is related to another record in the database, this field is 
+          the primary key of the linked record.
         data_type: integer
         tests:
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
       - name: note_event_field_concept_id
-        description: If the Note record is related to another record in the database, this field is the
-          CONCEPT_ID that identifies which table the primary key of the linked record came from.
+        description: If the Note record is related to another record in the database, this field is 
+          the CONCEPT_ID that identifies which table the primary key of the linked record came from.
         data_type: integer
         tests:
           - relationships:

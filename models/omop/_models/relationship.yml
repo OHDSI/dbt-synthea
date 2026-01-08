@@ -1,10 +1,10 @@
 models:
   - name: relationship
-    description: The RELATIONSHIP table provides a reference list of all types of relationships that can
-      be used to associate any two Concepts in the CONCEPT_RELATIONSHIP table, the respective reverse
-      relationships, and their hierarchical characteristics. Note, that Concepts representing relationships
-      between the clinical facts, used for filling in the FACT_RELATIONSHIP table are stored in the CONCEPT
-      table and belong to the Relationship Domain.
+    description: The RELATIONSHIP table provides a reference list of all types of relationships that
+      can be used to associate any two Concepts in the CONCEPT_RELATIONSHIP table, the respective 
+      reverse relationships, and their hierarchical characteristics. Note, that Concepts 
+      representing relationships between the clinical facts, used for filling in the 
+      FACT_RELATIONSHIP table are stored in the CONCEPT table and belong to the Relationship Domain.
     columns:
       - name: relationship_id
         description: The type of relationship captured by the relationship record.
@@ -32,8 +32,8 @@ models:
               row_condition: relationship_name is not null
               strictly: false
       - name: is_hierarchical
-        description: Defines whether a relationship defines concepts into classes or hierarchies. Values
-          are 1 for hierarchical relationship or 0 if not.
+        description: Defines whether a relationship defines concepts into classes or hierarchies. 
+          Values are 1 for hierarchical relationship or 0 if not.
         data_type: varchar(1)
         tests:
           - not_null
@@ -45,8 +45,8 @@ models:
               row_condition: is_hierarchical is not null
               strictly: false
       - name: defines_ancestry
-        description: Defines whether a hierarchical relationship contributes to the concept_ancestor table.
-          These are subsets of the hierarchical relationships. Valid values are 1 or 0.
+        description: Defines whether a hierarchical relationship contributes to the concept_ancestor
+          table. These are subsets of the hierarchical relationships. Valid values are 1 or 0.
         data_type: varchar(1)
         tests:
           - not_null
@@ -58,8 +58,8 @@ models:
               row_condition: defines_ancestry is not null
               strictly: false
       - name: reverse_relationship_id
-        description: The identifier for the relationship used to define the reverse relationship between
-          two concepts.
+        description: The identifier for the relationship used to define the reverse relationship 
+          between two concepts.
         data_type: varchar(20)
         tests:
           - not_null
@@ -71,8 +71,9 @@ models:
               row_condition: reverse_relationship_id is not null
               strictly: false
       - name: relationship_concept_id
-        description: A foreign key that refers to an identifier in the [CONCEPT](https://ohdsi.github.io/CommonDataModel/cdm54.html#concept)
-          table for the unique relationship concept.
+        description: A foreign key that refers to an identifier in the 
+          [CONCEPT](https://ohdsi.github.io/CommonDataModel/cdm54.html#concept) table for the unique
+          relationship concept.
         data_type: integer
         tests:
           - not_null
