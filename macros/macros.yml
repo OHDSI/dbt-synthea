@@ -53,6 +53,20 @@ macros:
         type: list[str]
         description: A list of column names
   
+  - name: get_source
+    description: >
+      Wrapper macro around source() that returns a Relation object.
+      Routes source_to_concept_map_seed to ref() when seed_source is false,
+      since this table is not part of the Athena vocabulary download and
+      only exists in the seeds schema.
+    arguments:
+      - name: source_name
+        type: str
+        description: The source name as defined in the sources YAML.
+      - name: table_name
+        type: str
+        description: The table name within the source.
+
   - name: string_truncate
     description: This macro truncates a string to a specified length.
     arguments:
