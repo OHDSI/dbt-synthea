@@ -31,7 +31,11 @@
         {% set column_casts = [] %}
         {% for column_name, column_type in columns.items() %}
             {% if column_name in ['valid_start_date', 'valid_end_date'] %}
-                {% do column_casts.append("CAST(strptime(CAST(" ~ column_name ~ " AS VARCHAR), '%Y%m%d') AS DATE) AS " ~ column_name) %}
+                {% if parquet %}
+                    {% do column_casts.append("CAST(" ~ column_name ~ " AS DATE) AS " ~ column_name) %}
+                {% else %}
+                    {% do column_casts.append("CAST(strptime(CAST(" ~ column_name ~ " AS VARCHAR), '%Y%m%d') AS DATE) AS " ~ column_name) %}
+                {% endif %}
             {% elif column_name|lower in ['start', 'stop', 'system', 'type', 'date'] %}
                 {% do column_casts.append("CAST(" ~ adapter.quote(column_name) ~ " AS " ~ api.Column.translate_type(column_type) ~ ") AS " ~ adapter.quote(column_name)) %}
             {% else %}
