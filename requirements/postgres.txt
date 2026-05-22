@@ -8,8 +8,6 @@ agate==1.9.1
     #   dbt-postgres
 annotated-types==0.7.0
     # via pydantic
-appdirs==1.4.4
-    # via sqlfluff
 attrs==24.2.0
     # via
     #   jsonschema
@@ -28,7 +26,7 @@ chardet==5.2.0
     #   sqlfluff
 charset-normalizer==3.3.2
     # via requests
-click==8.1.7
+click==8.3.3
     # via
     #   black
     #   dbt-core
@@ -40,50 +38,53 @@ colorama==0.4.6
     #   sqlfluff
 daff==1.3.46
     # via dbt-core
-dbt-adapters==1.3.2
+dbt-adapters==1.24.2
     # via
     #   dbt-core
     #   dbt-postgres
-dbt-common==1.3.0
+dbt-common==1.38.0
     # via
     #   dbt-adapters
     #   dbt-core
     #   dbt-postgres
-dbt-core==1.8.7
+dbt-core==1.11.11
     # via
+    #   -r requirements/common.in
     #   dbt-postgres
     #   sqlfluff-templater-dbt
 dbt-extractor==0.5.1
     # via dbt-core
 dbt-postgres==1.8.0
     # via -r requirements/postgres.in
-dbt-semantic-interfaces==0.5.1
+dbt-protos==1.0.498
+    # via
+    #   dbt-adapters
+    #   dbt-common
+    #   dbt-core
+dbt-semantic-interfaces==0.9.0
     # via dbt-core
-deepdiff==8.6.1
-    # via -r requirements/common.in
+deepdiff==8.6.2
+    # via dbt-common
 diff-cover==9.2.0
     # via sqlfluff
 distlib==0.3.8
     # via virtualenv
-filelock==3.20.2
+filelock==3.29.0
     # via
-    #   -r requirements/common.in
+    #   python-discovery
     #   virtualenv
 identify==2.6.1
     # via pre-commit
-idna==3.10
+idna==3.16
     # via requests
 importlib-metadata==6.11.0
     # via dbt-semantic-interfaces
-iniconfig==2.0.0
-    # via pytest
 isodate==0.6.1
     # via
     #   agate
     #   dbt-common
 jinja2==3.1.6
     # via
-    #   -r requirements/common.in
     #   dbt-common
     #   dbt-core
     #   dbt-semantic-interfaces
@@ -95,13 +96,12 @@ jinja2-simple-tags==0.6.1
 jsonschema==4.23.0
     # via
     #   dbt-common
+    #   dbt-core
     #   dbt-semantic-interfaces
 jsonschema-specifications==2023.12.1
     # via jsonschema
 leather==0.4.0
     # via agate
-logbook==1.5.3
-    # via dbt-core
 markupsafe==2.1.5
     # via jinja2
 mashumaro==3.13.1
@@ -109,8 +109,6 @@ mashumaro==3.13.1
     #   dbt-adapters
     #   dbt-common
     #   dbt-core
-minimal-snowplow-tracker==0.0.2
-    # via dbt-core
 more-itertools==10.5.0
     # via dbt-semantic-interfaces
 msgpack==1.1.0
@@ -127,7 +125,6 @@ packaging==24.1
     # via
     #   black
     #   dbt-core
-    #   pytest
 parsedatetime==2.6
     # via agate
 pathspec==0.12.1
@@ -139,33 +136,35 @@ pathspec==0.12.1
 platformdirs==4.3.6
     # via
     #   black
+    #   python-discovery
+    #   sqlfluff
     #   virtualenv
 pluggy==1.5.0
-    # via
-    #   diff-cover
-    #   pytest
-pre-commit==3.8.0
+    # via diff-cover
+pre-commit==4.6.0
     # via -r requirements/common.in
-protobuf==4.25.8
+protobuf==6.33.6
     # via
-    #   -r requirements/common.in
     #   dbt-adapters
     #   dbt-common
     #   dbt-core
+    #   dbt-protos
 psycopg2-binary==2.9.9
     # via dbt-postgres
 pydantic==2.9.2
-    # via dbt-semantic-interfaces
+    # via
+    #   dbt-core
+    #   dbt-semantic-interfaces
 pydantic-core==2.23.4
     # via pydantic
 pygments==2.18.0
     # via diff-cover
-pytest==8.3.3
-    # via sqlfluff
 python-dateutil==2.9.0.post0
     # via
     #   dbt-common
     #   dbt-semantic-interfaces
+python-discovery==1.3.1
+    # via virtualenv
 python-slugify==8.0.4
     # via agate
 pytimeparse==1.1.8
@@ -186,11 +185,11 @@ referencing==0.35.1
     #   jsonschema-specifications
 regex==2024.9.11
     # via sqlfluff
-requests==2.32.5
+requests==2.34.2
     # via
     #   dbt-common
     #   dbt-core
-    #   minimal-snowplow-tracker
+    #   snowplow-tracker
 rpds-py==0.20.0
     # via
     #   jsonschema
@@ -198,15 +197,16 @@ rpds-py==0.20.0
 six==1.16.0
     # via
     #   isodate
-    #   minimal-snowplow-tracker
     #   python-dateutil
-sqlfluff==3.2.0
+snowplow-tracker==1.1.0
+    # via dbt-core
+sqlfluff==4.2.1
     # via
     #   -r requirements/common.in
     #   sqlfluff-templater-dbt
-sqlfluff-templater-dbt==3.2.0
+sqlfluff-templater-dbt==4.2.1
     # via -r requirements/common.in
-sqlparse==0.5.1
+sqlparse==0.5.5
     # via dbt-core
 tblib==3.0.0
     # via sqlfluff
@@ -223,9 +223,10 @@ typing-extensions==4.12.2
     #   mashumaro
     #   pydantic
     #   pydantic-core
-urllib3==2.6.2
+    #   snowplow-tracker
+urllib3==2.7.0
     # via requests
-virtualenv==20.26.6
+virtualenv==21.3.3
     # via pre-commit
 zipp==3.20.2
     # via importlib-metadata
