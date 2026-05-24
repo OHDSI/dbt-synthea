@@ -396,6 +396,10 @@ models:
       +materialized: table
       +docs:
         node_color: '#EB6622'
+      vocabulary:
+        +schema: vocab
+      clinical:
+        +schema: cdm
     staging:
       synthea:
         +materialized: view

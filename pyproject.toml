@@ -1,0 +1,10 @@
+[project]
+name = "dbt-synthea"
+version = "0.1.0"
+description = "dbt project for transforming Synthea synthetic patient data into OMOP CDM"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "dbt-core>=1.9,<2",
+    "dbt-duckdb>=1.9,<2",
+    "duckdb",
+]
