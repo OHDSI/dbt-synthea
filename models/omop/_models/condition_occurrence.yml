@@ -62,6 +62,8 @@ models:
         description: ''
         data_type: datetime
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
@@ -69,6 +71,8 @@ models:
         description: Use this date to determine the end date of the condition
         data_type: date
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
@@ -76,6 +80,8 @@ models:
         description: ''
         data_type: datetime
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
@@ -108,6 +114,8 @@ models:
           diagnosis, among others.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_utils.relationships_where:
               to: ref('concept')
               field: concept_id
@@ -129,6 +137,8 @@ models:
           that the condition is no longer occurring.
         data_type: varchar(20)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -141,6 +151,8 @@ models:
           diagnosis or the provider who recorded the symptom.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('provider')
               field: provider_id
@@ -151,6 +163,8 @@ models:
         description: The visit during which the condition occurred.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('visit_occurrence')
               field: visit_occurrence_id
@@ -164,6 +178,8 @@ models:
           during the hospital visit.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('visit_detail')
               field: visit_detail_id
@@ -175,6 +191,8 @@ models:
           condition that occurred. For example, this could be an ICD10 or Read code.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -191,6 +209,8 @@ models:
           instead to enable standardized analytics that can be consistent across the network.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -204,6 +224,8 @@ models:
           condition status.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"

@@ -60,6 +60,7 @@ class OmopFieldDocumentationContainer:
     foreign_key_class: str
     standard_concept_record_completeness_threshold: str
     source_concept_record_completeness_threshold: str
+    value_completeness_threshold: str
 
 @dataclass
 class OmopTableDocumentationContainer:
@@ -183,8 +184,8 @@ def parse_cli_arguments() -> tuple[Path, str, str, str, str]:
 
 
 def sentinel_to_bool(text: str) -> bool:
-    """Convert sentinel strings to boolean"""
-    if text == "Yes":
+    """Convert sentinel strings to boolean (the CDM CSVs have used both Yes/No and TRUE/FALSE)"""
+    if text.lower() in {"yes", "true"}:
         return True
     else:
         return False
@@ -271,6 +272,17 @@ def omop_docs_to_dbt_config(
 
     if doc_container.required:
         tests.append("not_null")
+    # note_nlp.offset is skipped: dbt_utils.not_null_proportion injects the column name unquoted,
+    # and OFFSET is a reserved word, so the compiled test is invalid SQL
+    elif doc_container.value_completeness_threshold not in {"NA", ""} and doc_container.cdm_field != "offset":
+        # DQD threshold is the max percent of NULL records; dbt_utils expects the min proportion of non-NULL records
+        at_least = round(1 - float(doc_container.value_completeness_threshold) / 100, 4)
+        tests.append({
+            "dbt_utils.not_null_proportion": {
+                # write whole numbers as ints (0, not 0.0) to match the committed YAML
+                "at_least": int(at_least) if at_least.is_integer() else at_least,
+            }
+        })
 
     if doc_container.primary_key:
         tests.append("unique")
@@ -426,6 +438,7 @@ def parse_field_containers(
                 "foreign_key_class": '' if row["fkClass"].strip() == 'NA' else row["fkClass"].strip(),
                 "standard_concept_record_completeness_threshold": row["standardConceptRecordCompletenessThreshold"].strip(),
                 "source_concept_record_completeness_threshold": row["sourceConceptRecordCompletenessThreshold"].strip(),
+                "value_completeness_threshold": row["measureValueCompletenessThreshold"].strip(),
             }
 
     # Parse CDM file and enrich with DQD info
@@ -449,6 +462,7 @@ def parse_field_containers(
                     "foreign_key_class": dqd_data.get("foreign_key_class", ""),
                     "standard_concept_record_completeness_threshold": dqd_data.get("standard_concept_record_completeness_threshold", ""),
                     "source_concept_record_completeness_threshold": dqd_data.get("source_concept_record_completeness_threshold", ""),
+                    "value_completeness_threshold": dqd_data.get("value_completeness_threshold", ""),
                 }
             )
             containers.append(container)

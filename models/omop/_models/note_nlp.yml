@@ -24,6 +24,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -39,6 +41,8 @@ models:
         description: A small window of text surrounding the term
         data_type: varchar(250)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -69,6 +73,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -84,6 +90,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -94,6 +102,8 @@ models:
         description: ''
         data_type: varchar(250)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -113,6 +123,8 @@ models:
         description: The date and time of the note processing.
         data_type: datetime
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
@@ -120,6 +132,8 @@ models:
         description: ''
         data_type: varchar(1)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -131,6 +145,8 @@ models:
         description: ''
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -142,6 +158,8 @@ models:
         description: ''
         data_type: varchar(2000)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"

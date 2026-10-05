@@ -56,6 +56,8 @@ models:
           administers care to the Person.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -71,6 +73,8 @@ models:
         description: This is the Payer as it appears in the source data.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -82,6 +86,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -93,6 +99,8 @@ models:
           in.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -108,6 +116,8 @@ models:
         description: This is the health benefit Plan of the Person as it appears in the source data.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -119,6 +129,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -130,6 +142,8 @@ models:
           includes self-insured, small group health plan and large group health plan.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -145,6 +159,8 @@ models:
         description: The Plan sponsor as it appears in the source data.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -156,6 +172,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -167,6 +185,8 @@ models:
           policy.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -178,6 +198,8 @@ models:
         description: This field represents the reason the Person left the Plan, if known.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -193,6 +215,8 @@ models:
         description: The Plan stop reason as it appears in the source data.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -204,6 +228,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id

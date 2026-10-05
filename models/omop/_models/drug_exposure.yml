@@ -69,6 +69,8 @@ models:
         description: ''
         data_type: datetime
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
@@ -85,6 +87,8 @@ models:
         description: ''
         data_type: datetime
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
@@ -93,6 +97,8 @@ models:
           it is given
         data_type: date
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('date') }}"
@@ -123,6 +129,8 @@ models:
           v6.0.
         data_type: varchar(20)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -135,6 +143,8 @@ models:
           this field is meant to represent intended refills at time of the prescription.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -142,6 +152,8 @@ models:
         description: ''
         data_type: float
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
@@ -149,6 +161,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -156,6 +170,8 @@ models:
         description: This is the verbatim instruction for the drug as written by the provider.
         data_type: varchar(MAX)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -163,6 +179,8 @@ models:
         description: ''
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_utils.relationships_where:
               to: ref('concept')
               field: concept_id
@@ -182,6 +200,8 @@ models:
         description: ''
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -194,6 +214,8 @@ models:
           prescription or the provider who administered the drug.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('provider')
               field: provider_id
@@ -204,6 +226,8 @@ models:
         description: The Visit during which the drug was prescribed, administered or dispensed.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('visit_occurrence')
               field: visit_occurrence_id
@@ -217,6 +241,8 @@ models:
           the ICU stay during the hospital visit.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('visit_detail')
               field: visit_detail_id
@@ -228,6 +254,8 @@ models:
           exposure that occurred. For example, this could be an NDC or Gemscript code.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -244,6 +272,8 @@ models:
           standardized analytics that can be consistent across the network.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -257,6 +287,8 @@ models:
           route.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -269,6 +301,8 @@ models:
           unit of the drug given.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"

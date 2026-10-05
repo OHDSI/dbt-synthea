@@ -72,6 +72,8 @@ models:
         description: ''
         data_type: datetime
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('timestamp') }}"
@@ -79,6 +81,8 @@ models:
         description: ''
         data_type: varchar(10)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -116,6 +120,8 @@ models:
           for values different from =.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -133,6 +139,8 @@ models:
           i.e. one record for systolic, one record for diastolic.
         data_type: float
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
@@ -141,6 +149,8 @@ models:
           captured and mapped to standard concepts in the 'Meas Value' domain.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -159,6 +169,8 @@ models:
           accurately reflects the unit provided in the source data.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_utils.relationships_where:
               to: ref('concept')
               field: concept_id
@@ -179,6 +191,8 @@ models:
           the source and should remain NULL if not given.
         data_type: float
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
@@ -187,6 +201,8 @@ models:
           the source and should remain NULL if not given.
         data_type: float
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('float') }}"
@@ -195,6 +211,8 @@ models:
           the test or the provider who recorded the result.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('provider')
               field: provider_id
@@ -205,6 +223,8 @@ models:
         description: The visit during which the Measurement occurred.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('visit_occurrence')
               field: visit_occurrence_id
@@ -218,6 +238,8 @@ models:
           hospital visit.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('visit_detail')
               field: visit_detail_id
@@ -229,6 +251,8 @@ models:
           measurement that occurred.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -245,6 +269,8 @@ models:
           instead to enable standardized analytics that can be consistent across the network.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -258,6 +284,8 @@ models:
           unit of measurement used.
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -274,6 +302,8 @@ models:
           can be consistent across the network."'
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id
@@ -287,6 +317,8 @@ models:
           data .
         data_type: varchar(50)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -299,6 +331,8 @@ models:
           field is the primary key of the linked record.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_type_variants(['bigint', 'integer']) }}"
@@ -308,6 +342,8 @@ models:
           came from.
         data_type: integer
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - relationships:
               to: ref('concept')
               field: concept_id

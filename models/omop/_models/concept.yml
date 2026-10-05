@@ -92,6 +92,8 @@ models:
           'S' (Standard Concept) and 'C' (Classification Concept), otherwise the content is NULL.
         data_type: varchar(1)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
@@ -137,6 +139,8 @@ models:
           (replaced with an update) or NULL when valid_end_date has the default value.
         data_type: varchar(1)
         tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0
           - dbt_expectations.expect_column_to_exist
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list: "{{ get_equivalent_types('varchar') }}"
